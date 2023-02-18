@@ -255,6 +255,14 @@ a {
     flex-basis: 100%;
   }
 
+  .projectContainer {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 15px;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
   .rightHeader .articleIcon {
     display:block
   }
