@@ -1,0 +1,4 @@
+public/Dev
+public/Test Scripts
+jest.config.js
+*.test.js
