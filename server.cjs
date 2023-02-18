@@ -19,8 +19,8 @@ app.use(express.static('public'));
 http.createServer(app).listen(PORT, () => {
   console.log(`http server listing on ${PORT}`);
 });
-https.createServer(options, app).listen(3443, () => {
-  console.log(`http server listing on ${sshPORT}`);
+https.createServer(options, app).listen(sshPORT, () => {
+  console.log(`https server listing on ${sshPORT}`);
 });
 
 // app.listen(PORT, () => {
