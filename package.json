@@ -32,6 +32,6 @@
     "jest": "^29.3.1"
   },
   "nodemonConfig": {
-    "ext": "js,cjs,html"
+    "ext": "js,cjs,html,css"
   }
 }
