@@ -7,33 +7,33 @@
   <title>My Portfolio</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="site.css" />
-  <link rel="stylesheet" href="portfolio.css" />
 </head>
 <body>
   <div class="fullWindow">
-    <header>
-      <div id="header">
-        <div class="leftHeader">
-          <a href="index.html">
-            <div class="material-symbols-outlined">Home</div>
-          </a>
-          <p class="headerItems" id="myHeaderName">Matthew Pelnik</p>
-        </div>
-        <div class="rightHeader">
-          <a class="wideHeaderItems" href="/about.html">
-            <p class="headerItems" id="myAboutPage">About</p>
-          </a>
-          <a class="wideHeaderItems" href="/portfolio.html">
-            <p class="headerItems" id="myPortfolio">Portfolio</p>
-          </a>
-          <a href="portfolio.html">
-            <img class="articleIcon" src="Media/article_FILL1_wght600_GRAD0_opsz48.svg" />
-          </a>
-        </div>
+    <header class="header" id="portfolioHeader">
+      <div class="leftHeader">
+        <a href="index.html">
+          <div class="material-symbols-outlined">Home</div>
+        </a>
+        <p class="headerItems" id="myHeaderName">Matthew Pelnik</p>
+      </div>
+      <div class="rightHeader">
+        <a class="wideHeaderItems" href="/about.html">
+          <p class="headerItems" id="myAboutPage">About</p>
+        </a>
+        <a class="wideHeaderItems" href="/portfolio.html">
+          <p class="headerItems" id="myPortfolio">Portfolio</p>
+        </a>
+        <a class="articleIconContainer" href="/about.html">
+          <img class="articleIcon" src="Media/aboutPageIcon.svg" />
+        </a>
+        <a class="articleIconContainer" href="/portfolio.html">
+          <img class="articleIcon" src="Media/article_FILL1_wght600_GRAD0_opsz48.svg" />
+        </a>
       </div>
     </header>
     <main class="main" id="portfolioMain">
-      <div class="portfolioMainContainer">
+      <div id="portfolioMainContainer">
         <h1>Portfolio</h1>
         <p>
           Please see my portfolio below. This is a collection of various projects that I have developed over time

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Noto+Sans&family=Quicksand:wght@400;700&display=swap');
+
 :root {
   --myLightGray: #D4D4D4;
   --myLightBrown: #BF9E93;
@@ -36,19 +38,7 @@ a {
   gap: 10px;
 }
 
-
-#indexHeader {
-  display: flex;
-  background-color: var(--myLightBrown);
-  border-radius: 5px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px;
-  margin: 0px;
-}
-
-#aboutHeader {
+.header {
   display: flex;
   background-color: var(--myLightBrown);
   border-radius: 5px;
@@ -84,6 +74,10 @@ a {
   'opsz' 48;
   font-size: 2.5em;
   color: var(--myLightBlue);
+}
+
+.rightHeader .articleIconContainer {
+  display: none;
 }
 
 .rightHeader .articleIcon {
@@ -134,7 +128,7 @@ a {
   gap: 40px;
 }
 
-.portfolioMainContainer {
+#portfolioMainContainer {
   flex: 1 0 auto;
   display:flex;
   flex-wrap: nowrap;
@@ -143,7 +137,7 @@ a {
   padding: 0px;
   overflow: auto;
   width: 100%;
-  gap: 0px;
+  gap: 10px;
   align-items: center;
   justify-content: flex-start;
   align-content: flex-start;
@@ -229,6 +223,7 @@ a {
   flex-wrap: wrap;
   gap: 15px;
   justify-content: flex-start;
+  align-self: stretch;
 }
 
 .project {
@@ -269,6 +264,7 @@ a {
 @media (max-width: 768px) {
   .project {
     flex-basis: 100%;
+    max-width: none;
   }
 
   .projectContainer {
@@ -277,6 +273,14 @@ a {
     gap: 15px;
     justify-content: flex-start;
     align-items: stretch;
+  }
+
+  .rightHeader {
+    gap: 0px;
+  }
+
+  .rightHeader .articleIconContainer {
+    display: block;
   }
 
   .rightHeader .articleIcon {
