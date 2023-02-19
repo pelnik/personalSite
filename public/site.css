@@ -123,9 +123,9 @@ a {
   margin: 0px;
   padding: 0px;
   overflow: auto;
-  width: 100%;
   justify-content:center;
   gap: 40px;
+  width: 100%;
 }
 
 #portfolioMainContainer {
@@ -146,10 +146,11 @@ a {
 
 .indexTextContent {
   display: flex;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   flex-direction: column;
   max-width: 500px;
   gap: 10px;
+  width: 100%;
 }
 
 .main h1, .main p {
@@ -160,7 +161,8 @@ a {
 
 
 .indexIMGContainer {
-  flex: 0 0 250px;
+  flex: 0 1 250px;
+  width: 100%;
 }
 
 
