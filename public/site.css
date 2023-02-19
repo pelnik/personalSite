@@ -58,6 +58,7 @@ a {
 .rightHeader {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 
 .headerWrapper {
@@ -84,6 +85,11 @@ a {
   height: 2.5em;
   width: 2.5em;
   display: none;
+}
+
+#aboutIcon {
+  height: 2.75em;
+  width: 2.75em;
 }
 
 
@@ -171,8 +177,16 @@ a {
   grid-column: 2;
 }
 
+.rightFlexIMG {
+  max-width: 300px;
+  min-width: none;
+  width: 100%;
+}
+
 
 .aboutIMGContainer {
+  grid-row: 1;
+  grid-column: 2;
   flex: 0 0 250px;
   display: flex;
   flex-direction: column;
@@ -182,19 +196,16 @@ a {
 
 
 .professionalPicMain {
-  max-width: 400px;
   border-radius: 45%;
-  min-width: none;
-  width: 100%;
 }
 
 #aboutColoradoPic {
-  width: 600px;
+  max-width: 600px;
   border-radius: 5px;
 }
 
 #aboutKickballPic {
-  width: 600px;
+  max-width: 600px;
   border-radius: 5px;
 }
 
