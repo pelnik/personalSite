@@ -4,8 +4,8 @@ const http = require('http');
 const fs = require('fs');
 
 const app = express();
-const PORT = 80;
-const sshPORT = 443;
+const PORT = 3080;
+const sshPORT = 3443;
 
 const options = {
   key: fs.readFileSync('Keys/key.pem'),

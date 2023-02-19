@@ -1,11 +1,19 @@
+:root {
+  --myLightGray: #D4D4D4;
+  --myLightBrown: #BF9E93;
+  --myLightBlue: #4E72A3;
+  --myReddishBrown: #C26D63;
+} 
+
 * {
   box-sizing: border-box;
+  margin: 0px;
 }
 
 body {
   font-family: apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
   margin: 0;
-  background-color: #D4D4D4;
+  background-color: var(--myLightGray);
   height: 100vh;
 }
 
@@ -18,22 +26,25 @@ a {
 
 .fullWindow {
   height: 100vh;
-  padding: 0px 10px 0px 10px;
+  padding: 10px;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 10px;
 }
 
-#header {
-  position: fixed;
-  top: 10px;
+
+#indexHeader {
   display: flex;
-  background-color: #BF9E93;
+  background-color: var(--myLightBrown);
   border-radius: 5px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding: 5px;
-  width: calc(100% - 20px);
   margin: 0px;
 }
 
@@ -61,7 +72,7 @@ a {
   'GRAD' 0,
   'opsz' 48;
   font-size: 2.5em;
-  color: #4E72A3;
+  color: var(--myLightBlue);
 }
 
 .rightHeader .articleIcon {
@@ -74,7 +85,7 @@ a {
 .headerItems {
   color: white;
   margin: 0px;
-  background-color: #4E72A3;
+  background-color: var(--myLightBlue);
   border-radius: 5px;
   padding: 5px 5px;
   letter-spacing: 1px;
@@ -94,12 +105,10 @@ a {
 
 .main {
   display: flex;
-  color: #C26D63;
-  padding: 10px;
+  color: var(--myReddishBrown);
   position: relative;
-  height: calc(100vh - 2rem - 30px - 2rem - 30px);
-  margin: calc(2rem + 30px) 0px calc(2rem + 30px) 0px;
   overflow: auto;
+  flex-grow: 1;
 }
 
 .mainContainer {
@@ -134,8 +143,8 @@ a {
   display: flex;
   flex: 0 1 auto;
   flex-direction: column;
-  padding: 10px;
   max-width: 500px;
+  gap: 10px;
 }
 
 .main h1, .main p {
@@ -177,15 +186,11 @@ a {
 
 
 #footer {
-  margin: 0px;
-  position: fixed;
   display: flex;
   justify-content: space-around;
   background-color: #BF9E93;
   border-radius: 5px;
-  width: calc(100% - 20px);
   padding: 5px;
-  bottom: 10px;
 }
 
 #footerIconParent {
