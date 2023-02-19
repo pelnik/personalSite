@@ -48,6 +48,17 @@ a {
   margin: 0px;
 }
 
+#aboutHeader {
+  display: flex;
+  background-color: var(--myLightBrown);
+  border-radius: 5px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  margin: 0px;
+}
+
 
 .leftHeader {
   display: flex;
