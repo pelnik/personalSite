@@ -128,7 +128,7 @@ export default class DOMManager {
       const suitValue = `${currentCard.getValue()} ${currentCard.getSuit()}`;
 
       const currentDOMCard = this.cardImages[i];
-      currentDOMCard.src = `/Media/${suitValue}.png`;
+      currentDOMCard.src = `./Media/${suitValue}.png`;
     }
   }
 
