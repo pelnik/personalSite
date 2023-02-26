@@ -5,7 +5,7 @@
   "main": "game.js",
   "scripts": {
     "start": "sudo node server.cjs",
-    "startdev": "node server.cjs",
+    "startdev": "nodemon server.cjs",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "repository": {
