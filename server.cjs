@@ -16,6 +16,10 @@ const options = {
 
 app.use(express.static('public'));
 
+app.get('/s/st', (req, res) => {
+  res.redirect('https://strangers-things-classified-ads.netlify.app');
+});
+
 http.createServer(app).listen(PORT, () => {
   console.log(`http server listing on ${PORT}`);
 });
