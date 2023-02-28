@@ -2,6 +2,7 @@ const express = require('express');
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
+const morgan = require('morgan');
 
 const app = express();
 const PORT = 3080;
@@ -14,9 +15,10 @@ const options = {
   ca: fs.readFileSync('Keys/pelnik_dev.ca-bundle'),
 };
 
+app.use(morgan('dev'));
 app.use(express.static('public'));
 
-app.get('/s/st', (req, res) => {
+app.get('/sh/str', (req, res) => {
   res.redirect('https://strangers-things-classified-ads.netlify.app');
 });
 
