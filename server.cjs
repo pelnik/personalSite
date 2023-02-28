@@ -18,7 +18,7 @@ const options = {
 app.use(morgan('dev'));
 app.use(express.static('public'));
 
-app.get('/sh/str', (req, res) => {
+app.get('/stranger', (req, res) => {
   res.redirect('https://strangers-things-classified-ads.netlify.app');
 });
 
