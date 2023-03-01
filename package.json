@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "react-scripts build",
+    "build-dev": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "react-scripts start",
-    "start-dev": "DISABLE_ESLINT_PLUGIN=true react-scripts start"
+    "start-dev": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
+    "start-express": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,7 @@
     "url": "https://github.com/pelnik/personalSite/issues"
   },
   "dependencies": {
+    "express": "^4.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.2",
@@ -33,7 +36,8 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "nodemon": "^2.0.20"
   },
   "browserslist": {
     "production": [
