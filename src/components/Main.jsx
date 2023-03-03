@@ -1,6 +1,11 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { Home, About, Header, Footer } from '.';
+import {
+  Home,
+  About,
+  Header,
+  Footer,
+} from '.';
 
 function Main() {
   const homeRoutes = ['*', '/about', '/portfolio'];
@@ -8,14 +13,26 @@ function Main() {
   return (
     <div className="fullWindow">
       <Routes>
-        {homeRoutes.map((route, idx) => <Route path={route} element={<Header />} key={`homeRouteHeader ${idx}`} />)}
+        {homeRoutes.map((route, idx) => (
+          <Route
+            path={route}
+            element={<Header />}
+            key={`homeRouteHeader ${idx}`}
+          />
+        ))}
       </Routes>
       <Routes>
         <Route path="*" element={<Home />} />
         <Route path="/about" element={<About />} />
       </Routes>
       <Routes>
-        {homeRoutes.map((route, idx) => <Route path={route} element={<Footer />} key={`homeRouteFooter ${idx}`} />)}
+        {homeRoutes.map((route, idx) => (
+          <Route
+            path={route}
+            element={<Footer />}
+            key={`homeRouteFooter ${idx}`}
+          />
+        ))}
       </Routes>
     </div>
   );
