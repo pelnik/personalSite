@@ -8,13 +8,13 @@ function About() {
           <div className="indexTextContent">
             <h1>About me</h1>
             <p>
-              I'm a web software engineer open to relocating and working
+              I&apos;m a web software engineer open to relocating and working
               on-site or remotely. I previously received my chemical
               engineering degree and went to work with an energy company in
               Tulsa. While there, I found my passion for technology systems,
               initially starting with business intelligence reports where I
-              created automated reporting from various sytems. I have since
-              worked on "low-code" user interface platforms to generate online
+              created automated reporting from various systems. I have since
+              worked on &quot; user interface platforms to generate online
               user entry forms, have built automation systems at Oracle for a
               federal contract deliverables tracking system, and have coded in
               the data language SAS and SQL full-time, as well as Power Query
@@ -28,7 +28,7 @@ function About() {
             <p>
               In my free time, I like doing anything active, running and
               biking particularly. If I get a chance I will take a trip to go
-              hiking since there is not a lot near me. I'm in a kickball rec
+              hiking since there is not a lot near me. I`&apos;`m in a kickball rec
               league and enjoy a good trivia night with friends.
             </p>
             <p>
@@ -38,13 +38,13 @@ function About() {
           </div>
         </div>
         <div className="aboutIMGContainer">
-          <img src="Media/Professional pic.jpg" className="professionalPicMain rightFlexIMG" />
-          <img src="Media/about_Colorado_pic.jpeg" className="rightFlexIMG" id="aboutColoradoPic" />
-          <img src="Media/about_kickball_pic.JPG" className="rightFlexIMG" id="aboutKickballPic" />
+          <img src="/Media/main/Professional pic.jpg" className="professionalPicMain rightFlexIMG" alt="Matt Pelnik professional pic" />
+          <img src="/Media/main/about_Colorado_pic.jpeg" className="rightFlexIMG" id="aboutColoradoPic" alt="Colorado trip" />
+          <img src="/Media/main/about_kickball_pic.JPG" className="rightFlexIMG" id="aboutKickballPic" alt="kickball team" />
         </div>
       </div>
     </main>
-  )
+  );
 }
 
 export default About;
