@@ -2,6 +2,7 @@ const express = require('express');
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
+const path = require('path');
 const morgan = require('morgan');
 
 const PORT = 3080;
@@ -22,6 +23,11 @@ app.use(express.static('build'));
 app.get('/stranger', (req, res) => {
   res.redirect('https://strangers-things-classified-ads.netlify.app');
 });
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve('build', 'index.html'))
+}
+);
 
 http.createServer(app).listen(PORT, () => {
   console.log(`http server listing on ${PORT}`);
