@@ -1,12 +1,31 @@
 const express = require('express');
+const https = require('https');
+const http = require('http');
+const fs = require('fs');
 const morgan = require('morgan');
-const PORT = 3000;
+
+const PORT = 3080;
+const sshPORT = 3443;
 
 const app = express();
 
-app.use(morgan('common'));
+const options = {
+  key: fs.readFileSync('Keys/key.pem'),
+  cert: fs.readFileSync('Keys/pelnik_dev.crt'),
+  passphrase: fs.readFileSync('Keys/passphrase.txt', 'utf8'),
+  ca: fs.readFileSync('Keys/pelnik_dev.ca-bundle'),
+};
+
+app.use(morgan('combined'));
 app.use(express.static('build'));
 
-app.listen(PORT, () => {
-  console.log(`server listening on port ${PORT}`);
+app.get('/stranger', (req, res) => {
+  res.redirect('https://strangers-things-classified-ads.netlify.app');
+});
+
+http.createServer(app).listen(PORT, () => {
+  console.log(`http server listing on ${PORT}`);
+});
+https.createServer(options, app).listen(sshPORT, () => {
+  console.log(`https server listing on ${sshPORT}`);
 });
