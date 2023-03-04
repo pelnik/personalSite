@@ -20,7 +20,8 @@
         "import/no-extraneous-dependencies": "off",
         "react/jsx-filename-extension": "off",
         "import/no-cycle": "off",
-        "react/no-array-index-key": "off"
+        "react/no-array-index-key": "off",
+        "import/extensions": "off"
     },
     "settings": {
         "import/resolver": {
