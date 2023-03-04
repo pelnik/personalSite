@@ -14,9 +14,9 @@ function About() {
               Tulsa. While there, I found my passion for technology systems,
               initially starting with business intelligence reports where I
               created automated reporting from various systems. I have since
-              worked on &quot; user interface platforms to generate online
-              user entry forms, have built automation systems at Oracle for a
-              federal contract deliverables tracking system, and have coded in
+              worked on &quot;low code&quot; user interface platforms to generate online
+              user entry forms, built automation systems at Oracle for a
+              federal contract deliverables tracking system, and coded in
               the data language SAS and SQL full-time, as well as Power Query
               M and DAX.
             </p>
@@ -28,7 +28,7 @@ function About() {
             <p>
               In my free time, I like doing anything active, running and
               biking particularly. If I get a chance I will take a trip to go
-              hiking since there is not a lot near me. I`&apos;`m in a kickball rec
+              hiking since there is not a lot near me. I&apos;m in a kickball rec
               league and enjoy a good trivia night with friends.
             </p>
             <p>
