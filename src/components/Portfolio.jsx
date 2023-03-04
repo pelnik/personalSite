@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'react-router-dom';
 
 function Portfolio() {
   return (
@@ -17,7 +18,10 @@ function Portfolio() {
               target="_blank"
               rel="noreferrer"
             >
-              <img src="Media/Strangers_Things_screenshot.png" />
+              <img
+                src="/Media/main/Strangers_Things_screenshot.png"
+                alt="Strangers Things screenshot"
+              />
               <p>
                 A pair project in the spirit of Craigslist coded in React using
                 APIs allowing for user authentication, registration, making
@@ -40,7 +44,10 @@ function Portfolio() {
           </div>
           <div className="project">
             <a href="./portfolio/snake/index.html" target="_blank">
-              <img src="Media/snake-screenshot.png" />
+              <img
+                src="/Media/main/snake-screenshot.png"
+                alt="snake game screenshot"
+              />
               <p>
                 The classic game coded in vanilla Javascript. The game has
                 several difficulties, score tracking, and scales to multiple
@@ -61,13 +68,17 @@ function Portfolio() {
             </p>
           </div>
           <div className="project">
-            <a href="https://pelnik-zoo-clicker.netlify.app" target="_blank">
-              <img src="Media/Zoo Clicker.jpg" />
+            <a
+              href="https://pelnik-zoo-clicker.netlify.app"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img src="/Media/main/Zoo Clicker.jpg" alt="Zoo clicker game screenshot" />
               <p>
                 An interactive game in vanilla JS, HTML, and CSS that lets the
                 user gain more points as they click. It has a mobile view as
                 well as a standard desktop view with a seamless responsive
-                design. The user can buy producers with the currency they've
+                design. The user can buy producers with the currency they&apos;ve
                 acquired, generating more clicks, and unlocking more animals.
               </p>
             </a>
@@ -82,11 +93,11 @@ function Portfolio() {
           </div>
           <div className="project">
             <a href="/portfolio/DeucesWild/index.html" target="_blank">
-              <img src="/Media/deucesWildPic.jpg" />
+              <img src="/Media/main/deucesWildPic.jpg" alt="Deuces Wild screenshot" />
               <p>
                 This is a card game inspired by a trip with friends to Las
                 Vegas. While there, one theme that kept coming up was one
-                friend's obsession with Deuces Wild, and by the end of the trip,
+                friend&apos;s obsession with Deuces Wild, and by the end of the trip,
                 everyone had played it. This game is coded in vanilla
                 Javascript, HTML, and CSS. It is completely modular, object
                 based, and it tracks your hand history.
@@ -102,8 +113,8 @@ function Portfolio() {
             </p>
           </div>
           <div className="project">
-            <a href="https://qwirty-store-page.netlify.app/" target="_blank">
-              <img src="Media/site-qwirty.png" />
+            <a href="https://qwirty-store-page.netlify.app/" target="_blank" rel="noreferrer">
+              <img src="/Media/main/site-qwirty.png" alt="qwirty site screenshot" />
               <p>
                 For this project, the goal was to closely replicate a provided
                 template for a store page using just HTML and CSS. The page

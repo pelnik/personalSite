@@ -5,6 +5,7 @@ import {
   About,
   Header,
   Footer,
+  Portfolio,
 } from '.';
 
 function Main() {
@@ -24,6 +25,7 @@ function Main() {
       <Routes>
         <Route path="*" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/portfolio" element={<Portfolio />} />
       </Routes>
       <Routes>
         {homeRoutes.map((route, idx) => (
