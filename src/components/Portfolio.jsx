@@ -1,5 +1,6 @@
 import React from 'react';
-import Link from 'react-router-dom';
+import '../css/site.css';
+import { Link } from 'react-router-dom';
 
 function Portfolio() {
   return (
@@ -43,7 +44,7 @@ function Portfolio() {
             </p>
           </div>
           <div className="project">
-            <a href="./portfolio/snake/index.html" target="_blank">
+            <Link to="/snake">
               <img
                 src="/Media/main/snake-screenshot.png"
                 alt="snake game screenshot"
@@ -57,7 +58,7 @@ function Portfolio() {
                 game is built for using arrow keys on desktop. Play a few
                 rounds!
               </p>
-            </a>
+            </Link>
             <p>
               <a
                 className="projectGithubLink"

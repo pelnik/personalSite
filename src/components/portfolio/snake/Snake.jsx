@@ -1,17 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './index.css';
+import { Link } from 'react-router-dom';
 
 function Snake() {
+  useEffect(() => {
+    const scriptTag = document.createElement('script');
+
+    scriptTag.src = '/legacyJS/snakeGame.js';
+    scriptTag.defer = true;
+    scriptTag.type = 'module';
+
+    document.body.appendChild(scriptTag);
+
+    return () => {
+      document.body.removeChild(scriptTag);
+    };
+  });
+
   return (
-    <body>
+    <div id="body">
       <div id="full-window">
         <div id="game">
           <header id="header-parent">
             <div id="header-buttons">
               <button id="home-button" type="button">
-                <a href="../../portfolio.html">
+                <Link to="/portfolio">
                   <img src="./Media/snake/home_icon.svg" alt="home icon" />
-                </a>
+                </Link>
               </button>
               <h1>Classic Snake</h1>
             </div>
@@ -22,9 +37,9 @@ function Snake() {
                 <button className="start-button-not-started" id="start-button" type="button">
                   Start
                 </button>
-                <select id="select-difficulty">
+                <select id="select-difficulty" defaultValue="Medium">
                   <option value="Easy">Difficulty: Easy</option>
-                  <option selected value="Medium">Difficulty: Medium</option>
+                  <option value="Medium">Difficulty: Medium</option>
                   <option value="Hard">Difficulty: Hard</option>
                 </select>
               </div>
@@ -62,7 +77,7 @@ function Snake() {
           </div>
         </div>
       </div>
-    </body>
+    </div>
   );
 }
 

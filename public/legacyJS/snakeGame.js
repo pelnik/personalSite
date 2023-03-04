@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import Snake from './Modules/snake.js';
 
 const largeScreenCutoff = 768;
@@ -172,10 +173,11 @@ function removeApple(index) {
   points += 1;
   pointsElement.innerText = `Points: ${points}`;
   pointsElement.classList.add('point-shake');
-  setTimeout(() => {
-    pointsElement.classList.remove('point-shake');
-  },
-  500,
+  setTimeout(
+    () => {
+      pointsElement.classList.remove('point-shake');
+    },
+    500,
   );
 
   growthIndicator = 1;
