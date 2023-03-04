@@ -1,10 +1,11 @@
 const express = require('express');
-
-const app = express();
+const morgan = require('morgan');
 const PORT = 3000;
 
+const app = express();
+
+app.use(morgan('common'));
 app.use(express.static('build'));
-app.use(express.static('public'));
 
 app.listen(PORT, () => {
   console.log(`server listening on port ${PORT}`);
