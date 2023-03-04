@@ -237,7 +237,7 @@ a {
 
 .apple-square {
   /* background-color: #FF5D4A; */
-  background-image: url('./Media/icons/red\ apple.svg');
+  background-image: url('./redapple.svg');
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;

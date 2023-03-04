@@ -6,10 +6,11 @@ import {
   Header,
   Footer,
   Portfolio,
+  Snake,
 } from '.';
 
 function Main() {
-  const homeRoutes = ['*', '/about', '/portfolio'];
+  const homeRoutes = ['/', '/about', '/portfolio'];
 
   return (
     <div className="fullWindow">
@@ -21,11 +22,14 @@ function Main() {
             key={`homeRouteHeader ${idx}`}
           />
         ))}
+        <Route path="*" element={null} />
       </Routes>
       <Routes>
-        <Route path="*" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/snake" element={<Snake />} />
+        <Route path="*" element={null} />
       </Routes>
       <Routes>
         {homeRoutes.map((route, idx) => (
@@ -35,6 +39,7 @@ function Main() {
             key={`homeRouteFooter ${idx}`}
           />
         ))}
+        <Route path="*" element={null} />
       </Routes>
     </div>
   );
