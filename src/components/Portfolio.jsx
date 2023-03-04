@@ -70,7 +70,7 @@ function Portfolio() {
           </div>
           <div className="project">
             <a
-              href="https://pelnik-zoo-clicker.netlify.app"
+              href="/portfolio/ZooClicker/index.html"
               target="_blank"
               rel="noreferrer"
             >
