@@ -38,6 +38,8 @@ function Portfolio() {
               <a
                 className="projectGithubLink"
                 href="https://github.com/pelnik/StrangersThings"
+                target="_blank"
+                rel="noreferrer"
               >
                 Github repo
               </a>
@@ -63,6 +65,8 @@ function Portfolio() {
               <a
                 className="projectGithubLink"
                 href="https://github.com/pelnik/arcade"
+                target="_blank"
+                rel="noreferrer"
               >
                 Github repo
               </a>
@@ -91,6 +95,8 @@ function Portfolio() {
               <a
                 className="projectGithubLink"
                 href="https://github.com/pelnik/CookieClicker"
+                target="_blank"
+                rel="noreferrer"
               >
                 Github repo
               </a>
@@ -115,6 +121,8 @@ function Portfolio() {
               <a
                 className="projectGithubLink"
                 href="https://github.com/pelnik/Deuces-Wild"
+                target="_blank"
+                rel="noreferrer"
               >
                 Github repo
               </a>
@@ -142,6 +150,8 @@ function Portfolio() {
               <a
                 className="projectGithubLink"
                 href="https://github.com/pelnik/qwirtyStorePage"
+                target="_blank"
+                rel="noreferrer"
               >
                 Github repo
               </a>
