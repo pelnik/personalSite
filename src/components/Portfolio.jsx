@@ -93,7 +93,7 @@ function Portfolio() {
             </p>
           </div>
           <div className="project">
-            <Link to="/deuces">
+            <a href="/portfolio/deucesWild/index.html" target="_blank">
               <img src="/Media/main/deucesWildPic.jpg" alt="Deuces Wild screenshot" />
               <p>
                 This is a card game inspired by a trip with friends to Las
@@ -103,7 +103,7 @@ function Portfolio() {
                 Javascript, HTML, and CSS. It is completely modular, object
                 based, and it tracks your hand history.
               </p>
-            </Link>
+            </a>
             <p>
               <a
                 className="projectGithubLink"

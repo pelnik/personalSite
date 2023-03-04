@@ -2,19 +2,13 @@
 export default class DOMManager {
   constructor(gameParent) {
     this.gameParent = gameParent;
-    this.imageParent = document.querySelector('#deucesImageParent');
-    this.playGameButton = document.querySelector('#deucesPlayGame');
+    this.imageParent = document.querySelector('#imageParent');
+    this.playGameButton = document.querySelector('#playGame');
 
     this.cardImages = [];
 
-    this.cardImageIDs = [
-      'deucesFirstCard',
-      'deucesSecondCard',
-      'deucesThirdCard',
-      'deucesFourthCard',
-      'deucesFifthCard',
-    ];
-    this.submitButton = document.querySelector('#deucesSubmitButton');
+    this.cardImageIDs = ['firstCard', 'secondCard', 'thirdCard', 'fourthCard', 'fifthCard'];
+    this.submitButton = document.querySelector('#submitButton');
     this.cardsSubmitted = false;
   }
 
@@ -35,13 +29,12 @@ export default class DOMManager {
   }
 
   static listenForSidebarOpenClose() {
-    const sidebarArrow = document.querySelector('#deucesSidebarArrow');
-    const scoreSidebar = document.querySelector('.deucesScoreSidebar');
+    const sidebarArrow = document.querySelector('#sidebarArrow');
+    const scoreSidebar = document.querySelector('.scoreSidebar');
 
     function sidebarArrowClick() {
-      const fullWindow = document.getElementById('deucesFullWindowGrid');
-      const currentColumns =
-        window.getComputedStyle(fullWindow).gridTemplateColumns;
+      const fullWindow = document.getElementById('fullWindowGrid');
+      const currentColumns = window.getComputedStyle(fullWindow).gridTemplateColumns;
 
       sidebarArrow.style.visibility = 'visible';
       sidebarArrow.style.opacity = 1;
@@ -78,10 +71,10 @@ export default class DOMManager {
   }
 
   static listenForAboutClicks() {
-    const aboutButton = document.querySelector('#deucesAboutButton');
-    const aboutClose = document.querySelector('#deucesAboutClose');
-    const aboutFullTextParent = document.querySelector('#deucesAboutFullTextParent');
-    const fullWindowGrid = document.querySelector('#deucesFullWindowGrid');
+    const aboutButton = document.querySelector('#aboutButton');
+    const aboutClose = document.querySelector('#aboutClose');
+    const aboutFullTextParent = document.querySelector('#aboutFullTextParent');
+    const fullWindowGrid = document.querySelector('#fullWindowGrid');
 
     function aboutButtonClickAction() {
       aboutFullTextParent.style.visibility = 'visible';
@@ -101,16 +94,13 @@ export default class DOMManager {
   }
 
   listenForPlayGameClicks() {
-    this.playGameButton.addEventListener(
-      'click',
-      this.playGameStartup.bind(this)
-    );
+    this.playGameButton.addEventListener('click', this.playGameStartup.bind(this));
   }
 
   // We'll regenerate buttons in case multiple games are called. This will remove event listeners
   // Does not have any card based interactions
   createNewGameButtons() {
-    const oldCards = document.querySelectorAll('.deucesCardImage');
+    const oldCards = document.querySelectorAll('.cardImage');
 
     if (oldCards.length !== 0) {
       oldCards.forEach((image) => image.remove());
@@ -118,10 +108,10 @@ export default class DOMManager {
 
     for (let i = 0; i < 5; i += 1) {
       const newcardImage = document.createElement('img');
-      const imageElementParent = document.querySelector('#deucesImageParent');
+      const imageElementParent = document.querySelector('#imageParent');
 
       // Only new cards have the cardImage class
-      newcardImage.className = 'deucesUnselectedCard deucesCardImage';
+      newcardImage.className = 'unselectedCard cardImage';
       newcardImage.id = this.cardImageIDs[i];
 
       imageElementParent.appendChild(newcardImage);
@@ -138,7 +128,7 @@ export default class DOMManager {
       const suitValue = `${currentCard.getValue()} ${currentCard.getSuit()}`;
 
       const currentDOMCard = this.cardImages[i];
-      currentDOMCard.src = `/Media/deuces/${suitValue}.png`;
+      currentDOMCard.src = `./Media/${suitValue}.png`;
     }
   }
 
@@ -153,24 +143,21 @@ export default class DOMManager {
   static onClickImageChange(evt) {
     const event = evt;
 
-    if (evt.target.className === 'deucesUnselectedCard deucesCardImage') {
-      event.target.className = 'deucesSelectedCard deucesCardImage';
+    if (evt.target.className === 'unselectedCard cardImage') {
+      event.target.className = 'selectedCard cardImage';
     } else {
-      event.target.className = 'deucesUnselectedCard deucesCardImage';
+      event.target.className = 'unselectedCard cardImage';
     }
   }
 
   listenForSubmitClicks() {
-    this.submitButton.addEventListener(
-      'click',
-      this.onSubmitButtonClick.bind(this)
-    );
+    this.submitButton.addEventListener('click', this.onSubmitButtonClick.bind(this));
   }
 
   // Event listener function
   onSubmitButtonClick() {
     const selectedCards = [false, false, false, false, false];
-    const selectedDOMCards = document.querySelectorAll('.deucesSelectedCard');
+    const selectedDOMCards = document.querySelectorAll('.selectedCard');
 
     selectedDOMCards.forEach((DOMcardElement) => {
       const cardIndex = this.cardImageIDs.indexOf(`${DOMcardElement.id}`);
@@ -188,12 +175,12 @@ export default class DOMManager {
   // Called form game manager since hand access needed
   static addSubmitLabel(score) {
     const submitLabel = document.createElement('p');
-    submitLabel.className = 'deucesScoreLabel';
+    submitLabel.className = 'scoreLabel';
 
     submitLabel.textContent = `Score: ${score}`;
 
     // Get parent div for submit button
-    const parentSubmitDiv = document.querySelector('#deucesParentSubmitButton');
+    const parentSubmitDiv = document.querySelector('#parentSubmitButton');
     parentSubmitDiv.appendChild(submitLabel);
 
     return submitLabel;
@@ -203,13 +190,11 @@ export default class DOMManager {
   // Copies elemtns to the sidebar and cleans up classes and IF's so they return for DOM queries
   moveScoringElementsToSidebar(scoreLabel) {
     const imageParentClone = this.imageParent.cloneNode(true);
-    const sidebarHeaderContainer = document.querySelector(
-      '#deucesSidebarHeaderContainer'
-    );
+    const sidebarHeaderContainer = document.querySelector('#sidebarHeaderContainer');
 
     sidebarHeaderContainer.after(imageParentClone);
-    imageParentClone.className = 'deucesScoreHand';
-    imageParentClone.id = 'deucesOldImageParent';
+    imageParentClone.className = 'scoreHand';
+    imageParentClone.id = 'oldImageParent';
 
     DOMManager.changeChildClassesToOld(imageParentClone);
     DOMManager.removeOldSidebarHands();
@@ -237,7 +222,7 @@ export default class DOMManager {
   static removeOldSidebarHands() {
     const numberOfHandsToKeep = 10;
 
-    const imageParents = document.querySelectorAll('.deucesScoreHand');
+    const imageParents = document.querySelectorAll('.scoreHand');
     const numberOfHands = imageParents.length;
 
     if (numberOfHands > numberOfHandsToKeep) {

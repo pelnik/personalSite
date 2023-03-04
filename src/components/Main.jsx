@@ -1,5 +1,4 @@
 import React from 'react';
-import '../css/site.css';
 import { Routes, Route } from 'react-router-dom';
 import {
   Home,
@@ -8,7 +7,6 @@ import {
   Footer,
   Portfolio,
   Snake,
-  Deuces,
 } from '.';
 
 function Main() {
@@ -31,7 +29,6 @@ function Main() {
         <Route path="/about" element={<About />} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/snake" element={<Snake />} />
-        <Route path="/deuces" element={<Deuces />} />
         <Route path="*" element={null} />
       </Routes>
       <Routes>
