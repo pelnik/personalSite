@@ -74,13 +74,17 @@ function Portfolio() {
               target="_blank"
               rel="noreferrer"
             >
-              <img src="/Media/main/Zoo Clicker.jpg" alt="Zoo clicker game screenshot" />
+              <img
+                src="/Media/main/Zoo Clicker.jpg"
+                alt="Zoo clicker game screenshot"
+              />
               <p>
                 An interactive game in vanilla JS, HTML, and CSS that lets the
                 user gain more points as they click. It has a mobile view as
                 well as a standard desktop view with a seamless responsive
-                design. The user can buy producers with the currency they&apos;ve
-                acquired, generating more clicks, and unlocking more animals.
+                design. The user can buy producers with the currency
+                they&apos;ve acquired, generating more clicks, and unlocking
+                more animals.
               </p>
             </a>
             <p>
@@ -94,12 +98,15 @@ function Portfolio() {
           </div>
           <div className="project">
             <a href="/portfolio/deucesWild/index.html" target="_blank">
-              <img src="/Media/main/deucesWildPic.jpg" alt="Deuces Wild screenshot" />
+              <img
+                src="/Media/main/deucesWildPic.jpg"
+                alt="Deuces Wild screenshot"
+              />
               <p>
                 This is a card game inspired by a trip with friends to Las
                 Vegas. While there, one theme that kept coming up was one
-                friend&apos;s obsession with Deuces Wild, and by the end of the trip,
-                everyone had played it. This game is coded in vanilla
+                friend&apos;s obsession with Deuces Wild, and by the end of the
+                trip, everyone had played it. This game is coded in vanilla
                 Javascript, HTML, and CSS. It is completely modular, object
                 based, and it tracks your hand history.
               </p>
@@ -114,8 +121,15 @@ function Portfolio() {
             </p>
           </div>
           <div className="project">
-            <a href="https://qwirty-store-page.netlify.app/" target="_blank" rel="noreferrer">
-              <img src="/Media/main/site-qwirty.png" alt="qwirty site screenshot" />
+            <a
+              href="/portfolio/qwirty/index.html"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src="/Media/main/qwirty-screenshot.jpg"
+                alt="qwirty site screenshot"
+              />
               <p>
                 For this project, the goal was to closely replicate a provided
                 template for a store page using just HTML and CSS. The page
@@ -124,6 +138,14 @@ function Portfolio() {
                 responsive design.
               </p>
             </a>
+            <p>
+              <a
+                className="projectGithubLink"
+                href="https://github.com/pelnik/qwirtyStorePage"
+              >
+                Github repo
+              </a>
+            </p>
           </div>
         </div>
       </div>

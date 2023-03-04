@@ -1,0 +1,40 @@
+footer {
+  display: flex;
+  flex-direction: row;
+  background-color: rgb(34, 34, 89);
+  padding: 1rem;
+  font-family: 'Dosis';
+  justify-content: center;
+}
+
+section {
+  margin-right: 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+section:last-child {
+  margin-right: 0px;
+}
+
+section h2 {
+  color: white;
+  border-bottom: solid white 1px;
+  font-size: .95em;
+  letter-spacing: 0.15rem;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+
+section a {
+  color: white;
+  font-size: 0.75em;
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-decoration: none;
+}
+
+section a:hover {
+  border-bottom: solid 1px white;
+  margin-bottom: 4px;
+}

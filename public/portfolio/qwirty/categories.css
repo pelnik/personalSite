@@ -1,0 +1,22 @@
+.categories {
+  flex: 0 0 256px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 10px 30px;
+}
+
+.categories a {
+  background-color: #44b;
+  color: white;
+  padding: 17px 10px;
+  font-family: 'Dosis';
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.categories a:hover {
+  box-shadow: 0 2px 5px -2px black;
+  filter: brightness(85%);
+}
