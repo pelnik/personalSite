@@ -10,6 +10,7 @@ function Footer() {
             className="footerIcon"
             src="/Media/main/linkedin_icon.svg"
             alt="linkedIn"
+            target="_blank"
           />
         </a>
         <a href="https://github.com/pelnik">
@@ -17,6 +18,7 @@ function Footer() {
             className="footerIcon"
             src="/Media/main/github_icon.svg"
             alt="github"
+            target="_blank"
           />
         </a>
         <a href="tel:9187982238">
