@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../css/site.css';
 
 function About() {
+  useEffect(() => {
+    document.title = 'About Me - Matthew Pelnik, Full Stack Web Software Engineer';
+  }, []);
+
   return (
     <main className="main" id="aboutMain">
       <div className="mainContainer">
@@ -9,7 +13,7 @@ function About() {
           <div className="indexTextContent">
             <h1>About me</h1>
             <p>
-              I&apos;m a web software engineer open to relocating and working
+              I&apos;m a full stack web software engineer open to relocating and working
               on-site or remotely. I previously received my chemical
               engineering degree and went to work with an energy company in
               Tulsa. While there, I found my passion for technology systems,

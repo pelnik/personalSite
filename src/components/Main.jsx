@@ -7,10 +7,12 @@ import {
   Footer,
   Portfolio,
   Snake,
+  NotFound,
 } from '.';
 
 function Main() {
   const homeRoutes = ['/', '/about', '/portfolio'];
+  const otherRoutes = ['/snake'];
 
   return (
     <div className="fullWindow">
@@ -22,14 +24,21 @@ function Main() {
             key={`homeRouteHeader ${idx}`}
           />
         ))}
-        <Route path="*" element={null} />
+        {otherRoutes.map((route, idx) => (
+          <Route
+            path={route}
+            element={null}
+            key={`otherRouteHeader ${idx}`}
+          />
+        ))}
+        <Route path="*" element={<Header />} />
       </Routes>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/snake" element={<Snake />} />
-        <Route path="*" element={null} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Routes>
         {homeRoutes.map((route, idx) => (
@@ -39,7 +48,14 @@ function Main() {
             key={`homeRouteFooter ${idx}`}
           />
         ))}
-        <Route path="*" element={null} />
+        {otherRoutes.map((route, idx) => (
+          <Route
+            path={route}
+            element={null}
+            key={`otherRouteFooter ${idx}`}
+          />
+        ))}
+        <Route path="*" element={<Footer />} />
       </Routes>
     </div>
   );

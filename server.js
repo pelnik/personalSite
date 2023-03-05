@@ -25,9 +25,8 @@ app.get('/stranger', (req, res) => {
 });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve('build', 'index.html'))
-}
-);
+  res.sendFile(path.resolve('build', 'index.html'));
+});
 
 http.createServer(app).listen(PORT, () => {
   console.log(`http server listing on ${PORT}`);

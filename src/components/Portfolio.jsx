@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../css/site.css';
 import { Link } from 'react-router-dom';
 
 function Portfolio() {
+  useEffect(() => {
+    document.title = 'My Portfolio - Matthew Pelnik, Full Stack Web Software Engineer';
+  }, []);
+
   return (
     <main className="main" id="portfolioMain">
       <div id="portfolioMainContainer">

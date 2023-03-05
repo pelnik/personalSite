@@ -289,6 +289,43 @@ a {
   color:#4E72A3;
 }
 
+#nfFullWindow {
+  flex-grow: 1;
+
+  padding: 0px 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.nfTextContent {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  gap: 10px;
+  flex-basis: 0 1 400px;
+}
+
+.nfTextContent a {
+  text-decoration: underline;
+  display: inline-block;
+}
+
+#nfErrorHeader {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+}
+
+#nf404Svg {
+  background-color: inherit;
+  color: var(--myLightBlue);
+  padding: 0p;
+  margin: 0px;
+  align-self: stretch;
+  flex-grow: 1;
+}
 
 
 @media (max-width: 768px) {

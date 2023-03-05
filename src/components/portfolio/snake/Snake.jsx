@@ -17,6 +17,10 @@ function Snake() {
     };
   });
 
+  useEffect(() => {
+    document.title = 'Classic Snake Game - Matthew Pelnik, Full Stack Web Software Engineer';
+  }, []);
+
   return (
     <div id="body">
       <div id="full-window">
