@@ -5,20 +5,26 @@ function Footer() {
   return (
     <footer id="footer">
       <div id="footerIconParent">
-        <a href="https://www.linkedin.com/in/mpelnik/">
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.linkedin.com/in/mpelnik/"
+        >
           <img
             className="footerIcon"
             src="/Media/main/linkedin_icon.svg"
             alt="linkedIn"
-            target="_blank"
           />
         </a>
-        <a href="https://github.com/pelnik">
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://github.com/pelnik"
+        >
           <img
             className="footerIcon"
             src="/Media/main/github_icon.svg"
             alt="github"
-            target="_blank"
           />
         </a>
         <a href="tel:9187982238">
