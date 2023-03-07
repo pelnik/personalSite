@@ -24,7 +24,7 @@
         "react/no-array-index-key": "off",
         "import/extensions": "off",
         "no-unused-vars": "off",
-        "no-console": "off",
+        "no-console": "off"
     },
     "settings": {
         "import/resolver": {
