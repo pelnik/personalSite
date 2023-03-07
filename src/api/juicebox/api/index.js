@@ -47,11 +47,4 @@ jbRouter.use('/users', usersRouter);
 jbRouter.use('/posts', postRouter);
 jbRouter.use('/tags', tagsRouter);
 
-jbRouter.use((error, req, res, next) => {
-  res.send({
-    name: error.name,
-    message: error.message,
-  });
-});
-
 module.exports = jbRouter;
