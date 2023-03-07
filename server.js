@@ -4,6 +4,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const morgan = require('morgan');
+const apiRouter = require('./src/api');
+const { client } = require('./src/api/juicebox/db');
 
 const PORT = 3080;
 const sshPORT = 3443;
@@ -18,15 +20,20 @@ const options = {
 };
 
 app.use(morgan('combined'));
-app.use(express.static('build'));
+
+app.use('/api', apiRouter);
 
 app.get('/stranger', (req, res) => {
   res.redirect('https://strangers-things-classified-ads.netlify.app');
 });
 
+app.use(express.static('build'));
+
 app.get('*', (req, res) => {
   res.sendFile(path.resolve('build', 'index.html'));
 });
+
+client.connect();
 
 http.createServer(app).listen(PORT, () => {
   console.log(`http server listing on ${PORT}`);
