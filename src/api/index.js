@@ -3,6 +3,7 @@ const jbRouter = require('./juicebox/api');
 
 const apiRouter = express.Router();
 
+apiRouter.use(express.json());
 apiRouter.use('/juicebox', jbRouter);
 
 apiRouter.use('*', (req, res, next) => {
