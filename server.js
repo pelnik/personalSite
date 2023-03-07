@@ -6,6 +6,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const morgan = require('morgan');
+const cors = require('cors');
 const apiRouter = require('./src/api');
 const { client } = require('./src/api/juicebox/db');
 
@@ -13,6 +14,7 @@ const PORT = 80;
 const sshPORT = 443;
 
 const app = express();
+app.use(cors());
 
 const options = {
   key: fs.readFileSync('Keys/key.pem'),
