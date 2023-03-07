@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const https = require('https');
 const http = require('http');
@@ -7,8 +9,8 @@ const morgan = require('morgan');
 const apiRouter = require('./src/api');
 const { client } = require('./src/api/juicebox/db');
 
-const PORT = 3080;
-const sshPORT = 3443;
+const PORT = 80;
+const sshPORT = 443;
 
 const app = express();
 
