@@ -1,18 +1,11 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import {
-  Home,
-  About,
-  Header,
-  Footer,
-  Portfolio,
-  Snake,
-  NotFound,
-} from '.';
+import { Home, About, Header, Footer, Portfolio, Snake, NotFound } from '.';
+import { JuiceboxMain } from '../fullReactProjects/juicebox/components';
 
 function Main() {
   const homeRoutes = ['/', '/about', '/portfolio'];
-  const otherRoutes = ['/snake'];
+  const otherRoutes = ['/snake', '/juicebox/*'];
 
   return (
     <div className="fullWindow">
@@ -25,11 +18,7 @@ function Main() {
           />
         ))}
         {otherRoutes.map((route, idx) => (
-          <Route
-            path={route}
-            element={null}
-            key={`otherRouteHeader ${idx}`}
-          />
+          <Route path={route} element={null} key={`otherRouteHeader ${idx}`} />
         ))}
         <Route path="*" element={<Header />} />
       </Routes>
@@ -38,6 +27,7 @@ function Main() {
         <Route path="/about" element={<About />} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/snake" element={<Snake />} />
+        <Route path="/juicebox/*" element={<JuiceboxMain />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Routes>
@@ -49,11 +39,7 @@ function Main() {
           />
         ))}
         {otherRoutes.map((route, idx) => (
-          <Route
-            path={route}
-            element={null}
-            key={`otherRouteFooter ${idx}`}
-          />
+          <Route path={route} element={null} key={`otherRouteFooter ${idx}`} />
         ))}
         <Route path="*" element={<Footer />} />
       </Routes>
