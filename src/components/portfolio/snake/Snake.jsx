@@ -23,7 +23,7 @@ function Snake() {
   }, []);
 
   return (
-    <div id="body">
+    <div id="snake-body">
       <div id="snake-full-window">
         <div id="game">
           <header id="header-parent">
