@@ -1,9 +1,3 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 #jbMainContainer {
     --grayGreen: #9BC2BF;
     --lightBlue: #73FFF3;
@@ -12,12 +6,14 @@
     --lightPurple: #D9E2FA;
 }
 
-#jbMainContainer * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    /* font-family: apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-    ; */
+
+#jbMainContainer {
+    display: flex;
+    flex-direction: column;
+
+    background-color: #ffe4c4;
+    height: 100vh;
+    width: 100vw;
     font-family: 'roboto', apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
     ;
 }
@@ -33,17 +29,6 @@
     padding-right: 10px;
 }
 
-#jbMainContainer {
-    display: flex;
-    flex-direction: column;
-
-    background-color: #ffe4c4;
-
-
-    height: 100vh;
-    width: 100vw;
-
-}
 
 #jbMainContainer #full-post-page {
     display: flex;
