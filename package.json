@@ -8,9 +8,9 @@
     "build:dev": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "react-scripts start",
-    "start:dev": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
-    "start:express": "nodemon server.js",
-    "start:prod": "sudo node server.js",
+    "start:dev": "DISABLE_ESLINT_PLUGIN=true NODE_ENV=development nodemon server.js & react-scripts start",
+    "start:express": "NODE_ENV=development nodemon server.js",
+    "start:prod": "NODE_ENV=production sudo node server.js",
     "seed:dev": "nodemon ./src/api/juicebox/db/seed.js",
     "seed": "node ./src/api/juicebox/db/seed.js"
   },

@@ -10,8 +10,13 @@ const cors = require('cors');
 const apiRouter = require('./src/api');
 const { client } = require('./src/api/juicebox/db');
 
-const PORT = 80;
-const sshPORT = 443;
+let PORT = 80;
+let sshPORT = 443;
+
+if (process.env.NODE_ENV === 'development') {
+  PORT = 3000;
+  sshPORT = 3443;
+}
 
 const app = express();
 app.use(cors());
