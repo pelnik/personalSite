@@ -98,7 +98,7 @@ postRouter.patch(
     try {
       const originalPost = await getPostById(postId);
 
-      if (originalPost.id === req.user.id) {
+      if (originalPost.author.id === req.user.id) {
         const updatedPost = await updatePost(postId, updateFields);
 
         updatedPost.isAuthor = false;
