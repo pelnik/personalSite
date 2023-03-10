@@ -1,9 +1,7 @@
 const express = require('express');
-const {
-  getAllPosts, createPost, updatePost, getPostById,
-} = require('../db');
-
 const postRouter = express.Router();
+
+const { getAllPosts, createPost, updatePost, getPostById } = require('../db');
 const { requireUser, requireActiveUser } = require('./utils');
 
 postRouter.use((req, res, next) => {
@@ -27,6 +25,12 @@ postRouter.post('/', requireUser, requireActiveUser, async (req, res, next) => {
 
     const post = await createPost(postData);
     if (post) {
+      post.isAuthor = false;
+
+      if (req.user && req.user.id === post.author.id) {
+        post.isAuthor = true;
+      }
+
       res.send({ post });
     } else {
       next({
@@ -45,7 +49,12 @@ postRouter.get('/', async (req, res, next) => {
 
     console.log(allPosts);
     const posts = allPosts.filter((post) => {
-      console.log(post);
+      post.isAuthor = false;
+
+      if (req.user && req.user.id === post.author.id) {
+        post.isAuthor = true;
+      }
+
       if (post.active === true && post.author.active === true) {
         return true;
       }
@@ -91,6 +100,13 @@ postRouter.patch(
 
       if (originalPost.id === req.user.id) {
         const updatedPost = await updatePost(postId, updateFields);
+
+        updatedPost.isAuthor = false;
+
+        if (req.user && req.user.id === updatedPost.author.id) {
+          updatedPost.isAuthor = true;
+        }
+
         res.send({ post: updatedPost });
       } else {
         next({
