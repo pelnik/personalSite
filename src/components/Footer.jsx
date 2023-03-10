@@ -16,11 +16,7 @@ function Footer() {
             alt="linkedIn"
           />
         </a>
-        <a
-          target="_blank"
-          rel="noreferrer"
-          href="https://github.com/pelnik"
-        >
+        <a target="_blank" rel="noreferrer" href="https://github.com/pelnik">
           <img
             className="footerIcon"
             src="/Media/main/github_icon.svg"
