@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Header, Footer } from '..';
 
 function JuiceboxDoc() {
+  useEffect(() => {
+    document.title = `JuiceBox API Documentation -
+      Matthew Pelnik, Full Stack Web Software Engineer`;
+  }, []);
+
   return (
     <div className="siteFullWindow">
       <Header />

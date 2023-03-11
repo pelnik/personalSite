@@ -24,6 +24,9 @@ function Main() {
   useEffect(() => {
     const localToken = getToken();
     setToken(localToken);
+
+    document.title = `JuiceBox Social - A social media site project -
+      Matthew Pelnik, Full Stack Web Software Engineer`;
   }, []);
 
   return (
