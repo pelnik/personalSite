@@ -22,6 +22,43 @@ function Portfolio() {
           </p>
           <div className="projectContainer">
             <div className="project">
+              <Link to="/api/juicebox">
+                <img
+                  src="/Media/main/juicebox-back-end.jpg"
+                  alt="Juicebox back end screenshot"
+                />
+                <p>
+                  For this pair project, we developed an API for a social media
+                  site using Express. The site has a Postgres database back end
+                  that the server allows communication to through the back end.
+                  JSON Web Tokens are used for stateless user authentication, as
+                  opposed to implementing user sessions and verification for
+                  each user.
+                </p>
+                <p>
+                  Several features typical of a site of this nature are built
+                  into the API, such as user registration, login, the ability to
+                  see posts with or without authorization, edit and create
+                  posts, and the ability to add tags to posts and retrieve posts
+                  by those tags.
+                </p>
+                <p>
+                  The documentation linked has several cURL commands you can use
+                  to test the API.
+                </p>
+              </Link>
+              <p>
+                <a
+                  className="projectGithubLink"
+                  href="https://github.com/pelnik/juicebox"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Github repo
+                </a>
+              </p>
+            </div>
+            <div className="project">
               <Link to="/juicebox">
                 <img
                   src="/Media/main/juicebox-front-end.jpg"
@@ -42,39 +79,7 @@ function Portfolio() {
               <p>
                 <a
                   className="projectGithubLink"
-                  href="https://github.com/pelnik/juicebox"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Github repo
-                </a>
-              </p>
-            </div>
-            <div className="project">
-              <a
-                href="https://strangers-things-classified-ads.netlify.app"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <img
-                  src="/Media/main/Strangers_Things_screenshot.png"
-                  alt="Strangers Things screenshot"
-                />
-                <p>
-                  A pair project in the spirit of Craigslist coded in React
-                  using APIs allowing for user authentication, registration,
-                  making posts, messaging, and more. The site has a responsive
-                  desktop and mobile view, and the ads are posted by my cohort
-                  and anyone else with access to appropriate sites or APIs. The
-                  site also employs routing so users can access sections of the
-                  site directly. Feel free to register a user and experiment
-                  with the persistent posting and messaging capabilities!
-                </p>
-              </a>
-              <p>
-                <a
-                  className="projectGithubLink"
-                  href="https://github.com/pelnik/StrangersThings"
+                  href="https://github.com/pelnik/JuiceboxFrontEnd"
                   target="_blank"
                   rel="noreferrer"
                 >

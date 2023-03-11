@@ -34,8 +34,8 @@ function JuiceboxDoc() {
                 <br />
                 <br />
                 <span className="important">
-                  For values in curly braces, &#91;&#93;, you will need to use
-                  your own value. Most commonly usernames and tokens.
+                  For values in square brackets, &#91;&#93;, you will need to
+                  use your own value. Most commonly usernames and tokens.
                 </span>
               </p>
               <hr className="api-rule" />
@@ -43,7 +43,8 @@ function JuiceboxDoc() {
               <p className="jbCode">pelnik.dev/api/juicebox/register</p>
               <p className="jbText">
                 You can get posts without a user token, but to do most things,
-                first you will need a user token.
+                first you will need a user token. To register a user, you will
+                need to send a username, password, name, and location.
               </p>
               <p className="jbCurl">
                 curl https://pelnik.dev/api/juicebox/users/register -X POST -H
@@ -53,6 +54,7 @@ function JuiceboxDoc() {
                 &quot;name&quot;: &quot;&#91;Billy&#93;&quot;,
                 &quot;location&quot;: &quot;&#91;Kansas&#93;&quot; &#125;&apos;
               </p>
+              <p className="jbText">More to come!</p>
             </div>
           </div>
         </div>
