@@ -18,6 +18,7 @@
   --myLightBrown: #BF9E93;
   --myLightBlue: #4E72A3;
   --myReddishBrown: #C26D63;
+  --blue: #ADC0DB;;
   font-family: apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
 
   height: 100vh;
@@ -327,6 +328,30 @@
   margin: 0px;
   align-self: stretch;
   flex-grow: 1;
+}
+
+.siteFullWindow #jb-main-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.siteFullWindow #jb-main-container .jbText {
+  
+}
+
+.siteFullWindow #jb-main-container .jbCode {
+  background-color: var(--myLightGray);
+  font-family:'Courier New', Courier, monospace;
+  border: solid 2px var(--myLightBrown);
+  color: var(--myReddishBrown);
+  font-weight: bold;
+}
+
+.siteFullWindow #jb-main-container .jbCurl {
+  font-family:'Courier New', Courier, monospace;
+  background-color: var(--myLightBlue);
+  color: white;
 }
 
 
