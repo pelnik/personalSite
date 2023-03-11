@@ -39,6 +39,12 @@
   align-items: center;
 }
 
+.siteFullWindow .important {
+  color: red;
+  background-color: var(--myLightGray);
+  font-weight: bold;
+  text-decoration: underline;
+}
 
 
 .siteFullWindow .header {
@@ -352,6 +358,14 @@
   font-family:'Courier New', Courier, monospace;
   background-color: var(--myLightBlue);
   color: white;
+}
+
+.siteFullWindow .api-rule {
+  margin: 10px 0px;
+}
+
+.siteFullWindow .api-text-content {
+  max-width: 600px;
 }
 
 
