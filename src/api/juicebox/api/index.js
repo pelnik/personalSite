@@ -1,9 +1,16 @@
 const express = require('express');
+const path = require('path');
+
 const jwt = require('jsonwebtoken');
 const { getUserById } = require('../db');
 
 const jbRouter = express.Router();
 const { JWT_SECRET } = process.env;
+
+// Send docs for base path
+jbRouter.get('/', (req, res, next) => {
+  res.sendFile(path.resolve('build', 'index.html'));
+});
 
 jbRouter.use(async (req, res, next) => {
   const prefix = 'Bearer ';

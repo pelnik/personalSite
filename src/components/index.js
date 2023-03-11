@@ -7,3 +7,4 @@ export { default as Footer } from './Footer';
 export { default as Snake } from './portfolio/snake/Snake';
 export { default as NotFound } from './NotFound/NotFound';
 export { default as ErrorIcon } from './NotFound/ErrorIcon';
+export { default as JuiceboxDoc } from './apiDocs/JuiceboxDoc';
