@@ -13,7 +13,7 @@ function Home() {
       <Header />
       <div className="main" id="indexMain">
         <div className="mainContainer">
-          <div id="indexTextContentContainer">
+          <div className="textContentContainer" id="indexTextContentContainer">
             <div className="indexTextContent">
               <h1>👋 Welcome to my page!</h1>
               <p>

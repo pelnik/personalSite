@@ -151,7 +151,7 @@
   align-content: flex-start;
 }
 
-.siteFullWindow #indexTextContentContainer {
+.siteFullWindow .textContentContainer {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
