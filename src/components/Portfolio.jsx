@@ -70,12 +70,12 @@ function Portfolio() {
                   We implemented the popular Material UI React framework to
                   allow for quick implementation of advanced UI features for
                   form input and other visual components.
-                  <p>
-                    The front end allows the user to use the features described
-                    in the backend section, such as registering a user, logging
-                    in, creating a post, editing, and deleting. Register a user
-                    and play around in the site!
-                  </p>
+                </p>
+                <p>
+                  The front end allows the user to use the features described in
+                  the backend section, such as registering a user, logging in,
+                  creating a post, editing, and deleting. Register a user and
+                  play around in the site!
                 </p>
               </Link>
               <p>

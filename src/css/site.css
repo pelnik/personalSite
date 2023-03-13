@@ -143,6 +143,10 @@
   column-gap: 40px;
 }
 
+.siteFullWindow #aboutMainContainer {
+  justify-content: center;
+}
+
 .siteFullWindow #portfolioMainContainer {
   flex: 1 0 auto;
   display:flex;
@@ -178,6 +182,11 @@
   background-color: #ADC0DB;
   border-radius: 5px;
   padding: 5px;
+}
+
+.siteFullWindow #indexTextContentContainer {
+  display: flex;
+  justify-content: flex-end;
 }
 
 

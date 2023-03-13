@@ -12,7 +12,7 @@ function About() {
     <div className="siteFullWindow">
       <Header />
       <div className="main" id="aboutMain">
-        <div className="mainContainer">
+        <div className="mainContainer" id="aboutMainContainer">
           <div id="indexTextContentContainer">
             <div className="indexTextContent">
               <h1>About me</h1>
