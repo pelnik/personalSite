@@ -6,7 +6,7 @@
   "scripts": {
     "build": "react-scripts build",
     "start": "react-scripts start",
-    "start:dev": "NODE_ENV=development nodemon server.js & react-scripts start",
+    "start:dev": "NODE_ENV=development nodemon server.js",
     "start:express": "NODE_ENV=development nodemon server.js",
     "start:prod": "NODE_ENV=production sudo node server.js",
     "start:prod:full": "NODE_ENV=production git pull && npm install && react-scripts build && sudo node server.js",
