@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
-import { getPosts, getMyData } from "../../api-adapter";
-import { IndividualPost, PostSubmission, Messages } from "..";
-import { Logo } from "../../Media";
+import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { getPosts, getMyData } from '../../api-adapter';
+import { IndividualPost, PostSubmission, Messages } from '..';
+import { Logo } from '../../Media';
 
 function Posts({ userToken, postFilter }) {
   const [posts, setPosts] = useState([]);
@@ -45,7 +45,7 @@ function Posts({ userToken, postFilter }) {
       <div id="post-page-container">
         <div className="generic-flex-row" id="post-header-container">
           <div id="logo-container">
-            <Logo height="100%"/>
+            <Logo height="100%" />
           </div>
           <h1 id="post-header">Stranger's Things</h1>
         </div>
@@ -75,23 +75,28 @@ function Posts({ userToken, postFilter }) {
               })}
           </div>
           <p id="attribution">
-            Icon attribution to: https://handdrawngoods.com, Sabr Studio of iconfinder.com, https://elements.envato.com/all-items/deemakdaksinas,
-            papergarden of iconfinder.com, https://creativemarket.com/eucalyp, and https://creativemarket.com/BomSymbols
+            Icon attribution to: https://handdrawngoods.com, Sabr Studio of
+            iconfinder.com,
+            https://elements.envato.com/all-items/deemakdaksinas, papergarden of
+            iconfinder.com, https://creativemarket.com/eucalyp, and
+            https://creativemarket.com/BomSymbols
           </p>
         </div>
       </div>
       <Routes>
         <Route
-          path="/profile"
+          path="profile"
           element={<Messages userToken={userToken} myData={myData} />}
         />
         <Route
-          path="/submit"
-          element={<PostSubmission
-            userToken={userToken}
-            posts={posts}
-            setPosts={setPosts}
-          />}
+          path="submit"
+          element={
+            <PostSubmission
+              userToken={userToken}
+              posts={posts}
+              setPosts={setPosts}
+            />
+          }
         />
         <Route path="*" element={null} />
       </Routes>

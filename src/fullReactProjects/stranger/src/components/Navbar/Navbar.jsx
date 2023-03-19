@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import { RegisterForm, NavbarNotLoggedIn, NavbarLoggedIn, LoginForm } from "..";
+import React, { useState, useRef } from 'react';
+import { Routes, Route, Link } from 'react-router-dom';
+import { RegisterForm, NavbarNotLoggedIn, NavbarLoggedIn, LoginForm } from '..';
 import { HomeSVG, Search } from '../../Media';
 
 function Navbar({ userToken, setUserToken, setPostFilter }) {
@@ -11,7 +11,7 @@ function Navbar({ userToken, setUserToken, setPostFilter }) {
   });
 
   const inputRef = useRef(null);
-  const iconFill = "#FFFFF"
+  const iconFill = '#FFFFF';
 
   function clearAlerts() {
     const alertCopy = { ...alert };
@@ -49,9 +49,19 @@ function Navbar({ userToken, setUserToken, setPostFilter }) {
             <p>Home</p>
           </div>
         </Link>
-        <div id="searchContainer" onClick={() => {inputRef.current.focus()}}>
+        <div
+          id="searchContainer"
+          onClick={() => {
+            inputRef.current.focus();
+          }}
+        >
           <Search fill="#99D1FF" height="100%" />
-          <input type="search" id="postFilter" onChange={onSearchChange} ref={inputRef}></input>
+          <input
+            type="search"
+            id="postFilter"
+            onChange={onSearchChange}
+            ref={inputRef}
+          ></input>
         </div>
       </div>
       <div id="rightNavbar" onClick={clearAlerts}>
@@ -61,16 +71,14 @@ function Navbar({ userToken, setUserToken, setPostFilter }) {
             path="/"
             element={
               userToken ? (
-                <NavbarLoggedIn
-                  setUserToken={setUserToken}
-                />
+                <NavbarLoggedIn setUserToken={setUserToken} />
               ) : (
                 <NavbarNotLoggedIn />
               )
             }
           />
           <Route
-            path="/register"
+            path="register"
             element={
               <RegisterForm
                 userToken={userToken}
@@ -81,7 +89,7 @@ function Navbar({ userToken, setUserToken, setPostFilter }) {
             }
           />
           <Route
-            path="/login"
+            path="login"
             element={
               <LoginForm
                 userToken={userToken}
@@ -100,7 +108,7 @@ function Navbar({ userToken, setUserToken, setPostFilter }) {
                   setUserToken={setUserToken}
                 />
               ) : (
-                <NavbarNotLoggedIn iconFill={iconFill}/>
+                <NavbarNotLoggedIn iconFill={iconFill} />
               )
             }
           />

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Navbar, Posts } from '.';
 import { checkLocalStorageToken } from '../utils';
+import '../../../../css/stranger.css';
 
 function Main() {
   const [userToken, setUserToken] = useState(null);

@@ -1,18 +1,7 @@
-#strangerMain :root {
-  --lightYellow: #FAF7E1;
-  --blue: #99D1FF;
-  --lightPink: #F3C8F7;
-  --brightPink: #EE7FF9;
-  --darkBlue: #90C5F0;
-}
-
 #strangerMain * {
   margin: 0;
   box-sizing: border-box;
   border-radius: 5px;
-  background-color: var(--lightYellow);
-  font-family: apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-  height: 100vh;
 }
 
 
@@ -45,11 +34,18 @@
 }
 
 #strangerMain {
+  --lightYellow: #FAF7E1;
+  --blue: #99D1FF;
+  --lightPink: #F3C8F7;
+  --brightPink: #EE7FF9;
+  --darkBlue: #90C5F0;
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr;
   height: 100vh;
   width: 100vw;
+  background-color: var(--lightYellow);
+  font-family: apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
 }
 
 
