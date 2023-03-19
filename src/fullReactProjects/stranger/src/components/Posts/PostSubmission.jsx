@@ -1,18 +1,14 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IndividualPostSubmissionDetail } from "..";
-import { postSubmission } from "../../api-adapter/index.js";
+import { IndividualPostSubmissionDetail } from '..';
+import { postSubmission } from '../../api-adapter/index.js';
 
-function PostSubmission({
-  userToken,
-  posts,
-  setPosts,
-}) {
+function PostSubmission({ userToken, posts, setPosts }) {
   const defaultSubmissionDetails = {
-    title: "",
-    description: "",
-    price: "",
-    location: "",
+    title: '',
+    description: '',
+    price: '',
+    location: '',
     willDeliver: false,
   };
 
@@ -36,31 +32,30 @@ function PostSubmission({
   async function handlePostRequest() {
     try {
       const response = await postSubmission(submissionDetails, userToken);
-      
 
       const post = response.data.post;
 
-      if (response.success === true ) {
+      if (response.success === true) {
         setSubmissionDetails(defaultSubmissionDetails);
-        
+
         const postsClone = [...posts];
-        postsClone.push(post)
-        setPosts(postsClone)
+        postsClone.push(post);
+        setPosts(postsClone);
       }
-    } catch(err) {
+    } catch (err) {
       console.error(err);
     }
   }
 
   function onChangeDetail(evt, key) {
     const value =
-      evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
+      evt.target.type === 'checkbox' ? evt.target.checked : evt.target.value;
 
     updateSubmission(key, value, submissionDetails, setSubmissionDetails);
   }
 
   function onClickClose() {
-    navigate('/');
+    navigate('/stranger');
   }
 
   function onSubmitPost(evt) {
@@ -68,12 +63,14 @@ function PostSubmission({
     handlePostRequest();
   }
 
-  return (
-    userToken === null
-    ? null
-    : <div className="sidebar" id="post-submission-parent">
+  return userToken === null ? null : (
+    <div className="sidebar" id="post-submission-parent">
       <div className="sidebar-content-container" id="post-submission-parent">
-        <button className="sidebar-close" id="close-submission-page" onClick={onClickClose}>
+        <button
+          className="sidebar-close"
+          id="close-submission-page"
+          onClick={onClickClose}
+        >
           x
         </button>
         <h1 className="sidebar-header"> Enter details of your post below: </h1>

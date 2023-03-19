@@ -1,28 +1,27 @@
 import React from 'react';
-import { Link, useNavigate } from'react-router-dom';
-import { removeLocalStorageToken } from'../../utils';
+import { Link, useNavigate } from 'react-router-dom';
+import { removeLocalStorageToken } from '../../utils';
 import { LogoutSVG, MessageSVG, Compose2 } from '../../Media';
 
-
-function NavbarLoggedIn({setUserToken}) {
+function NavbarLoggedIn({ setUserToken }) {
   const navigate = useNavigate();
 
   function onClickLogout() {
     removeLocalStorageToken();
     setUserToken(null);
-    navigate('/');
+    navigate('/stranger');
   }
 
   return (
     <div className="generic-flex-row" id="navbar-logged-in">
       <div className="generic-flex-row" id="logged-in-actions">
-        <Link to="/profile">
+        <Link to="/stranger/profile">
           <div className="icon-wrapper">
             <MessageSVG />
             <p>Messages</p>
           </div>
         </Link>
-        <Link to="/submit">
+        <Link to="/stranger/submit">
           <div className="icon-wrapper">
             <Compose2 height="100%" />
             <p>Submit</p>
@@ -36,8 +35,7 @@ function NavbarLoggedIn({setUserToken}) {
         </div>
       </button>
     </div>
-  )
+  );
 }
-
 
 export default NavbarLoggedIn;

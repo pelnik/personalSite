@@ -32,10 +32,6 @@ app.use(morgan('combined'));
 
 app.use('/api', apiRouter);
 
-app.get('/stranger', (req, res) => {
-  res.redirect('https://strangers-things-classified-ads.netlify.app');
-});
-
 app.use(express.static('build'));
 
 app.get('*', (req, res) => {

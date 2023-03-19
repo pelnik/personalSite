@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { login } from "../../api-adapter";
-import { writeLocalStorageToken } from "../../utils";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { login } from '../../api-adapter';
+import { writeLocalStorageToken } from '../../utils';
 
 function LoginForm({ userToken, setUserToken, alert, setAlert }) {
-  const [typedUsername, setTypedUsername] = useState("");
-  const [typedPassword, setTypedPassword] = useState("");
+  const [typedUsername, setTypedUsername] = useState('');
+  const [typedPassword, setTypedPassword] = useState('');
   const [wrongLogin, setWrongLogin] = useState(false);
 
   const navigate = useNavigate();
@@ -21,17 +21,17 @@ function LoginForm({ userToken, setUserToken, alert, setAlert }) {
       const success = response.success;
 
       if (success === false) {
-        if (response.error.name === "InvalidCredentials") {
+        if (response.error.name === 'InvalidCredentials') {
           setWrongLogin(true);
         } else {
-          console.error(response)
+          console.error(response);
         }
       } else if (success === true) {
         const token = response.data.token;
 
         setUserToken(token);
         writeLocalStorageToken(token);
-        navigate("/");
+        navigate('/stranger');
       }
     } catch (error) {
       console.error(error, response);
@@ -44,7 +44,7 @@ function LoginForm({ userToken, setUserToken, alert, setAlert }) {
         ...alert,
         userLoggedInRegister: true,
       });
-      navigate("/");
+      navigate('/stranger');
     }
   }, [userToken]);
 
@@ -57,59 +57,65 @@ function LoginForm({ userToken, setUserToken, alert, setAlert }) {
 
     loginUserToken();
 
-    setTypedUsername("");
-    setTypedPassword("");
+    setTypedUsername('');
+    setTypedPassword('');
   }
 
   function onClickParent() {
     setWrongLogin(false);
   }
 
-  return (
-    userToken !== null
-    ? <p>You're already logged in!</p>
-    : <div className="login-input-container" id="loginFormParent" onClick={onClickParent}>
-        {
-          wrongLogin
-          ? <p>Wrong username or password. Please try again.</p>
-          : null
-        }
-        <form className="login-input-container" onSubmit={onSubmitHandler} id="loginFormContainer">
-          <div id="loginUsernameContainer">
-            <label>Username:</label>
-            <input
-              type="text"
-              id="loginUsername"
-              name="loginUsername"
-              required="required"
-              minLength="5"
-              value={typedUsername}
-              onChange={(evt) => {
-                onChangeHandler(evt, setTypedUsername);
-              }}
-            />
-          </div>
-          <div className="login-input-container" id="loginPasswordContainer">
-            <label>Password:</label>
-            <input
-              type="password"
-              id="loginPassword"
-              name="loginPassword"
-              required="required"
-              autoComplete="on"
-              value={typedPassword}
-              minLength="8"
-              onChange={(evt) => {
-                onChangeHandler(evt, setTypedPassword);
-              }}
-            />
-          </div>
-          <div id="loginSubmitContainer">
-            <input type="submit" value="Login" />
-          </div>
-        </form>
-        <Link to='/'><p id="header-x">x</p></Link>
-      </div>
+  return userToken !== null ? (
+    <p>You're already logged in!</p>
+  ) : (
+    <div
+      className="login-input-container"
+      id="loginFormParent"
+      onClick={onClickParent}
+    >
+      {wrongLogin ? <p>Wrong username or password. Please try again.</p> : null}
+      <form
+        className="login-input-container"
+        onSubmit={onSubmitHandler}
+        id="loginFormContainer"
+      >
+        <div id="loginUsernameContainer">
+          <label>Username:</label>
+          <input
+            type="text"
+            id="loginUsername"
+            name="loginUsername"
+            required="required"
+            minLength="5"
+            value={typedUsername}
+            onChange={(evt) => {
+              onChangeHandler(evt, setTypedUsername);
+            }}
+          />
+        </div>
+        <div className="login-input-container" id="loginPasswordContainer">
+          <label>Password:</label>
+          <input
+            type="password"
+            id="loginPassword"
+            name="loginPassword"
+            required="required"
+            autoComplete="on"
+            value={typedPassword}
+            minLength="8"
+            onChange={(evt) => {
+              onChangeHandler(evt, setTypedPassword);
+            }}
+          />
+        </div>
+        <div id="loginSubmitContainer">
+          <input type="submit" value="Login" />
+        </div>
+      </form>
+      <Link to="/stranger">
+        <p id="header-x">x</p>
+      </Link>
+    </div>
   );
 }
 
