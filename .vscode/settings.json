@@ -1,6 +1,4 @@
 {
-  "cSpell.words": [
-    "Craigslist",
-    "juicebox"
-  ]
+  "cSpell.words": ["Craigslist", "juicebox"],
+  "git.ignoreLimitWarning": true
 }
