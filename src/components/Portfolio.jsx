@@ -90,11 +90,7 @@ function Portfolio() {
               </p>
             </div>
             <div className="project">
-              <a
-                href="https://strangers-things-classified-ads.netlify.app"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <Link to="/stranger">
                 <img
                   src="/Media/main/Strangers_Things_screenshot.png"
                   alt="Strangers Things screenshot"
@@ -109,7 +105,7 @@ function Portfolio() {
                   site directly. Feel free to register a user and experiment
                   with the persistent posting and messaging capabilities!
                 </p>
-              </a>
+              </Link>
               <p>
                 <a
                   className="projectGithubLink"
