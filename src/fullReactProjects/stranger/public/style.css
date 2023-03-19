@@ -1,4 +1,4 @@
-:root {
+#strangerMain :root {
   --lightYellow: #FAF7E1;
   --blue: #99D1FF;
   --lightPink: #F3C8F7;
@@ -6,14 +6,17 @@
   --darkBlue: #90C5F0;
 }
 
-* {
+#strangerMain * {
   margin: 0;
   box-sizing: border-box;
   border-radius: 5px;
+  background-color: var(--lightYellow);
+  font-family: apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+  height: 100vh;
 }
 
 
-button, a {
+#strangerMain button, #strangerMain a {
   border: none;
   background-color: inherit;
   font: inherit;
@@ -25,33 +28,23 @@ button, a {
   cursor: pointer;
 }
 
-a {
+#strangerMain a {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-svg {
+#strangerMain svg {
   display: block;
 }
 
-
-body {
-  background-color: var(--lightYellow);
-  font-family: apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-}
-
-#app {
-  height: 100vh;
-}
-
-.generic-flex-row {
+#strangerMain .generic-flex-row {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
 }
 
-#main {
+#strangerMain {
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr;
@@ -60,7 +53,7 @@ body {
 }
 
 
-#Navbar {
+#strangerMain #Navbar {
   background-color: var(--blue);
   color: white;
   padding: 5px;
@@ -72,21 +65,21 @@ body {
   min-height: 4rem;
 }
 
-#Navbar input {
+#strangerMain #Navbar input {
   border: none;
   background-color: white;
 }
 
 
 
-#leftNavbar {
+#strangerMain #leftNavbar {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 20px;
 }
 
-#rightNavbar {
+#strangerMain #rightNavbar {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -95,12 +88,12 @@ body {
   min-width: 0;
 }
 
-.navbar-icons {
+#strangerMain .navbar-icons {
   height: 3rem;
   cursor: pointer;
 }
 
-.icon-wrapper {
+#strangerMain.icon-wrapper {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -111,33 +104,33 @@ body {
   text-decoration: none;
 }
 
-.icon-wrapper p {
+#strangerMain .icon-wrapper p {
   font-size: 0.65rem;
   text-align: center;
 }
 
 
-#navbar-not-logged-in {
+#strangerMain #navbar-not-logged-in {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   gap: 10px;
 }
 
-#navbar-logged-in {
+#strangerMain #navbar-logged-in {
   gap: 20px;
   align-items: center;
 }
 
-#logged-in-actions {
+#strangerMain #logged-in-actions {
   gap: 10px;
 }
 
-#postFilter:focus {
+#strangerMain #postFilter:focus {
   outline: none;
 }
 
-#mainContent {
+#strangerMain #mainContent {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -148,7 +141,7 @@ body {
   grid-column: 1;
 }
 
-#post-page-container {
+#strangerMain #post-page-container {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -163,7 +156,7 @@ body {
   grid-template-columns: 2;
 }
 
-#post-header-container {
+#strangerMain #post-header-container {
   flex-grow: 0;
   flex-shrink: 1;
   flex-wrap: wrap;
@@ -171,29 +164,29 @@ body {
   color: var(--blue)
 }
 
-#logo-container {
+#strangerMain #logo-container {
   height: 4rem;
 }
 
-#post-header {
+#strangerMain #post-header {
   text-align: center;
   font-size: 3rem;
 }
 
 
-#show-submission-page {
+#strangerMain #show-submission-page {
   position: absolute;
   top: 10px;
   right: 10px;
 }
 
-#show-message-page {
+#strangerMain #show-message-page {
   position: absolute;
   top: 10px;
   left: 10px;
 }
 
-#post-submission-parent {
+#strangerMain #post-submission-parent {
   padding: 20px;
   display: flex;
   gap: 30px;
@@ -203,46 +196,46 @@ body {
   grid-column: 2;
 }
 
-#post-submission-form {
+#strangerMain #post-submission-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-#postSubmitContainer {
+#strangerMain #postSubmitContainer {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
 }
 
-#post-submission-form input, #post-submission-form textarea {
+#strangerMain #post-submission-form input, #strangerMain #post-submission-form textarea {
   border: none;
 }
 
-#post-submit-button {
+#strangerMain #post-submit-button {
   background-color: var(--blue);
   color: white;
   padding: 5px 10px;
 }
 
 
-.submission-detail {
+#strangerMain .submission-detail {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-#submissionPostDescription {
+#strangerMain #submissionPostDescription {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
 }
 
-#submissionPostDescriptionInput {
+#strangerMain #submissionPostDescriptionInput {
   height: 5rem;
 }
 
-#submissionPostWillDeliver {
+#strangerMain #submissionPostWillDeliver {
   display: flex;
   flex-direction: row;
   align-content: center;
@@ -251,7 +244,7 @@ body {
 
 
 
-.login-input-container {
+#strangerMain .login-input-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -259,7 +252,7 @@ body {
   flex-shrink: 1;
 }
 
-#loginFormParent {
+#strangerMain #loginFormParent {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -267,13 +260,13 @@ body {
   justify-content: flex-end;
 }
 
-#loginFormContainer {
+#strangerMain #loginFormContainer {
   display: flex;
   gap: 20px;
   flex-direction: row;
 }
 
-#loginSubmitContainer {
+#strangerMain #loginSubmitContainer {
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -281,13 +274,13 @@ body {
   justify-content: center;
 }
 
-#header-x {
+#strangerMain #header-x {
   font-size: 1rem;
 }
 
 
 
-#searchContainer {
+#strangerMain #searchContainer {
   display: flex;
   flex-direction: row;
   gap: 15px;
@@ -295,13 +288,13 @@ body {
   background-color: white;
 }
 
-#searchContainer {
+#strangerMain #searchContainer {
   display: flex;
   flex-direction: row;
   gap: 15px;
 }
 
-#all-posts-plus-attribution {
+#strangerMain #all-posts-plus-attribution {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -311,7 +304,7 @@ body {
   flex-grow: 1;
 }
 
-#all-posts {
+#strangerMain #all-posts {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -322,13 +315,13 @@ body {
   margin-right: auto;
 }
 
-#attribution {
+#strangerMain #attribution {
   font-size: 0.75rem;
   width: 30%;
   text-align: center;
 }
 
-.individual-post-container {
+#strangerMain .individual-post-container {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
@@ -342,7 +335,7 @@ body {
   background-color: var(--blue);
 }
 
-.individual-post-content {
+#strangerMain .individual-post-content {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -354,7 +347,7 @@ body {
   background-color: var(--lightYellow);
 }
 
-.individual-post {
+#strangerMain .individual-post {
   display: flex;
   gap: 15px;
   flex-direction: column;
@@ -363,33 +356,33 @@ body {
   overflow-y: scroll;
 }
 
-.button-wrapper {
+#strangerMain .button-wrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: flex-end;
 }
 
-.my-post {
+#strangerMain .my-post {
   background-color: var(--lightPink);
 }
 
-.my-post h3 {
+#strangerMain .my-post h3 {
   color: var(--brightPink);
 }
 
-.post-button {
+#strangerMain .post-button {
   background-color: var(--blue);
   color: white;
   padding: 5px;
 }
 
-.my-post-delete {
+#strangerMain .my-post-delete {
   background-color: var(--lightPink);
 }
 
 
-.message-content {
+#strangerMain .message-content {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -397,25 +390,25 @@ body {
   flex: 0 1 300px;
 }
 
-.message-form {
+#strangerMain .message-form {
   display: flex;
   flex-direction: column;
   gap: 15px;
   flex-grow: 1;
 }
 
-.message-form textarea {
+#strangerMain .message-form textarea {
   flex-grow: 1;
   border: none;
 }
 
-.send-message-container {
+#strangerMain .send-message-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.send-message-container button {
+#strangerMain .send-message-container button {
   padding: 5px 15px;
   border: none;
   font-size: 0.75rem;
@@ -424,7 +417,7 @@ body {
   color: white;
 }
 
-.send-message-button {
+#strangerMain .send-message-button {
   padding: 5px 15px;
   background-color: white;
   border: none;
@@ -433,14 +426,14 @@ body {
   color: var(--darkBlue);
 }
 
-#auth-user-post-info {
+#strangerMain #auth-user-post-info {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
 }
 
-.sidebar {
+#strangerMain .sidebar {
   overflow-y: scroll;
   min-height: 0;
   flex: 0 1 300px;
@@ -449,20 +442,20 @@ body {
   padding: 15px;
 }
 
-.sidebar-close {
+#strangerMain .sidebar-close {
   position: absolute;
   top: 5px;
   right: 5px;
   color: var(--darkBlue)
 }
 
-.sidebar-content-container {
+#strangerMain .sidebar-content-container {
   border: 10px solid var(--lightPink);
   position: relative;
   padding: 20px;
 }
 
-#message-container {
+#strangerMain #message-container {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -472,20 +465,20 @@ body {
   grid-row: 1;
 }
 
-#message-buttons {
+#strangerMain #message-buttons {
   display: flex;
   flex-direction: row;
   justify-content: center;
   margin-top: 15px;
 }
 
-#message-button {
+#strangerMain #message-button {
   background-color: var(--blue);
   color: white;
   padding: 5px 10px;
 }
 
-.sidebar-header {
+#strangerMain .sidebar-header {
   text-align: center;
   color: var(--blue);
   font-size: 1.5rem;
@@ -493,48 +486,48 @@ body {
 
 
 
-.individual-message {
+#strangerMain .individual-message {
   padding: 20px;
   border-bottom: 2px solid var(--blue);
   border-radius: 0;
 }
 
-.individual-message:last-child {
+#strangerMain .individual-message:last-child {
   border-bottom: none;
 }
 
 
 @media (max-width: 768px) {
-  #Navbar {
+  #strangerMain #Navbar {
     flex-direction: column;
     align-items: center;
   }
 
-  #loginFormContainer {
+  #strangerMain #loginFormContainer {
     flex-direction: column;
   }
 
-  #post-header {
+  #strangerMain #post-header {
     font-size: 1.5rem;
   }
 
-  #mainContent {
+  #strangerMain #mainContent {
     flex-direction: column;
   }
 
-  #logo-container {
+  #strangerMain #logo-container {
     height: 2rem;
   }
 
-  .individual-post-container {
+  #strangerMain .individual-post-container {
     flex-direction: column;
   }
 
-  .individual-post-content {
+  #strangerMain .individual-post-content {
     flex-basis:auto;
   }
 
-  .message-content {
+  #strangerMain .message-content {
     flex-basis: 100px;
   }
   
