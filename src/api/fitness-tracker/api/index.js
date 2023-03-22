@@ -1,10 +1,10 @@
 const express = require('express');
-const router = express.Router();
+const fitnessRouter = express.Router();
 const jwt = require('jsonwebtoken');
 const { getUserById } = require('../db');
 const { JWT_SECRET } = process.env;
 
-router.use(async (req, res, next) => {
+fitnessRouter.use(async (req, res, next) => {
   const prefix = 'Bearer ';
   const auth = req.header('Authorization');
 
@@ -31,7 +31,7 @@ router.use(async (req, res, next) => {
 });
 
 // GET /api/health
-router.get('/health', async (req, res, next) => {
+fitnessRouter.get('/health', async (req, res, next) => {
   res.send({
     message: 'All is well',
   });
@@ -39,29 +39,29 @@ router.get('/health', async (req, res, next) => {
 
 // ROUTER: /api/users
 const usersRouter = require('./users');
-router.use('/users', usersRouter);
+fitnessRouter.use('/users', usersRouter);
 
 // ROUTER: /api/activities
 const activitiesRouter = require('./activities');
-router.use('/activities', activitiesRouter);
+fitnessRouter.use('/activities', activitiesRouter);
 
 // ROUTER: /api/routines
 const routinesRouter = require('./routines');
-router.use('/routines', routinesRouter);
+fitnessRouter.use('/routines', routinesRouter);
 
 // ROUTER: /api/routine_activities
 const routineActivitiesRouter = require('./routineActivities');
-router.use('/routine_activities', routineActivitiesRouter);
+fitnessRouter.use('/routine_activities', routineActivitiesRouter);
 
-router.use('*', (req, res, next) => {
-  res.status(404)
+fitnessRouter.use('*', (req, res, next) => {
+  res.status(404);
   res.send({
-    name:'PathNotExist',
-    message: 'Path does not exist'
-  })
-})
+    name: 'PathNotExist',
+    message: 'Path does not exist',
+  });
+});
 
-router.use((error, req, res, next) => {
+fitnessRouter.use((error, req, res, next) => {
   res.status(400);
   res.send({
     name: error.name,
@@ -69,4 +69,4 @@ router.use((error, req, res, next) => {
   });
 });
 
-module.exports = router;
+module.exports = fitnessRouter;
