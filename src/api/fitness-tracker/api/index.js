@@ -56,7 +56,7 @@ fitnessRouter.use('/routine_activities', routineActivitiesRouter);
 fitnessRouter.use('*', (req, res, next) => {
   res.status(404);
   res.send({
-    name: 'PathNotExist',
+    name: 'PathDoesNotExist',
     message: 'Path does not exist',
   });
 });
