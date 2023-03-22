@@ -16,6 +16,7 @@ apiRouter.use('*', (req, res, next) => {
 });
 
 apiRouter.use((error, req, res, next) => {
+  res.status(400);
   res.send({
     name: error.name,
     message: error.message,
