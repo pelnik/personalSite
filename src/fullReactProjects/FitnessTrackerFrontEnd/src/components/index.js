@@ -16,3 +16,4 @@ export { default as UpdateActivity } from './UpdateActivity';
 export { default as CreateActivity } from './CreateActivity';
 export { default as CreatorRoutines } from './CreatorRoutines';
 export { default as RoutineWithActivity } from './RoutineWithActivity';
+export { default as BadPath } from './BadPath';

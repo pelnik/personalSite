@@ -14,6 +14,7 @@ import {
   RoutineWithActivity,
   UpdateActivity,
   Homepage,
+  BadPath,
 } from './';
 import { Routes, Route } from 'react-router-dom';
 import { getTokenFromLocalStorage } from '../utils/localStorage';
@@ -136,7 +137,7 @@ const Main = () => {
             />
           }
         />
-        <Route path="*" element={null} />
+        <Route path="*" element={<BadPath />} />
       </Routes>
     </div>
   );
