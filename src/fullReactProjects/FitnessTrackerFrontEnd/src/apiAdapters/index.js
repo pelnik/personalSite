@@ -1,4 +1,10 @@
-const BASE = 'http://localhost:3000/api/fitness';
+let BASE;
+
+if (process.env.SERVER_ENV === 'production') {
+  BASE = 'https://pelnik.dev/api/fitness';
+} else {
+  BASE = 'http://localhost:3000/api/fitness';
+}
 
 export const registerAccount = async (username, password) => {
   try {
