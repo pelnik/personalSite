@@ -6,20 +6,20 @@ const CreateRoutine = ({ token }) => {
   const [name, setName] = useState('');
   const [goal, setGoal] = useState('');
   const [isPublic, setIsPublic] = useState(false);
-  const [error, setError] = useState('')
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   async function postNewRoutine() {
     try {
       const result = await createRoutine(token, name, goal, isPublic);
-      console.log('error message here', result)
+      console.log('error message here', result);
       if (result && result.id) {
         setName('');
         setGoal('');
         setIsPublic(false);
-        navigate('/my-routines');
+        navigate('../my-routines');
       } else {
-        setError('Routine with this name already exists')
+        setError('Routine with this name already exists');
       }
     } catch (error) {
       console.log(error);
@@ -66,7 +66,7 @@ const CreateRoutine = ({ token }) => {
             }}
           />
           <button type="submit">Submit</button>
-          <p className='error-message'>{error}</p>
+          <p className="error-message">{error}</p>
         </form>
       </div>
     </div>

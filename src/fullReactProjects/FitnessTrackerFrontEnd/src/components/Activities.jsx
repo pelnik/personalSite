@@ -27,7 +27,7 @@ const Activities = ({ token, setActivityEdit, setSelectedActivity }) => {
         {token ? (
           <button
             onClick={() => {
-              navigate('/activities/new');
+              navigate('./new');
             }}
           >
             Create New Activity
@@ -46,7 +46,7 @@ const Activities = ({ token, setActivityEdit, setSelectedActivity }) => {
                       activityId: activity.id,
                       activityName: activity.name,
                     });
-                    navigate(`/routines/${activity.id}`);
+                    navigate(`../routines/${activity.id}`);
                   }}
                 >
                   {activity.name}
@@ -60,7 +60,7 @@ const Activities = ({ token, setActivityEdit, setSelectedActivity }) => {
                         name: activity.name,
                         description: activity.description,
                       });
-                      navigate('/activities/update');
+                      navigate('./update');
                     }}
                   >
                     Edit

@@ -89,7 +89,7 @@ const MyRoutines = ({
         <h1>My Routines</h1>
         <button
           onClick={() => {
-            navigate('/my-routines/new');
+            navigate('./new');
           }}
         >
           Create New Routine
@@ -118,7 +118,7 @@ const MyRoutines = ({
                             isPublic: post.isPublic,
                             routineId: post.id,
                           });
-                          navigate('/my-routines/update');
+                          navigate('./update');
                         }}
                       >
                         Edit
@@ -133,7 +133,7 @@ const MyRoutines = ({
                     </div>
                   </div>
                   <h3>Goal: {post.goal}</h3>
-                  <h3 className="border-link routine-creator">
+                  <h3 className="routine-creator">
                     Creator: {post.creatorName}
                   </h3>
                   <button
@@ -171,7 +171,7 @@ const MyRoutines = ({
                                 activityId: activity.id,
                                 activityName: activity.name,
                               });
-                              navigate(`/routines/${activity.id}`);
+                              navigate(`../routines/${activity.id}`);
                             }}
                           >
                             Name: {activity.name}
@@ -189,9 +189,7 @@ const MyRoutines = ({
                                   count: activity.count,
                                   routineActivityId: activity.routineActivityId,
                                 });
-                                navigate(
-                                  '/my-routines/update-routine-activity'
-                                );
+                                navigate('./update-routine-activity');
                               }}
                             >
                               Edit

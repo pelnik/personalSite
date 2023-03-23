@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from "react";
-import { updateActivity } from "../apiAdapters";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { updateActivity } from '../apiAdapters';
+import { useNavigate } from 'react-router-dom';
 
 const UpdateActivity = ({ token, activityEdit, setActivityEdit }) => {
   const [name, setName] = useState(activityEdit.name);
-  const [description, setDescription] = useState(activityEdit.description)
+  const [description, setDescription] = useState(activityEdit.description);
   const navigate = useNavigate();
-  const activityId = activityEdit.id
+  const activityId = activityEdit.id;
 
-  console.log(typeof(activityId), "type of activityId")
+  console.log(typeof activityId, 'type of activityId');
 
   async function editActivity(name, description) {
     try {
       const result = await updateActivity(token, activityId, name, description);
-      setActivityEdit({})
-      navigate('/activities')
+      setActivityEdit({});
+      navigate('../activities');
     } catch (error) {
       console.log(error);
     }
   }
 
-  return(
+  return (
     <div className="center-form">
-        <div className="form-parent">
+      <div className="form-parent">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -52,7 +52,7 @@ const UpdateActivity = ({ token, activityEdit, setActivityEdit }) => {
         </form>
       </div>
     </div>
-  )
+  );
 };
 
 export default UpdateActivity;

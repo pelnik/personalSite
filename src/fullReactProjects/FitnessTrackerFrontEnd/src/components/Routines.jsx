@@ -53,7 +53,7 @@ const Routines = ({ setSelectedUser, setSelectedActivity }) => {
                             activityId: activity.id,
                             activityName: activity.name,
                           });
-                          navigate(`/routines/${activity.id}`);
+                          navigate(`./${activity.id}`);
                         }}
                       >
                         Name: {activity.name}

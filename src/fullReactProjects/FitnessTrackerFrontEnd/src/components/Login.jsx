@@ -18,9 +18,9 @@ const Login = ({ setToken, token }) => {
         saveToLocalStorage(result.token);
         setUsername('');
         setPassword('');
-        navigate(-1);
+        navigate('/fitness/my-routines');
       } else {
-        setError('Wrong username and/or password')
+        setError('Wrong username and/or password');
       }
     } catch (error) {
       console.log(error);
@@ -29,7 +29,7 @@ const Login = ({ setToken, token }) => {
 
   useEffect(() => {
     if (token) {
-      navigate('/');
+      navigate(-1);
     }
   }, [token]);
 
@@ -70,7 +70,7 @@ const Login = ({ setToken, token }) => {
           />
 
           <button type="submit">Submit</button>
-          <p className='error-message'>{error}</p>
+          <p className="error-message">{error}</p>
         </form>
       </div>
     </div>

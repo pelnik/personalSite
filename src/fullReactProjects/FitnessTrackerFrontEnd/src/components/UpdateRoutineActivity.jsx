@@ -17,9 +17,9 @@ function UpdateRoutineActivity({
       myRoutineActivityEdit.count
     );
 
-    if (result.id) {
+    if (result && result.id) {
       setMyRoutineActivityEdit({});
-      navigate('/my-routines');
+      navigate('../my-routines');
     }
   }
 

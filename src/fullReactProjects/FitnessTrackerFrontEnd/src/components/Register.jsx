@@ -14,12 +14,13 @@ const Register = ({ setToken, token }) => {
     try {
       const result = await registerAccount(username, password);
 
-      if (result.token !== undefined) {
+      if (result && result.token !== undefined) {
         setToken(result.token);
         saveToLocalStorage(result.token);
         setUsername('');
         setPassword('');
         setConfirmPassword('');
+        navigate('/fitness/routines');
       } else {
         setError('User already exists');
       }
@@ -31,7 +32,7 @@ const Register = ({ setToken, token }) => {
   useEffect(() => {
     console.log('token register', token);
     if (token) {
-      navigate('/');
+      navigate(-1);
     }
   }, [token]);
 
