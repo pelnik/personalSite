@@ -17,6 +17,7 @@ import {
 } from './';
 import { Routes, Route } from 'react-router-dom';
 import { getTokenFromLocalStorage } from '../utils/localStorage';
+import '../../../../css/fitness-tracker.css';
 
 const Main = () => {
   const [token, setToken] = useState('');
@@ -35,20 +36,20 @@ const Main = () => {
   }, [token]);
 
   return (
-    <div id="main">
+    <div id="fitnessMain">
       <Navbar setToken={setToken} token={token} />
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route
-          path="/users/register"
+          path="users/register"
           element={<Register setToken={setToken} token={token} />}
         />
         <Route
-          path="/users/login"
+          path="users/login"
           element={<Login setToken={setToken} token={token} />}
         />
         <Route
-          path="/routines"
+          path="routines"
           element={
             <Routines
               setSelectedUser={setSelectedUser}
@@ -58,7 +59,7 @@ const Main = () => {
           }
         />
         <Route
-          path="/my-routines"
+          path="my-routines"
           element={
             <MyRoutines
               token={token}
@@ -69,11 +70,11 @@ const Main = () => {
           }
         />
         <Route
-          path="/my-routines/new"
+          path="my-routines/new"
           element={<CreateRoutine token={token} />}
         />
         <Route
-          path="/my-routines/update"
+          path="my-routines/update"
           element={
             <UpdateRoutine
               token={token}
@@ -83,7 +84,7 @@ const Main = () => {
           }
         />
         <Route
-          path="/my-routines/update-routine-activity"
+          path="my-routines/update-routine-activity"
           element={
             <UpdateRoutineActivity
               token={token}
@@ -93,7 +94,7 @@ const Main = () => {
           }
         />
         <Route
-          path="/activities"
+          path="activities"
           element={
             <Activities
               token={token}
@@ -103,11 +104,11 @@ const Main = () => {
           }
         />
         <Route
-          path="/activities/new"
+          path="activities/new"
           element={<CreateActivity token={token} />}
         />
         <Route
-          path="/activities/update"
+          path="activities/update"
           element={
             <UpdateActivity
               token={token}
@@ -117,7 +118,7 @@ const Main = () => {
           }
         />
         <Route
-          path="/:username/routines"
+          path=":username/routines"
           element={
             <CreatorRoutines
               selectedUser={selectedUser}
@@ -126,7 +127,7 @@ const Main = () => {
           }
         />
         <Route
-          path="/routines/:activityId"
+          path="routines/:activityId"
           element={
             <RoutineWithActivity
               selectedActivity={selectedActivity}

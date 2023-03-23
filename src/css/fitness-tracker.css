@@ -1,4 +1,4 @@
-:root {
+#fitnessMain :root {
   --darkOrange: #e07f2b;
   --peach: #ffc28e;
   --blue: #a1c3ff;
@@ -6,18 +6,18 @@
   --yellow: #fffadb;
 }
 
-::-webkit-scrollbar {
+#fitnessMain ::-webkit-scrollbar {
     background: transparent; /* Chrome/Safari/Webkit */
     width: 0px;
   }
 
-* {
+#fitnessMain * {
   box-sizing: border-box;
   padding: 0px;
   margin: 0px;
 }
 
-button {
+#fitnessMain button {
   padding: 4px 8px;
   border: solid 1px rgba(0, 0, 0, 0.181);
   color: inherit;
@@ -27,41 +27,41 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+#fitnessMain button:hover {
   border: solid 1px rgba(255, 255, 255, 0);
   background-color: rgba(0, 0, 0, 0.181);
 }
 
-a {
+#fitnessMain a {
   text-decoration: none;
   color: inherit;
   cursor: pointer;
 }
 
-.border-link {
+#fitnessMain .border-link {
   border: solid 1px rgba(0, 0, 0, 0.181);
   padding: 3px 6px;
   border-radius: 5px;
 }
 
-.border-link:hover {
+#fitnessMain .border-link:hover {
   border: solid 1px rgba(255, 255, 255, 0);
   background-color: rgba(0, 0, 0, 0.181);
 }
 
-input {
+#fitnessMain input {
   border-radius: 5px;
 }
 
-input[type=text], input[type=password] {
+#fitnessMain input[type=text], input[type=password] {
   border: none;
 }
 
-input[type=text]:focus, input[type=password]:hover {
+#fitnessMain input[type=text]:focus, input[type=password]:hover {
   outline: none;
 }
 
-.shade-link {
+#fitnessMain .shade-link {
   transition: background-color 0.25s;
   border-radius: 5px;
   border: solid 1px rgba(0, 0, 0, 0.181);
@@ -70,26 +70,26 @@ input[type=text]:focus, input[type=password]:hover {
   align-self: flex-start;
 }
 
-.shade-link:hover {
+#fitnessMain .shade-link:hover {
   border: solid 1px rgba(255, 255, 255, 0);
     background-color: rgba(0, 0, 0, 0.181);
 }
 
-.error-message {
+#fitnessMain .error-message {
   color: red;
 }
 
-.routine-creator {
+#fitnessMain .routine-creator {
   align-self: flex-start;
 }
 
-.warning {
+#fitnessMain .warning {
   color: red;
   font-weight: bold;
   font: 1.25 em;
 }
 
-#navbar {
+#fitnessMain #navbar {
   background-color: var(--blue);
   color: white;
   display: flex;
@@ -100,11 +100,11 @@ input[type=text]:focus, input[type=password]:hover {
   padding: 10px;
 }
 
-#navbar-logo {
+#fitnessMain #navbar-logo {
   height: 60px;
 }
 
-#navbarTabs-container {
+#fitnessMain #navbarTabs-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -112,22 +112,22 @@ input[type=text]:focus, input[type=password]:hover {
   justify-content:center;
 }
 
-#navbar .navbar-icons {
+#fitnessMain #navbar .navbar-icons {
   height: 2.25rem;
   width: 2.25rem;
 }
 
-#navbar button {
+#fitnessMain #navbar button {
   border: none;
 }
 
-.navbar-user {
+#fitnessMain .navbar-user {
   display: flex;
   flex-direction: row;
   gap: 5px;
 }
 
-#main {
+#fitnessMain #main {
   height: 100vh;
   width: 100vw;
   background-color: var(--yellow);
@@ -137,37 +137,37 @@ input[type=text]:focus, input[type=password]:hover {
   font-family: apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
-.main-content {
+#fitnessMain .main-content {
     flex-grow: 1;
     min-height: 0px;
     padding: 40px;
 }
 
-.main-layout {
+#fitnessMain .main-layout {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.scrolling-content {
+#fitnessMain .scrolling-content {
     overflow-y: scroll;
     min-height: 0px;
     flex-grow: 1;
 }
 
-.horizontal-cards {
+#fitnessMain .horizontal-cards {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: stretch;
 }
 
-.horizontal-cards > div {
+#fitnessMain .horizontal-cards > div {
     flex: 1 1 350px;
     max-height: 600px;
 }
 
-.center-form {
+#fitnessMain .center-form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -176,11 +176,11 @@ input[type=text]:focus, input[type=password]:hover {
   align-self: center;
 }
 
-#home-page {
+#fitnessMain #home-page {
   position: relative;
 }
 
-#homepage-logo {
+#fitnessMain #homepage-logo {
   height: 70px;
   display: flex;
   flex-direction: row;
@@ -189,18 +189,18 @@ input[type=text]:focus, input[type=password]:hover {
   color: var(--darkOrange)
 }
 
-#homepage-text-content {
+#fitnessMain #homepage-text-content {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-#homepage-text-content p {
+#fitnessMain #homepage-text-content p {
   font-size: 1.25rem;
   color: var(--darkOrange);
 }
 
-#attr {
+#fitnessMain #attr {
   position: absolute;
   bottom: 10px;
   font-size: 0.75rem;
@@ -208,13 +208,13 @@ input[type=text]:focus, input[type=password]:hover {
 }
 
 
-.register-warning {
+#fitnessMain .register-warning {
   max-width: 150px;
   align-self: center;
   text-align: center;
 }
 
-#routine-page-container {
+#fitnessMain #routine-page-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -222,7 +222,7 @@ input[type=text]:focus, input[type=password]:hover {
 }
 
 
-#routine-container {
+#fitnessMain #routine-container {
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
@@ -233,7 +233,7 @@ input[type=text]:focus, input[type=password]:hover {
   color: black;
   flex-grow: 1;
 }
-#routine-activity-card {
+#fitnessMain #routine-activity-card {
   display: flex;
   flex-direction: column;
   background-color: rgb(255, 255, 255, 0.4);
@@ -242,74 +242,74 @@ input[type=text]:focus, input[type=password]:hover {
   border-radius: 8px;
 }
 
-#routine-activity-container {
+#fitnessMain #routine-activity-container {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-.routine-activity-buttons {
+#fitnessMain .routine-activity-buttons {
   display: flex;
   flex-direction: row;
   gap: 3px;
 }
 
-#my-routine-header, #activities-header {
+#fitnessMain #my-routine-header, #activities-header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-#full-routines-page {
+#fitnessMain #full-routines-page {
   overflow-y: scroll;
   min-height: 0px;
   flex-grow: 1;
 }
 
-.my-routine-container {
+#fitnessMain .my-routine-container {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
-.my-routine-header-container {
+#fitnessMain .my-routine-header-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
-.my-routine-buttons {
+#fitnessMain .my-routine-buttons {
   display: flex;
   flex-direction: row;
   gap: 3px;
 }
 
-.add-activity-button {
+#fitnessMain .add-activity-button {
   align-self: center;
   padding: 10px 20px;
 }
 
-.activity-warning {
+#fitnessMain .activity-warning {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
 }
 
-.user-link {
+#fitnessMain .user-link {
     align-self: flex-start;
 }
 
-#activities-full-page {
+#fitnessMain #activities-full-page {
   display: flex;
   flex-direction: column;
 }
 
-#activities-container {
+#fitnessMain #activities-container {
   display: flex;
   flex-direction: column;
 }
 
-#activity-container {
+#fitnessMain #activity-container {
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid black;
@@ -317,15 +317,15 @@ input[type=text]:focus, input[type=password]:hover {
     gap: 10px;
 }
 
-#activity-container:last-child {
+#fitnessMain #activity-container:last-child {
     border: none;
 }
 
-#activity-container button {
+#fitnessMain #activity-container button {
   align-self: start;
 }
 
-.form-parent {
+#fitnessMain .form-parent {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -336,40 +336,40 @@ input[type=text]:focus, input[type=password]:hover {
     color: white;
 }
 
-.form-parent form {
+#fitnessMain .form-parent form {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.form-parent h1 {
+#fitnessMain .form-parent h1 {
     font-size: 1.75rem;
 }
 
-.form-parent h2 {
+#fitnessMain .form-parent h2 {
     font-size: 1.25rem;
 }
 
-.form-parent form button {
+#fitnessMain .form-parent form button {
     align-self: center;
 }
 
-.checkbox-parent {
+#fitnessMain .checkbox-parent {
     display: flex;
     flex-direction: row;
     gap: 20px;
 }
 
-.checkbox-parent input {
+#fitnessMain .checkbox-parent input {
     width: 1rem;
 }
 
-#number-form-field {
+#fitnessMain #number-form-field {
     width: 3rem;
 }
 
 @media (max-width: 768px) {
-    #navbar {
+    #fitnessMain #navbar {
         flex-direction: column;
         align-content: center;
         gap: 10px;
