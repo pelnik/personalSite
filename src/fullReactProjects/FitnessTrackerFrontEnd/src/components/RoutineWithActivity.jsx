@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getRoutinesByActivity } from '../apiAdapters';
 
-const RoutineWithActivity = ({ selectedActivity, setSelectedActivity }) => {
+const RoutineWithActivity = ({ selectedActivity }) => {
   const [routines, setRoutines] = useState([]);
   const activityId = selectedActivity.activityId;
 
@@ -9,7 +9,7 @@ const RoutineWithActivity = ({ selectedActivity, setSelectedActivity }) => {
     try {
       const result = await getRoutinesByActivity(activityId);
 
-      if (result && result.id) {
+      if (Array.isArray(result)) {
         setRoutines(result);
       }
       return result;
