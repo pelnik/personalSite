@@ -33,13 +33,13 @@ describe('/api/users', () => {
 
     beforeAll(async () => {
       const successResponse = await axios.post(
-        `${API_URL}/api/users/register`,
+        `${API_URL}/users/register`,
         newUser
       );
       registeredUser = successResponse.data.user;
       try {
         tooShortSuccess = await axios.post(
-          `${API_URL}/api/users/register`,
+          `${API_URL}/users/register`,
           newUserShortPassword
         );
       } catch (err) {
@@ -55,7 +55,7 @@ describe('/api/users', () => {
       };
       console.log(fakeUserData, 'fakeUserData');
       const { data } = await axios.post(
-        `${API_URL}/api/users/register`,
+        `${API_URL}/users/register`,
         fakeUserData
       );
       console.log(data, 'data');
@@ -80,7 +80,7 @@ describe('/api/users', () => {
 
       // Create the user through the API
       const { data } = await axios.post(
-        `${API_URL}/api/users/register`,
+        `${API_URL}/users/register`,
         fakeUserData
       );
 
@@ -113,7 +113,7 @@ describe('/api/users', () => {
       let duplicateSuccess, duplicateErrResp;
       try {
         duplicateSuccess = await axios.post(
-          `${API_URL}/api/users/register`,
+          `${API_URL}/users/register`,
           newUser
         );
       } catch (err) {
@@ -131,7 +131,7 @@ describe('/api/users', () => {
 
   describe('POST /api/users/login', () => {
     it('Logs in the user. Requires username and password, and verifies that hashed login password matches the saved hashed password.', async () => {
-      const { data } = await axios.post(`${API_URL}/api/users/login`, newUser);
+      const { data } = await axios.post(`${API_URL}/users/login`, newUser);
       token = data.token;
       expect(data.token).toBeTruthy();
     });
@@ -144,7 +144,7 @@ describe('/api/users', () => {
 
   describe('GET /api/users/me', () => {
     it('sends back users data if valid token is supplied in header', async () => {
-      const { data } = await axios.get(`${API_URL}/api/users/me`, {
+      const { data } = await axios.get(`${API_URL}/users/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -154,7 +154,7 @@ describe('/api/users', () => {
     it('rejects requests with no valid token', async () => {
       let noTokenResp, noTokenErrResp;
       try {
-        noTokenResp = await axios.get(`${API_URL}/api/users/me`);
+        noTokenResp = await axios.get(`${API_URL}/users/me`);
       } catch (err) {
         noTokenErrResp = err.response;
       }
@@ -168,7 +168,7 @@ describe('/api/users', () => {
       const userId = 2;
       const userWithRoutines = await getUserById(userId);
       const { data: routines } = await axios.get(
-        `${API_URL}/api/users/${userWithRoutines.username}/routines`
+        `${API_URL}/users/${userWithRoutines.username}/routines`
       );
       const routinesFromDB = await getPublicRoutinesByUser(userWithRoutines);
       expect(routines).toBeTruthy();
@@ -176,12 +176,12 @@ describe('/api/users', () => {
     });
 
     it('gets a list of all routines for the logged in user', async () => {
-      const { data } = await axios.get(`${API_URL}/api/users/me`, {
+      const { data } = await axios.get(`${API_URL}/users/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const { data: routines } = await axios.get(
-        `${API_URL}/api/users/${data.username}/routines`
+        `${API_URL}/users/${data.username}/routines`
       );
       const routinesFromDB = await getAllRoutinesByUser(data);
       expect(routines).toBeTruthy();

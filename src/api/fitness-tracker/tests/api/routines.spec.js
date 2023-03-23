@@ -55,10 +55,7 @@ describe('/api/routines', () => {
       routineToCreate.creatorId = newUser.id;
 
       //login as the user to generate a token
-      const { data } = await axios.post(
-        `${API_URL}/api/users/login`,
-        userToCreate
-      );
+      const { data } = await axios.post(`${API_URL}/users/login`, userToCreate);
       token = data.token;
 
       //creates an activity
@@ -81,7 +78,7 @@ describe('/api/routines', () => {
       const publicRoutinesFromDB = await getAllPublicRoutines();
 
       const { data: publicRoutinesFromAPI } = await axios.get(
-        `${API_URL}/api/routines`
+        `${API_URL}/routines`
       );
       expect(publicRoutinesFromAPI).toEqual(publicRoutinesFromDB);
     });
@@ -97,7 +94,7 @@ describe('/api/routines', () => {
           goal: 'time to change it up',
         };
 
-        await axios.post(`${API_URL}/api/routines`, newRoutineToCreate, {
+        await axios.post(`${API_URL}/routines`, newRoutineToCreate, {
           headers: { Authorization: `Bearer thisIsAFakeToken` },
         });
       } catch (err) {
@@ -114,7 +111,7 @@ describe('/api/routines', () => {
       };
 
       const { data: respondedRoutine } = await axios.post(
-        `${API_URL}/api/routines`,
+        `${API_URL}/routines`,
         newRoutineToCreate,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -148,7 +145,7 @@ describe('/api/routines', () => {
         };
 
         const { data } = await axios.post(
-          `${API_URL}/api/routines`,
+          `${API_URL}/routines`,
           newRoutineToCreate,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -171,7 +168,7 @@ describe('/api/routines', () => {
 
         // this generates an error because we are not sending in a token. This error will be used in the below test for patch: "Requires logged in user"
         await axios.patch(
-          `${API_URL}/api/routines/${newRoutineForTesting.id}`,
+          `${API_URL}/routines/${newRoutineForTesting.id}`,
           dataForPatchingRoutine,
           {
             headers: { Authorization: `Bearer thisIsAFakeToken` },
@@ -193,7 +190,7 @@ describe('/api/routines', () => {
         let secondUserToken;
 
         const { data } = await axios.post(
-          `${API_URL}/api/users/login`,
+          `${API_URL}/users/login`,
           secondUserData
         );
 
@@ -214,14 +211,14 @@ describe('/api/routines', () => {
 
         // Create a routine so we can attempt to update it. Using the secondUserToken
         const { data: respondedRoutine } = await axios.post(
-          `${API_URL}/api/routines`,
+          `${API_URL}/routines`,
           newRoutineToCreate,
           { headers: { Authorization: `Bearer ${secondUserToken}` } }
         );
 
         // Attempt to patch a routine made with the secondUserToken, while passing in the token from the first user we made. This should throw an error which we are attempting to capture in the catch.
         await axios.patch(
-          `${API_URL}/api/routines/${respondedRoutine.id}`,
+          `${API_URL}/routines/${respondedRoutine.id}`,
           newDataForPatchingRoutine,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -242,7 +239,7 @@ describe('/api/routines', () => {
 
       // Create a routine so we can update it.
       const { data: respondedRoutine } = await axios.post(
-        `${API_URL}/api/routines`,
+        `${API_URL}/routines`,
         newRoutineToCreate,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -254,7 +251,7 @@ describe('/api/routines', () => {
       };
 
       const { data } = await axios.patch(
-        `${API_URL}/api/routines/${respondedRoutine.id}`,
+        `${API_URL}/routines/${respondedRoutine.id}`,
         updateRoutineData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -291,7 +288,7 @@ describe('/api/routines', () => {
         let secondUserToken;
 
         const { data } = await axios.post(
-          `${API_URL}/api/users/login`,
+          `${API_URL}/users/login`,
           secondUserData
         );
 
@@ -307,13 +304,13 @@ describe('/api/routines', () => {
 
         // Create a routine so we can attempt to update it. Using the secondUserToken
         const { data: respondedRoutine } = await axios.post(
-          `${API_URL}/api/routines`,
+          `${API_URL}/routines`,
           newRoutineToCreate,
           { headers: { Authorization: `Bearer ${secondUserToken}` } }
         );
 
         // Attempt to delete a routine made with the secondUserToken, while passing in the token from the first user we made. This should throw an error which we are attempting to capture in the catch.
-        await axios.delete(`${API_URL}/api/routines/${respondedRoutine.id}`, {
+        await axios.delete(`${API_URL}/routines/${respondedRoutine.id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (err) {
@@ -332,13 +329,13 @@ describe('/api/routines', () => {
       };
 
       const { data: respondedRoutine } = await axios.post(
-        `${API_URL}/api/routines`,
+        `${API_URL}/routines`,
         newRoutineToCreateToBeDeleted,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const { data: deletedRoutine } = await axios.delete(
-        `${API_URL}/api/routines/${respondedRoutine.id}`,
+        `${API_URL}/routines/${respondedRoutine.id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -376,7 +373,7 @@ describe('/api/routines', () => {
 
         // create an activity in the database
         const { data: newlyCreatedActivity } = await axios.post(
-          `${API_URL}/api/activities`,
+          `${API_URL}/activities`,
           newActivityToCreate,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -392,7 +389,7 @@ describe('/api/routines', () => {
         // add the routine activity to the database
 
         const { data: respondedRoutineActivity } = await axios.post(
-          `${API_URL}/api/routines/${firstUserRoutine.id}/activities`,
+          `${API_URL}/routines/${firstUserRoutine.id}/activities`,
           routineActivityToAddToARoutine,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -408,7 +405,7 @@ describe('/api/routines', () => {
 
       try {
         const { data } = await axios.post(
-          `${API_URL}/api/routines/${firstUserRoutine.id}/activities`,
+          `${API_URL}/routines/${firstUserRoutine.id}/activities`,
           routineActivityThatWeCreated,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -430,7 +427,7 @@ describe('/api/routines', () => {
       };
 
       const { data: newlyCreatedActivity } = await axios.post(
-        `${API_URL}/api/activities`,
+        `${API_URL}/activities`,
         newActivityToCreate,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -443,7 +440,7 @@ describe('/api/routines', () => {
       };
 
       const { data: respondedRoutineActivity } = await axios.post(
-        `${API_URL}/api/routines/${firstUserRoutine.id}/activities`,
+        `${API_URL}/routines/${firstUserRoutine.id}/activities`,
         routineActivityToAddToARoutine,
         { headers: { Authorization: `Bearer ${token}` } }
       );

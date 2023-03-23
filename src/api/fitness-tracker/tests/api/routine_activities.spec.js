@@ -4,10 +4,10 @@ DO NOT CHANGE THIS FILE
 
 */
 
-require("dotenv").config();
+require('dotenv').config();
 
-const axios = require("axios");
-const { SERVER_ADDRESS = "http://localhost:", PORT = 3000 } = process.env;
+const axios = require('axios');
+const { SERVER_ADDRESS = 'http://localhost:', PORT = 3000 } = process.env;
 const API_URL = process.env.API_URL || SERVER_ADDRESS + PORT;
 
 const {
@@ -16,9 +16,9 @@ const {
   createRoutine,
   createUser,
   getRoutineActivityById,
-} = require("../../db");
+} = require('../../db');
 
-describe("/api/routine_activities", () => {
+describe('/api/routine_activities', () => {
   let token;
   let secondUserToken;
   let theUserNeedsToBeLoggedInToPatchError;
@@ -26,20 +26,20 @@ describe("/api/routine_activities", () => {
   let routineActivityThatWasCreated;
 
   const userToCreate = {
-    username: "Wash",
-    password: "Flying",
+    username: 'Wash',
+    password: 'Flying',
   };
 
   const secondUserToCreate = {
-    username: "Anara",
-    password: "Flying",
+    username: 'Anara',
+    password: 'Flying',
   };
 
   const routineToCreate = {
     creatorId: 0,
     isPublic: true,
-    name: "spartan training",
-    goal: "lets climb the wall and then run",
+    name: 'spartan training',
+    goal: 'lets climb the wall and then run',
   };
 
   const routineActivityToCreateAndUpdate = {
@@ -50,8 +50,8 @@ describe("/api/routine_activities", () => {
   };
 
   const activityToCreate = {
-    name: "farmer carry",
-    description: "perfect for life on a farm",
+    name: 'farmer carry',
+    description: 'perfect for life on a farm',
   };
 
   beforeAll(async () => {
@@ -61,10 +61,7 @@ describe("/api/routine_activities", () => {
       routineToCreate.creatorId = newUser.id;
 
       //login as the user to generate a token
-      const { data } = await axios.post(
-        `${API_URL}/api/users/login`,
-        userToCreate
-      );
+      const { data } = await axios.post(`${API_URL}/users/login`, userToCreate);
       token = data.token;
 
       //creates an activity
@@ -86,7 +83,7 @@ describe("/api/routine_activities", () => {
 
       //login as the second user to generate a token
       const response = await axios.post(
-        `${API_URL}/api/users/login`,
+        `${API_URL}/users/login`,
         secondUserToCreate
       );
       secondUserToken = response.data.token;
@@ -95,7 +92,7 @@ describe("/api/routine_activities", () => {
     }
   });
 
-  describe("PATCH /api/routine_activities/:routineActivityId", () => {
+  describe('PATCH /api/routine_activities/:routineActivityId', () => {
     beforeAll(async () => {
       try {
         const newRoutineActivityData = {
@@ -104,7 +101,7 @@ describe("/api/routine_activities", () => {
         };
 
         const { data: respondedRoutineActivity } = await axios.patch(
-          `${API_URL}/api/routine_activities/${routineActivityThatWasCreated.id}`,
+          `${API_URL}/routine_activities/${routineActivityThatWasCreated.id}`,
           newRoutineActivityData,
           { headers: { Authorization: `Bearer ${secondUserToken}` } }
         );
@@ -113,14 +110,14 @@ describe("/api/routine_activities", () => {
       }
     });
 
-    it("Updates the count or duration on the routine activity", async () => {
+    it('Updates the count or duration on the routine activity', async () => {
       const newRoutineActivityData = {
         count: 55,
         duration: 45,
       };
 
       const { data: respondedRoutineActivity } = await axios.patch(
-        `${API_URL}/api/routine_activities/${routineActivityThatWasCreated.id}`,
+        `${API_URL}/routine_activities/${routineActivityThatWasCreated.id}`,
         newRoutineActivityData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -140,11 +137,11 @@ describe("/api/routine_activities", () => {
     });
   });
 
-  describe("DELETE /api/routine_activities/:routineActivityId", () => {
+  describe('DELETE /api/routine_activities/:routineActivityId', () => {
     beforeAll(async () => {
       try {
         await axios.delete(
-          `${API_URL}/api/routine_activities/${routineActivityThatWasCreated.id}`,
+          `${API_URL}/routine_activities/${routineActivityThatWasCreated.id}`,
           { headers: { Authorization: `Bearer ${secondUserToken}` } }
         );
       } catch (err) {
@@ -152,10 +149,10 @@ describe("/api/routine_activities", () => {
       }
     });
 
-    it("Removes an activity from a routine, uses hard delete", async () => {
+    it('Removes an activity from a routine, uses hard delete', async () => {
       const newActivityToCreate = {
-        name: "swimming",
-        description: "just keep swimming",
+        name: 'swimming',
+        description: 'just keep swimming',
       };
 
       //creates an activity
@@ -165,8 +162,8 @@ describe("/api/routine_activities", () => {
       const newRoutineData = {
         creatorId: routineToCreate.creatorId,
         isPublic: true,
-        name: "triathlon training",
-        goal: "all the exercises",
+        name: 'triathlon training',
+        goal: 'all the exercises',
       };
 
       //creates a routine that is attached to the above user
@@ -184,7 +181,7 @@ describe("/api/routine_activities", () => {
       );
 
       const { data: deletedRoutineActivity } = await axios.delete(
-        `${API_URL}/api/routine_activities/${newRoutineActivityThatWasCreated.id}`,
+        `${API_URL}/routine_activities/${newRoutineActivityThatWasCreated.id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -204,7 +201,7 @@ describe("/api/routine_activities", () => {
       expect(shouldBeDeleted).toBeFalsy();
     });
 
-    it("Logged in user should be the owner of the modified object.", async () => {
+    it('Logged in user should be the owner of the modified object.', async () => {
       expect(theUserNeedsToBeLoggedInToDeleteError).toMatchObject({
         message: expect.any(String),
         name: expect.any(String),
