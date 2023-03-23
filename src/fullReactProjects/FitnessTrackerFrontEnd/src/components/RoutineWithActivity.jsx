@@ -10,7 +10,10 @@ const RoutineWithActivity = ({ selectedActivity, setSelectedActivity }) => {
   async function selectActivityRoutines() {
     try {
       const result = await getRoutinesByActivity(activityId);
-      setRoutines(result);
+
+      if (result && result.id) {
+        setRoutines(result);
+      }
       return result;
     } catch (error) {
       console.log(error);
