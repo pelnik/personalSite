@@ -13,7 +13,7 @@
     "seed:dev": "nodemon ./src/api/juicebox/db/seed.js",
     "seed:juicebox": "node ./src/api/juicebox/db/seed.js",
     "seed:fitness": "node ./src/api/fitness-tracker/db/seed.js",
-    "test": "npm run start:dev & npm run test:fitness:all && npm run test:others",
+    "test": "npm run test:fitness:all && npm run test:others",
     "test:fitness": "JEST_ENV=fitness jest --runInBand",
     "test:fitness:safe": "JEST_ENV=fitness jest --runInBand",
     "test:fitness:all": "JEST_ENV=fitness jest --runInBand fitness-tracker",
