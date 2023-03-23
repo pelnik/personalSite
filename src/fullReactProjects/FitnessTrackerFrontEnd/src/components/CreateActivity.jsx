@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { createActivity } from '../apiAdapters';
+import { useNavigate } from 'react-router-dom';
 
 const CreateActivity = ({ token }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   async function postNewActivity() {
     try {
       const result = await createActivity(token, name, description);
-      if (result.id) {
+      if (result && result.id) {
         setName('');
         setDescription('');
+        navigate('../activities');
       } else {
         setError('Activity already exists');
       }
@@ -49,7 +52,7 @@ const CreateActivity = ({ token }) => {
             }}
           />
           <button type="submit">Submit</button>
-          <p className='error-message'>{error}</p>
+          <p className="error-message">{error}</p>
         </form>
       </div>
     </div>

@@ -1,13 +1,24 @@
 import React from 'react';
 import { NavbarUser, NavbarNoUser } from './';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { default as Logo } from '../Media/Logo';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Navbar = ({ setToken, token }) => {
+  const navigate = useNavigate();
+
   return (
     <div id="navbar">
-      <div id="navbar-logo">
-        <Logo />
+      <div id="left-navbar">
+        <ArrowBackIcon
+          onClick={() => {
+            navigate(-1);
+          }}
+          className="navbar-icons"
+        />
+        <div id="navbar-logo">
+          <Logo />
+        </div>
       </div>
       <div id="navbarTabs">
         <div id="navbarTabs-container">
