@@ -20,7 +20,6 @@ describe('/api/unknown', () => {
       await axios.get(`${API_URL}/unknown`);
     } catch (err) {
       // the 404 response returns an object with a message, nae and status properties
-      console.log('error', err);
       errorNameFor404Error = err.response.data.name;
       errorMessageFor404Error = err.response.data.message;
       errorStatusFor404Error = err.response.status;

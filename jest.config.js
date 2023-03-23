@@ -19,6 +19,4 @@ if (process.env.JEST_ENV === 'fitness') {
   };
 }
 
-console.log('jest config', config);
-
 module.exports = config;

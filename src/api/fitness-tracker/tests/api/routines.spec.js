@@ -227,7 +227,6 @@ describe('/api/routines', () => {
           }
         );
       } catch (err) {
-        console.log('error', err);
         errorForTryingToEditARoutineThatIsNotYours = err.response.data;
       }
     });

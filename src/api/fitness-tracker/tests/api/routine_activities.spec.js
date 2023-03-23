@@ -88,7 +88,7 @@ describe('/api/routine_activities', () => {
       );
       secondUserToken = response.data.token;
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   });
 
