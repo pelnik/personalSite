@@ -1,0 +1,384 @@
+#fitnessMain {
+  --darkOrange: #e07f2b;
+  --peach: #ffc28e;
+  --blue: #a1c3ff;
+  --gray: #c7c3a9;
+  --yellow: #fffadb;
+}
+
+#fitnessMain ::-webkit-scrollbar {
+    background: transparent; /* Chrome/Safari/Webkit */
+    width: 0px;
+  }
+
+#fitnessMain * {
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+}
+
+#fitnessMain button {
+  padding: 4px 8px;
+  border: solid 1px rgba(0, 0, 0, 0.181);
+  color: inherit;
+  background-color: inherit;
+  border-radius: 5px;
+  transition: border 0.25s, background-color 0.25s;
+  cursor: pointer;
+}
+
+#fitnessMain button:hover {
+  border: solid 1px rgba(255, 255, 255, 0);
+  background-color: rgba(0, 0, 0, 0.181);
+}
+
+#fitnessMain a {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+#fitnessMain .border-link {
+  border: solid 1px rgba(0, 0, 0, 0.181);
+  padding: 3px 6px;
+  border-radius: 5px;
+}
+
+#fitnessMain .border-link:hover {
+  border: solid 1px rgba(255, 255, 255, 0);
+  background-color: rgba(0, 0, 0, 0.181);
+}
+
+#fitnessMain input {
+  border-radius: 5px;
+}
+
+#fitnessMain input[type=text], input[type=password] {
+  border: none;
+}
+
+#fitnessMain input[type=text]:focus, input[type=password]:hover {
+  outline: none;
+}
+
+#fitnessMain .shade-link {
+  transition: background-color 0.25s;
+  border-radius: 5px;
+  border: solid 1px rgba(0, 0, 0, 0.181);
+  transition: border 0.25s, background-color 0.25s;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+#fitnessMain .shade-link:hover {
+  border: solid 1px rgba(255, 255, 255, 0);
+    background-color: rgba(0, 0, 0, 0.181);
+}
+
+#fitnessMain .error-message {
+  color: red;
+}
+
+#fitnessMain .routine-creator {
+  align-self: flex-start;
+}
+
+#fitnessMain .warning {
+  color: red;
+  font-weight: bold;
+  font: 1.25 em;
+}
+
+#fitnessMain #navbar {
+  background-color: var(--blue);
+  color: white;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+#fitnessMain #left-navbar {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+}
+
+#fitnessMain #navbar-logo {
+  height: 60px;
+}
+
+#fitnessMain #navbarTabs-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content:center;
+}
+
+#fitnessMain #navbar .navbar-icons {
+  height: 2.25rem;
+  width: 2.25rem;
+}
+
+#fitnessMain #navbar button {
+  border: none;
+}
+
+#fitnessMain .navbar-user {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+#fitnessMain {
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--yellow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-family: apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+#fitnessMain .main-content {
+    flex-grow: 1;
+    min-height: 0px;
+    padding: 40px;
+}
+
+#fitnessMain .main-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#fitnessMain .scrolling-content {
+    overflow-y: scroll;
+    min-height: 0px;
+    flex-grow: 1;
+}
+
+#fitnessMain .horizontal-cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+#fitnessMain .horizontal-cards > div {
+    flex: 1 1 350px;
+    max-height: 600px;
+}
+
+#fitnessMain .center-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 15%;
+  border-radius: 5px;
+  align-self: center;
+}
+
+#fitnessMain #home-page {
+  position: relative;
+}
+
+#fitnessMain #homepage-logo {
+  height: 70px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+  color: var(--darkOrange)
+}
+
+#fitnessMain #homepage-text-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#fitnessMain #homepage-text-content p {
+  font-size: 1.25rem;
+  color: var(--darkOrange);
+}
+
+#fitnessMain #attr {
+  position: absolute;
+  bottom: 10px;
+  font-size: 0.75rem;
+  color: var(--darkOrange)
+}
+
+
+#fitnessMain .register-warning {
+  max-width: 150px;
+  align-self: center;
+  text-align: center;
+}
+
+#fitnessMain #routine-page-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+
+#fitnessMain #routine-container {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  padding: 20px;
+  border-radius: 8px;
+  gap: 15px;
+  background-color: var(--peach);
+  color: black;
+  flex-grow: 1;
+}
+#fitnessMain #routine-activity-card {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255, 0.4);
+  gap: 15px;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+#fitnessMain #routine-activity-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#fitnessMain .routine-activity-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+}
+
+#fitnessMain #my-routine-header, #activities-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#fitnessMain #full-routines-page {
+  overflow-y: scroll;
+  min-height: 0px;
+  flex-grow: 1;
+}
+
+#fitnessMain .my-routine-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+#fitnessMain .my-routine-header-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#fitnessMain .my-routine-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+}
+
+#fitnessMain .add-activity-button {
+  align-self: center;
+  padding: 10px 20px;
+}
+
+#fitnessMain .activity-warning {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#fitnessMain .user-link {
+    align-self: flex-start;
+}
+
+#fitnessMain #activities-full-page {
+  display: flex;
+  flex-direction: column;
+}
+
+#fitnessMain #activities-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#fitnessMain #activity-container {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid black;
+    padding: 20px 0px;
+    gap: 10px;
+}
+
+#fitnessMain #activity-container:last-child {
+    border: none;
+}
+
+#fitnessMain #activity-container button {
+  align-self: start;
+}
+
+#fitnessMain .form-parent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--blue);
+    padding: 25px 50px;
+    border-radius: 5px;
+    gap: 15px;
+    color: white;
+}
+
+#fitnessMain .form-parent form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#fitnessMain .form-parent h1 {
+    font-size: 1.75rem;
+}
+
+#fitnessMain .form-parent h2 {
+    font-size: 1.25rem;
+}
+
+#fitnessMain .form-parent form button {
+    align-self: center;
+}
+
+#fitnessMain .checkbox-parent {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+#fitnessMain .checkbox-parent input {
+    width: 1rem;
+}
+
+#fitnessMain #number-form-field {
+    width: 3rem;
+}
+
+@media (max-width: 768px) {
+    #fitnessMain #navbar {
+        flex-direction: column;
+        align-content: center;
+        gap: 10px;
+    }
+}
