@@ -12,7 +12,6 @@ const CreateRoutine = ({ token }) => {
   async function postNewRoutine() {
     try {
       const result = await createRoutine(token, name, goal, isPublic);
-      console.log('error message here', result);
       if (result && result.id) {
         setName('');
         setGoal('');
@@ -21,9 +20,7 @@ const CreateRoutine = ({ token }) => {
       } else {
         setError('Routine with this name already exists');
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   return (

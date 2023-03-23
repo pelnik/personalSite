@@ -18,9 +18,7 @@ const CreateActivity = ({ token }) => {
       } else {
         setError('Activity already exists');
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   return (

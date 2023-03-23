@@ -3,9 +3,7 @@ import { getRoutinesByActivity } from '../apiAdapters';
 
 const RoutineWithActivity = ({ selectedActivity, setSelectedActivity }) => {
   const [routines, setRoutines] = useState([]);
-  console.log(selectedActivity, 'selectedActivity');
   const activityId = selectedActivity.activityId;
-  console.log(typeof activityId, 'activityId>');
 
   async function selectActivityRoutines() {
     try {

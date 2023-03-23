@@ -32,10 +32,6 @@ const Main = () => {
     setToken(getTokenFromLocalStorage());
   }, []);
 
-  useEffect(() => {
-    console.log('main token', token);
-  }, [token]);
-
   return (
     <div id="fitnessMain">
       <Navbar setToken={setToken} token={token} />

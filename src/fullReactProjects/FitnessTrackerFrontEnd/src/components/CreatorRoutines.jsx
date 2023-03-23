@@ -10,9 +10,7 @@ const CreatorRoutines = ({ selectedUser, setSelectedUser }) => {
       const result = await getUsersRoutines(username);
       setRoutines(result);
       return result;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   useEffect(() => {

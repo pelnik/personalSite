@@ -22,9 +22,7 @@ const Login = ({ setToken, token }) => {
       } else {
         setError('Wrong username and/or password');
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   useEffect(() => {

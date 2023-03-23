@@ -11,9 +11,7 @@ const Activities = ({ token, setActivityEdit, setSelectedActivity }) => {
       const result = await getAllActivities();
       setActivities(result);
       return result;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   useEffect(() => {

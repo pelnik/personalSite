@@ -8,8 +8,6 @@ const UpdateActivity = ({ token, activityEdit, setActivityEdit }) => {
   const navigate = useNavigate();
   const activityId = activityEdit.id;
 
-  console.log(typeof activityId, 'type of activityId');
-
   async function editActivity(name, description) {
     try {
       const result = await updateActivity(token, activityId, name, description);

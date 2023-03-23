@@ -30,7 +30,6 @@ const Register = ({ setToken, token }) => {
   }
 
   useEffect(() => {
-    console.log('token register', token);
     if (token) {
       navigate(-1);
     }

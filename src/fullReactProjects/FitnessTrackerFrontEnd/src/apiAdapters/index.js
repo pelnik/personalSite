@@ -14,11 +14,8 @@ export const registerAccount = async (username, password) => {
     });
 
     const result = await response.json();
-    console.log(result);
     return result;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 export const loginAccount = async (username, password) => {
@@ -35,11 +32,8 @@ export const loginAccount = async (username, password) => {
     });
 
     const result = await response.json();
-    console.log(result);
     return result;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
 
 export const getAllRoutines = async () => {
@@ -68,7 +62,6 @@ export const getMyUser = async (token) => {
 
     const result = await response.json();
 
-    console.log('my user', result);
     return result;
   } catch (error) {
     console.error(error);
@@ -106,7 +99,6 @@ export const deleteRoutine = async (token, routineId) => {
       },
     });
     const result = await response.json();
-    console.log('deleting routine', result);
     return result;
   } catch (error) {
     console.error(error);
@@ -128,7 +120,6 @@ export const createRoutine = async (token, name, goal, isPublic) => {
       }),
     });
     const result = await response.json();
-    console.log('creating routine', result);
     return result;
   } catch (error) {
     console.error(error);
@@ -145,11 +136,8 @@ export async function getAllActivities() {
     });
 
     const result = await response.json();
-    console.log('activity get', result);
     return result;
-  } catch (error) {
-    console.log('error getting activities', error);
-  }
+  } catch (error) {}
 }
 
 export async function addActivityToRoutine(
@@ -173,9 +161,7 @@ export async function addActivityToRoutine(
 
     const result = await response.json();
     return result;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 }
 
 export async function deleteActivityFromRoutine(token, routineActivityId) {
@@ -192,9 +178,7 @@ export async function deleteActivityFromRoutine(token, routineActivityId) {
     );
     const result = await response.json();
     return result;
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 }
 
 export const updateRoutineActivity = async (
@@ -220,11 +204,8 @@ export const updateRoutineActivity = async (
     );
     const result = await response.json();
 
-    console.log('updateRA:', result);
     return result;
-  } catch (error) {
-    console.error(error);
-  }
+  } catch (error) {}
 };
 
 export const createActivity = async (token, name, description) => {
@@ -241,11 +222,8 @@ export const createActivity = async (token, name, description) => {
       }),
     });
     const result = await response.json();
-    console.log('create new activity', result);
     return result;
-  } catch (error) {
-    console.error(error);
-  }
+  } catch (error) {}
 };
 
 export const getUsersRoutines = async (username) => {
@@ -256,7 +234,6 @@ export const getUsersRoutines = async (username) => {
       },
     });
     const result = await response.json();
-    console.log('users routine', result);
     return result;
   } catch (error) {}
 };
@@ -269,11 +246,8 @@ export const getRoutinesByActivity = async (activityId) => {
       },
     });
     const result = await response.json();
-    console.log('routines by activity', result);
     return result;
-  } catch (error) {
-    console.error(error);
-  }
+  } catch (error) {}
 };
 
 export const updateActivity = async (token, activityId, name, description) => {
@@ -290,7 +264,6 @@ export const updateActivity = async (token, activityId, name, description) => {
       }),
     });
     const result = await response.json();
-    console.log('edit activity', result);
     return result;
   } catch (error) {
     console.error(error);
