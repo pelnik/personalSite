@@ -36,39 +36,47 @@ const Activities = ({ token, setActivityEdit, setSelectedActivity }) => {
       </div>
       <div className="scrolling-content">
         <div id="activities-container">
-          {activities.map((activity, idx) => {
-            return (
-              <div id="activity-container" key={`ActivityPage${idx}`}>
-                <h2
-                  className="shade-link"
-                  onClick={() => {
-                    setSelectedActivity({
-                      activityId: activity.id,
-                      activityName: activity.name,
-                    });
-                    navigate(`../routines/${activity.id}`);
-                  }}
-                >
-                  {activity.name}
-                </h2>
-                <p>{activity.description}</p>
-                {token ? (
-                  <button
+          {[...activities]
+            .sort((activity1, activity2) => {
+              if (activity1.id > activity2.id) {
+                return -1;
+              } else {
+                return 1;
+              }
+            })
+            .map((activity, idx) => {
+              return (
+                <div id="activity-container" key={`ActivityPage${idx}`}>
+                  <h2
+                    className="shade-link"
                     onClick={() => {
-                      setActivityEdit({
-                        id: activity.id,
-                        name: activity.name,
-                        description: activity.description,
+                      setSelectedActivity({
+                        activityId: activity.id,
+                        activityName: activity.name,
                       });
-                      navigate('./update');
+                      navigate(`../routines/${activity.id}`);
                     }}
                   >
-                    Edit
-                  </button>
-                ) : null}
-              </div>
-            );
-          })}
+                    {activity.name}
+                  </h2>
+                  <p>{activity.description}</p>
+                  {token ? (
+                    <button
+                      onClick={() => {
+                        setActivityEdit({
+                          id: activity.id,
+                          name: activity.name,
+                          description: activity.description,
+                        });
+                        navigate('./update');
+                      }}
+                    >
+                      Edit
+                    </button>
+                  ) : null}
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>

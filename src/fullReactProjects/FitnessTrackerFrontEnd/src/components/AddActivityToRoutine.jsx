@@ -46,7 +46,7 @@ function AddActivityToRoutine({
 
   return (
     <div id="routine-activity">
-      {filteredActivities.length === 0 ? (
+      {filterActivities && filteredActivities.length === 0 ? (
         <p className="warning activity-warning">All activities already added</p>
       ) : (
         <form
@@ -62,13 +62,21 @@ function AddActivityToRoutine({
               setSelectedActivity(evt.target.value);
             }}
           >
-            {filteredActivities.map((activity, idx) => {
-              return (
-                <option key={`activity${idx}`} value={activity.id}>
-                  {`${activity.name}`}
-                </option>
-              );
-            })}
+            {[...filteredActivities]
+              .sort((activity1, activity2) => {
+                if (activity1.id > activity2.id) {
+                  return -1;
+                } else {
+                  return 1;
+                }
+              })
+              .map((activity, idx) => {
+                return (
+                  <option key={`activity${idx}`} value={activity.id}>
+                    {`${activity.name}`}
+                  </option>
+                );
+              })}
           </select>
           <h1>Count:</h1>
           <input
