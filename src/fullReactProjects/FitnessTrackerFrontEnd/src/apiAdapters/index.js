@@ -1,6 +1,6 @@
 let BASE;
 
-if (process.env.SERVER_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
   BASE = 'https://pelnik.dev/api/fitness';
 } else {
   BASE = 'http://localhost:3000/api/fitness';
