@@ -59,10 +59,7 @@ describe('/api/activities', () => {
     routineToCreate.creatorId = newUser.id;
 
     //login as the user to generate a token
-    const { data } = await axios.post(
-      `${API_URL}/api/users/login`,
-      userToCreate
-    );
+    const { data } = await axios.post(`${API_URL}/users/login`, userToCreate);
     token = data.token;
 
     //creates an activity
@@ -83,7 +80,7 @@ describe('/api/activities', () => {
       // Create a fake activity to watch for
       const curls = { name: 'curls', description: '4 sets of 15.' };
       const createdActivity = await createActivity(curls);
-      const { data: activities } = await axios.get(`${API_URL}/api/activities`);
+      const { data: activities } = await axios.get(`${API_URL}/activities`);
       expect(Array.isArray(activities)).toBe(true);
       expect(activities.length).toBeGreaterThan(0);
       expect(activities[0].name).toBeTruthy();
@@ -99,7 +96,7 @@ describe('/api/activities', () => {
   describe('GET /api/activities/:activityId/routines', () => {
     beforeAll(async () => {
       try {
-        await axios.get(`${API_URL}/api/activities/10000/routines`);
+        await axios.get(`${API_URL}/activities/10000/routines`);
       } catch (err) {
         thisActivityDoesNotExistError = err.response.data;
       }
@@ -108,7 +105,7 @@ describe('/api/activities', () => {
       const [testRoutine] = await getAllPublicRoutines();
       const [testActivity] = testRoutine.activities;
       const { data: routines } = await axios.get(
-        `${API_URL}/api/activities/${testActivity.id}/routines`
+        `${API_URL}/activities/${testActivity.id}/routines`
       );
       const routinesFromDB = await getPublicRoutinesByActivity(testActivity);
       expect(routines).toEqual(routinesFromDB);
@@ -132,7 +129,7 @@ describe('/api/activities', () => {
       // this is to create the activity
       try {
         await axios.post(
-          `${API_URL}/api/activities`,
+          `${API_URL}/activities`,
           activityToTestDuplicateErrorHandling,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -145,7 +142,7 @@ describe('/api/activities', () => {
       // this is to try and create a duplicate activity and to save the error in a variable to be used below in the test
       try {
         await axios.post(
-          `${API_URL}/api/activities`,
+          `${API_URL}/activities`,
           activityToTestDuplicateErrorHandling,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -161,7 +158,7 @@ describe('/api/activities', () => {
       };
 
       const { data: respondedActivity } = await axios.post(
-        `${API_URL}/api/activities`,
+        `${API_URL}/activities`,
         activityToCreateAndUpdate,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -189,7 +186,7 @@ describe('/api/activities', () => {
       // this is to create the activity that we will then attempt to update
 
       const { data } = await axios.post(
-        `${API_URL}/api/activities`,
+        `${API_URL}/activities`,
         activityToCreateAndThenUpdate,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -205,7 +202,7 @@ describe('/api/activities', () => {
       };
       try {
         const { data } = await axios.patch(
-          `${API_URL}/api/activities/${424242424242}`,
+          `${API_URL}/activities/${424242424242}`,
           activityThatShouldNotExist,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -223,7 +220,7 @@ describe('/api/activities', () => {
       };
 
       const { data } = await axios.post(
-        `${API_URL}/api/activities`,
+        `${API_URL}/activities`,
         aNewActivityToUseAsATest,
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -240,7 +237,7 @@ describe('/api/activities', () => {
       };
       try {
         await axios.patch(
-          `${API_URL}/api/activities/${createdActivityToBePatched.id}`,
+          `${API_URL}/activities/${createdActivityToBePatched.id}`,
           patchData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -256,7 +253,7 @@ describe('/api/activities', () => {
         description: 'They hurt EVEN MORE, but you will thank you later',
       };
       const { data: respondedActivity } = await axios.patch(
-        `${API_URL}/api/activities/${createdActivityToBePatched.id}`,
+        `${API_URL}/activities/${createdActivityToBePatched.id}`,
         newActivityData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
