@@ -351,10 +351,6 @@
   justify-content: center;
 }
 
-.siteFullWindow #jb-main-container .jbText {
-  
-}
-
 .siteFullWindow #jb-main-container .jbCode {
   background-color: var(--myLightGray);
   font-family:'Courier New', Courier, monospace;
@@ -375,6 +371,18 @@
 
 .siteFullWindow .api-text-content {
   max-width: 600px;
+}
+
+.siteFullWindow .jbLink {
+  background-color: #ADC0DB;
+  border-radius: 5px;
+  padding: 5px;
+  transition: filter 0.5s;
+  cursor: pointer;
+}
+
+.siteFullWindow .jbLink:hover {
+  filter: brightness(80%);
 }
 
 
