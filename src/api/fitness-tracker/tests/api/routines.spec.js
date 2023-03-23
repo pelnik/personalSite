@@ -216,6 +216,8 @@ describe('/api/routines', () => {
           { headers: { Authorization: `Bearer ${secondUserToken}` } }
         );
 
+        console.log('responded routine', respondedRoutine);
+
         // Attempt to patch a routine made with the secondUserToken, while passing in the token from the first user we made. This should throw an error which we are attempting to capture in the catch.
         await axios.patch(
           `${API_URL}/routines/${respondedRoutine.id}`,
@@ -225,6 +227,7 @@ describe('/api/routines', () => {
           }
         );
       } catch (err) {
+        console.log('error', err);
         errorForTryingToEditARoutineThatIsNotYours = err.response.data;
       }
     });

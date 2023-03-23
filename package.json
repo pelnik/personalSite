@@ -12,8 +12,10 @@
     "start:prod:full": "NODE_ENV=production git pull && npm install && react-scripts build && sudo node server.js",
     "seed:dev": "nodemon ./src/api/juicebox/db/seed.js",
     "seed": "node ./src/api/juicebox/db/seed.js",
-    "test": "jest",
-    "test:fitness": "jest --runInBand"
+    "test": "npm run test:fitness:all",
+    "test:fitness": "JEST_ENV=fitness jest --runInBand",
+    "test:fitness:all": "JEST_ENV=fitness jest --runInBand fitness-tracker",
+    "test:others": "JEST_ENV=others jest"
   },
   "repository": {
     "type": "git",
@@ -53,6 +55,7 @@
     "babel-jest": "^29.5.0",
     "faker": "^5.5.3",
     "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
     "nodemon": "^2.0.22",
     "react-test-renderer": "^18.2.0"
   },
