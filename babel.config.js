@@ -1,4 +1,4 @@
-config = {};
+let config = {};
 
 if (process.env.JEST_ENV !== 'fitness') {
   config = {

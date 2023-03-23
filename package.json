@@ -12,8 +12,9 @@
     "start:prod:full": "NODE_ENV=production git pull && npm install && react-scripts build && sudo node server.js",
     "seed:dev": "nodemon ./src/api/juicebox/db/seed.js",
     "seed": "node ./src/api/juicebox/db/seed.js",
-    "test": "npm run test:fitness:all",
+    "test": "npm run start:dev & npm run test:fitness:all && npm run test:others",
     "test:fitness": "JEST_ENV=fitness jest --runInBand",
+    "test:fitness:safe": "JEST_ENV=fitness jest --runInBand",
     "test:fitness:all": "JEST_ENV=fitness jest --runInBand fitness-tracker",
     "test:others": "JEST_ENV=others jest"
   },

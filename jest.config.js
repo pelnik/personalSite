@@ -1,4 +1,4 @@
-config = {};
+let config = {};
 
 if (process.env.JEST_ENV === 'fitness') {
   config = {
@@ -15,8 +15,10 @@ if (process.env.JEST_ENV === 'fitness') {
       '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/src/__mocks__/fileMock.js',
     },
     testEnvironment: 'jsdom',
-    testPathIgnorePatterns: ['/node_modules/', '/src/api/fitness_tracker'],
+    testPathIgnorePatterns: ['/node_modules/', '/src/api/fitness-tracker/'],
   };
 }
+
+console.log('jest config', config);
 
 module.exports = config;
