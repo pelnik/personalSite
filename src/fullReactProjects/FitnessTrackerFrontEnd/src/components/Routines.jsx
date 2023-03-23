@@ -33,7 +33,7 @@ const Routines = ({ setSelectedUser, setSelectedActivity }) => {
               <h2>Name: {post.name}</h2>
               <h3>Goal: {post.goal}</h3>
               <Link
-                to={`/${post.creatorName}/routines`}
+                to={`/fitness/${post.creatorName}/routines`}
                 onClick={() => {
                   setSelectedUser({ username: post.creatorName });
                 }}
