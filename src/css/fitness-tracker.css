@@ -1,4 +1,4 @@
-#fitnessMain :root {
+#fitnessMain {
   --darkOrange: #e07f2b;
   --peach: #ffc28e;
   --blue: #a1c3ff;
@@ -127,7 +127,7 @@
   gap: 5px;
 }
 
-#fitnessMain #main {
+#fitnessMain {
   height: 100vh;
   width: 100vw;
   background-color: var(--yellow);

@@ -11,7 +11,7 @@ function NavbarNoUser() {
     <div className="navbar-user" id="navbar-no-user-container">
       <button
         onClick={() => {
-          navigate('/users/login');
+          navigate('users/login');
         }}
       >
         <Tooltip title="Log In">
@@ -20,7 +20,7 @@ function NavbarNoUser() {
       </button>
       <button
         onClick={() => {
-          navigate('/users/register');
+          navigate('users/register');
         }}
       >
         <Tooltip title="Register">

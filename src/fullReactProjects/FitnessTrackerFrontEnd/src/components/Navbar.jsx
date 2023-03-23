@@ -11,10 +11,10 @@ const Navbar = ({ setToken, token }) => {
       </div>
       <div id="navbarTabs">
         <div id="navbarTabs-container">
-          <Link to="/">
+          <Link to="/fitness/">
             <h2>Home</h2>
           </Link>
-          <Link to="/routines">
+          <Link to="routines">
             <h2>Routines</h2>
           </Link>
           {token ? (
@@ -22,7 +22,7 @@ const Navbar = ({ setToken, token }) => {
               <h2>My Routines</h2>
             </Link>
           ) : null}
-          <Link to="/activities">
+          <Link to="activities">
             <h2>Activities</h2>
           </Link>
         </div>

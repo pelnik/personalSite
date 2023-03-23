@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Home, About, Portfolio, Snake, NotFound, JuiceboxDoc } from '.';
 import { JuiceboxMain } from '../fullReactProjects/juicebox/components';
 import { StrangerMain } from '../fullReactProjects/stranger/src/components';
+import { FitnessMain } from '../fullReactProjects/FitnessTrackerFrontEnd/src/components';
 
 function Main() {
   return (
@@ -15,7 +16,7 @@ function Main() {
         <Route path="/stranger/*" element={<StrangerMain />} />
         <Route path="/juicebox/*" element={<JuiceboxMain />} />
         <Route path="/api/juicebox" element={<JuiceboxDoc />} />
-        <Route path="/fitness/*" element={<JuiceboxDoc />} />
+        <Route path="/fitness/*" element={<FitnessMain />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </main>

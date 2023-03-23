@@ -1,4 +1,4 @@
-export { default as Main } from './Main';
+export { default as FitnessMain } from './Main';
 export { default as Homepage } from './Homepage';
 export { default as Navbar } from './Navbar';
 export { default as Register } from './Register';

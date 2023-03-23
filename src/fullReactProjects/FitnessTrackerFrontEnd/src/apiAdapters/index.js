@@ -1,6 +1,5 @@
-const BASE = 'https://fitnesstrackr.fly.dev/api';
+const BASE = 'http://localhost:3000/api/fitness';
 
-test;
 export const registerAccount = async (username, password) => {
   try {
     const response = await fetch(`${BASE}/users/register`, {
@@ -68,6 +67,7 @@ export const getMyUser = async (token) => {
     });
 
     const result = await response.json();
+
     console.log('my user', result);
     return result;
   } catch (error) {

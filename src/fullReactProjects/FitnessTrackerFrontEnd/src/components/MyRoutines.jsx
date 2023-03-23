@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   getMyUser,
   deleteRoutine,
   getAllActivities,
   deleteActivityFromRoutine,
-} from "../apiAdapters";
-import { AddActivityToRoutine } from "./";
+} from '../apiAdapters';
+import { AddActivityToRoutine } from './';
+import { saveToLocalStorage } from '../utils/localStorage';
 
 const MyRoutines = ({
   token,
   setMyRoutineEdit,
   setMyRoutineActivityEdit,
   setSelectedActivity,
+  setToken,
 }) => {
   const [routine, setRoutine] = useState([]);
   const [activities, setActivities] = useState([]);
@@ -26,7 +28,13 @@ const MyRoutines = ({
 
       if (token) {
         result = await getMyUser(token);
-        setRoutine(result.allMyRoutines);
+
+        if (result && result.name === 'JsonWebTokenError') {
+          saveToLocalStorage('');
+          setToken('');
+        } else {
+          setRoutine(result.allMyRoutines);
+        }
       }
       return result;
     } catch (error) {
@@ -81,16 +89,16 @@ const MyRoutines = ({
         <h1>My Routines</h1>
         <button
           onClick={() => {
-            navigate("/my-routines/new");
+            navigate('/my-routines/new');
           }}
         >
           Create New Routine
         </button>
       </div>
 
-      {routine.length === 0 ? (
+      {routine && routine.length === 0 ? (
         <div>😢 No routines yet. Create a routine to use this page.</div>
-      ) : (
+      ) : routine ? (
         <div
           className="scrolling-content horizontal-cards"
           id="routine-page-container"
@@ -110,7 +118,7 @@ const MyRoutines = ({
                             isPublic: post.isPublic,
                             routineId: post.id,
                           });
-                          navigate("/my-routines/update");
+                          navigate('/my-routines/update');
                         }}
                       >
                         Edit
@@ -182,7 +190,7 @@ const MyRoutines = ({
                                   routineActivityId: activity.routineActivityId,
                                 });
                                 navigate(
-                                  "/my-routines/update-routine-activity"
+                                  '/my-routines/update-routine-activity'
                                 );
                               }}
                             >
@@ -206,7 +214,7 @@ const MyRoutines = ({
             );
           })}
         </div>
-      )}
+      ) : null}
     </div>
   );
 };
