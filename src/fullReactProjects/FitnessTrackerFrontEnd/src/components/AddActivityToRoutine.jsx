@@ -17,9 +17,17 @@ function AddActivityToRoutine({
 
   const postIdSet = new Set(postActivityIds);
 
-  const filteredActivities = activities.filter((activity) => {
-    return !postIdSet.has(activity.id);
-  });
+  const filteredActivities = activities
+    .filter((activity) => {
+      return !postIdSet.has(activity.id);
+    })
+    .sort((activity1, activity2) => {
+      if (activity1.id > activity2.id) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
 
   const [selectedActivity, setSelectedActivity] = useState(
     filteredActivities.length > 0 ? filteredActivities[0].id : 1
@@ -46,7 +54,7 @@ function AddActivityToRoutine({
 
   return (
     <div id="routine-activity">
-      {filterActivities && filteredActivities.length === 0 ? (
+      {filteredActivities && filteredActivities.length === 0 ? (
         <p className="warning activity-warning">All activities already added</p>
       ) : (
         <form
@@ -62,21 +70,13 @@ function AddActivityToRoutine({
               setSelectedActivity(evt.target.value);
             }}
           >
-            {[...filteredActivities]
-              .sort((activity1, activity2) => {
-                if (activity1.id > activity2.id) {
-                  return -1;
-                } else {
-                  return 1;
-                }
-              })
-              .map((activity, idx) => {
-                return (
-                  <option key={`activity${idx}`} value={activity.id}>
-                    {`${activity.name}`}
-                  </option>
-                );
-              })}
+            {[...filteredActivities].map((activity, idx) => {
+              return (
+                <option key={`activity${idx}`} value={activity.id}>
+                  {`${activity.name}`}
+                </option>
+              );
+            })}
           </select>
           <h1>Count:</h1>
           <input
