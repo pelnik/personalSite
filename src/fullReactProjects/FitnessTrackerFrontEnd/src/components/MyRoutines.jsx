@@ -84,6 +84,12 @@ const MyRoutines = ({
     getActivities();
   }, []);
 
+  useEffect(() => {
+    if (!token) {
+      navigate('/fitness');
+    }
+  }, [token]);
+
   return (
     <div className="main-content main-layout" id="full-routines-page">
       <div id="my-routine-header">
