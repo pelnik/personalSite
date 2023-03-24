@@ -9,7 +9,10 @@ const Activities = ({ token, setActivityEdit, setSelectedActivity }) => {
   async function getAllActivityPage() {
     try {
       const result = await getAllActivities();
-      setActivities(result);
+
+      if (Array.isArray(result)) {
+        setActivities(result);
+      }
       return result;
     } catch (error) {}
   }

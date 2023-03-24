@@ -1,8 +1,14 @@
 const express = require('express');
 const fitnessRouter = express.Router();
 const jwt = require('jsonwebtoken');
+const path = require('path');
 const { getUserById } = require('../db');
 const { JWT_SECRET } = process.env;
+
+// Send docs for base path
+fitnessRouter.get('/docs', (req, res, next) => {
+  res.sendFile(path.resolve('build', 'index.html'));
+});
 
 fitnessRouter.use(async (req, res, next) => {
   const prefix = 'Bearer ';

@@ -11,8 +11,11 @@ const UpdateActivity = ({ token, activityEdit, setActivityEdit }) => {
   async function editActivity(name, description) {
     try {
       const result = await updateActivity(token, activityId, name, description);
-      setActivityEdit({});
-      navigate('../activities');
+
+      if (result && result.id) {
+        setActivityEdit({});
+        navigate('../activities');
+      }
     } catch (error) {
       console.log(error);
     }

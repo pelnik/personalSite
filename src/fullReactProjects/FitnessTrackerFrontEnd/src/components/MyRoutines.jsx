@@ -43,7 +43,7 @@ const MyRoutines = ({
   async function removeRoutine(post) {
     try {
       const result = await deleteRoutine(token, post.id);
-      if (result.id) {
+      if (result && result.id) {
         const routineCopy = [...routine].filter((r, idx) => {
           return r.id !== post.id;
         });
@@ -58,7 +58,9 @@ const MyRoutines = ({
     try {
       const result = await getAllActivities();
 
-      setActivities(result);
+      if (Array.isArray(result)) {
+        setActivities(result);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -67,6 +69,7 @@ const MyRoutines = ({
   async function removeActivity(routineActivityId) {
     try {
       const result = await deleteActivityFromRoutine(token, routineActivityId);
+
       return result;
     } catch (error) {
       console.log(error);
@@ -80,6 +83,12 @@ const MyRoutines = ({
   useEffect(() => {
     getActivities();
   }, []);
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/fitness');
+    }
+  }, [token]);
 
   return (
     <div className="main-content main-layout" id="full-routines-page">

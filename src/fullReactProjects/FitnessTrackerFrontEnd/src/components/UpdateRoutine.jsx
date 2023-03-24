@@ -18,8 +18,11 @@ const UpdateRoutine = ({ token, myRoutineEdit, setMyRoutineEdit }) => {
         goal,
         routineId
       );
-      setMyRoutineEdit({});
-      navigate('../my-routines');
+
+      if (result && result.id) {
+        setMyRoutineEdit({});
+        navigate('../my-routines');
+      }
     } catch (error) {
       console.log(error);
     }

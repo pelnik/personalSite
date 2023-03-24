@@ -41,7 +41,7 @@ function AddActivityToRoutine({
       duration
     );
 
-    if (result.id) {
+    if (result && result.id) {
       setSelectedActivity(1);
       setCount(0);
       setDuration(0);

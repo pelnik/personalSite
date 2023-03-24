@@ -13,7 +13,7 @@ const Login = ({ setToken, token }) => {
     try {
       const result = await loginAccount(username, password);
 
-      if (result.token !== undefined) {
+      if (result && result.token !== undefined) {
         setToken(result.token);
         saveToLocalStorage(result.token);
         setUsername('');

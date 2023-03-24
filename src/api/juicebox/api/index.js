@@ -8,7 +8,7 @@ const jbRouter = express.Router();
 const { JWT_SECRET } = process.env;
 
 // Send docs for base path
-jbRouter.get('/', (req, res, next) => {
+jbRouter.get('/docs', (req, res, next) => {
   res.sendFile(path.resolve('build', 'index.html'));
 });
 

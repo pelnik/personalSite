@@ -22,7 +22,82 @@ function Portfolio() {
           </p>
           <div className="projectContainer">
             <div className="project">
-              <Link to="/api/juicebox">
+              <Link to="/api/fitness/docs">
+                <img
+                  src="/Media/main/fitness-back-end.jpg"
+                  alt="fitness tracker back end screenshot"
+                />
+                <p>
+                  We developed a fitness tracker back end that tracks user
+                  routines and activities. You can choose if you want your
+                  routines public, and the API will serve up appropriate
+                  routines whether you are logged in or logged out. The site has
+                  a Postgres database back end and JSON Web Tokens are used for
+                  stateless user authentication.
+                </p>
+                <p>
+                  The API was built using a test driven development design where
+                  Jest test were provided specifying the needed capabilities,
+                  and the API was built to meet those.
+                </p>
+                <p>
+                  Several features typical of a site of this nature are built
+                  into the API, such as user registration, login, the ability to
+                  see routines and activities with or without authorization,
+                  edit and create routines, and the attachment of activities to
+                  individual routines.
+                </p>
+                <p>
+                  The documentation linked has several cURL commands you can use
+                  to test the API.
+                </p>
+              </Link>
+              <p>
+                <a
+                  className="projectGithubLink"
+                  href="https://github.com/pelnik/FitnessTracker"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Github repo
+                </a>
+              </p>
+            </div>
+            <div className="project">
+              <Link to="/fitness">
+                <img
+                  src="/Media/main/fitness-front-end.jpg"
+                  alt="fitness tracker front end screenshot"
+                />
+                <p>
+                  The front end for our fitness tracker was developed on top of
+                  the API built allowing users to track their own fitness
+                  efforts. The site uses extensive routing to allow the user to
+                  navigate directly to certain pages, like "create new activity"
+                  for instance and also implements the Material UI React
+                  framework for icons.
+                </p>
+                <p>
+                  The front end allows the user to use the features described in
+                  the backend section, such as registering a user, logging in,
+                  creating a routine or activity, adding activities to the
+                  routine, editing, and deleting. Register a user and play
+                  around in the site!
+                </p>
+              </Link>
+              <p>
+                <a
+                  className="projectGithubLink"
+                  href="https://github.com/jina366/FitnessTrackerFront"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Github repo
+                </a>
+              </p>
+            </div>
+            <div className="project">
+              <Link to="/api/juicebox/docs">
                 <img
                   src="/Media/main/juicebox-back-end.jpg"
                   alt="Juicebox back end screenshot"
