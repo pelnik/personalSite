@@ -1,11 +1,19 @@
 import React from 'react';
 import '../css/site.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 function Header() {
+  const navigate = useNavigate();
+
   return (
     <header className="header" id="indexHeader">
       <div className="leftHeader">
+        <ArrowBackIcon
+          onClick={() => {
+            navigate(-1);
+          }}
+        />
         <Link to="/">
           <div className="material-symbols-outlined">Home</div>
         </Link>
