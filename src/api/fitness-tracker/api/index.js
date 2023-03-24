@@ -4,6 +4,11 @@ const jwt = require('jsonwebtoken');
 const { getUserById } = require('../db');
 const { JWT_SECRET } = process.env;
 
+// Send docs for base path
+fitnessRouter.get('/', (req, res, next) => {
+  res.sendFile(path.resolve('build', 'index.html'));
+});
+
 fitnessRouter.use(async (req, res, next) => {
   const prefix = 'Bearer ';
   const auth = req.header('Authorization');
