@@ -8,7 +8,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="siteFullWindow">
+    <div className="site-full-window">
       <HomeHeader />
       <HomeContent />
       <HomeFooter />

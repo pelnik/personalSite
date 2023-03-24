@@ -16,7 +16,7 @@ import { FitnessMain } from '../fullReactProjects/FitnessTrackerFrontEnd/src/com
 
 function Main() {
   return (
-    <main className="fullWindow">
+    <main className="full-window">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
