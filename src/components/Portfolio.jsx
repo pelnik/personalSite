@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Header, Footer } from '.';
+import { OldHeader, OldFooter } from '.';
 import { Link } from 'react-router-dom';
 
 function Portfolio() {
@@ -10,7 +10,7 @@ function Portfolio() {
 
   return (
     <div className="siteFullWindow">
-      <Header />
+      <OldHeader />
       <div className="main" id="portfolioMain">
         <div id="portfolioMainContainer">
           <h1>Portfolio</h1>
@@ -350,7 +350,7 @@ function Portfolio() {
           </div>
         </div>
       </div>
-      <Footer />
+      <OldFooter />
     </div>
   );
 }

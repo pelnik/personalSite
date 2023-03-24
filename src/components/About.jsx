@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Header, Footer } from '.';
+import { OldHeader, OldFooter } from '.';
 
 function About() {
   useEffect(() => {
@@ -9,7 +9,7 @@ function About() {
 
   return (
     <div className="siteFullWindow">
-      <Header />
+      <OldHeader />
       <div className="main" id="aboutMain">
         <div className="mainContainer" id="aboutMainContainer">
           <div id="indexTextContentContainer">
@@ -66,7 +66,7 @@ function About() {
           </div>
         </div>
       </div>
-      <Footer />
+      <OldFooter />
     </div>
   );
 }

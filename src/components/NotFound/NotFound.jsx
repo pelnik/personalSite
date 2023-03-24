@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Header, Footer } from '..';
+import { OldHeader, OldFooter } from '..';
 
 import { ErrorIcon } from '..';
 
@@ -12,7 +12,7 @@ function NotFound() {
 
   return (
     <div className="siteFullWindow">
-      <Header />
+      <OldHeader />
       <div className="main" id="nfFullWindow">
         <div className="nfTextContent">
           <h1 id="nfErrorHeader">
@@ -32,7 +32,7 @@ function NotFound() {
           </p>
         </div>
       </div>
-      <Footer />
+      <OldFooter />
     </div>
   );
 }

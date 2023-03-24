@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Header, HomeContent, Footer } from '.';
+import { HomeHeader, HomeContent, HomeFooter } from '.';
 
 function Home() {
   useEffect(() => {
@@ -9,9 +9,9 @@ function Home() {
 
   return (
     <div className="siteFullWindow">
-      <Header />
+      <HomeHeader />
       <HomeContent />
-      <Footer />
+      <HomeFooter />
     </div>
   );
 }

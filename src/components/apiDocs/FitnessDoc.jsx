@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { Header, Footer } from '..';
+import { OldHeader, OldFooter } from '..';
 
 function FitnessDoc() {
   useEffect(() => {
@@ -10,7 +10,7 @@ function FitnessDoc() {
 
   return (
     <div className="siteFullWindow">
-      <Header />
+      <OldHeader />
       <div className="main" id="jbDocMain">
         <div className="mainContainer" id="jb-main-container">
           <div className="textContentContainer" id="indexTextContentContainer">
@@ -109,7 +109,7 @@ function FitnessDoc() {
           </div>
         </div>
       </div>
-      <Footer />
+      <OldFooter />
     </div>
   );
 }
