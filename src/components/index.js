@@ -12,3 +12,4 @@ export { default as NotFound } from './NotFound/NotFound';
 export { default as ErrorIcon } from './NotFound/ErrorIcon';
 export { default as JuiceboxDoc } from './apiDocs/JuiceboxDoc';
 export { default as FitnessDoc } from './apiDocs/FitnessDoc';
+export { default as ButtonSpecial } from './Utilities/ButtonSpecial';

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ButtonSpecial } from '.';
 
 function HomeHeader() {
   return (
@@ -9,9 +10,7 @@ function HomeHeader() {
         </p>
       </div>
       <div className="subnavbar" id="right-navbar">
-        <div className="button-special">
-          <button className="navbar-button">About</button>
-        </div>
+        <ButtonSpecial>About</ButtonSpecial>
       </div>
     </div>
   );

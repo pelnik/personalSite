@@ -65,17 +65,7 @@
   font-size: 2rem;
 }
 
-.site-full-window .button-special {
-  padding: 4px;
-}
 
-.site-full-window .button-special:hover {
-  padding: 0px;
-}
-
-.site-full-window .button-special button:hover {
-  padding: 4px;
-}
 
 .site-full-window {
 
