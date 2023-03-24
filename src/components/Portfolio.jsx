@@ -22,7 +22,7 @@ function Portfolio() {
           </p>
           <div className="projectContainer">
             <div className="project">
-              <Link to="/api/fitness">
+              <Link to="/api/fitness/docs">
                 <img
                   src="/Media/main/juicebox-back-end.jpg"
                   alt="fitness tracker back end screenshot"
@@ -97,7 +97,7 @@ function Portfolio() {
               </p>
             </div>
             <div className="project">
-              <Link to="/api/juicebox">
+              <Link to="/api/juicebox/docs">
                 <img
                   src="/Media/main/juicebox-back-end.jpg"
                   alt="Juicebox back end screenshot"

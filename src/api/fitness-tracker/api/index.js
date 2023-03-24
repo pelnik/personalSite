@@ -5,7 +5,7 @@ const { getUserById } = require('../db');
 const { JWT_SECRET } = process.env;
 
 // Send docs for base path
-fitnessRouter.get('/', (req, res, next) => {
+fitnessRouter.get('/docs', (req, res, next) => {
   res.sendFile(path.resolve('build', 'index.html'));
 });
 

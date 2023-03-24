@@ -15,7 +15,8 @@ function Main() {
         <Route path="/snake" element={<Snake />} />
         <Route path="/stranger/*" element={<StrangerMain />} />
         <Route path="/juicebox/*" element={<JuiceboxMain />} />
-        <Route path="/api/juicebox" element={<JuiceboxDoc />} />
+        <Route path="/api/juicebox/docs" element={<JuiceboxDoc />} />
+        <Route path="/api/fitness/docs" element={<JuiceboxDoc />} />
         <Route path="/fitness/*" element={<FitnessMain />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
