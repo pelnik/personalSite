@@ -24,7 +24,7 @@ function Portfolio() {
             <div className="project">
               <Link to="/api/fitness/docs">
                 <img
-                  src="/Media/main/juicebox-back-end.jpg"
+                  src="/Media/main/fitness-back-end.jpg"
                   alt="fitness tracker back end screenshot"
                 />
                 <p>
@@ -66,7 +66,7 @@ function Portfolio() {
             <div className="project">
               <Link to="/fitness">
                 <img
-                  src="/Media/main/juicebox-front-end.jpg"
+                  src="/Media/main/fitness-front-end.jpg"
                   alt="fitness tracker front end screenshot"
                 />
                 <p>
