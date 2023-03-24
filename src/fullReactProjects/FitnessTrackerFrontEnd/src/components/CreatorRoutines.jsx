@@ -8,7 +8,10 @@ const CreatorRoutines = ({ selectedUser, setSelectedUser }) => {
   async function getSelectedUserRoutine() {
     try {
       const result = await getUsersRoutines(username);
-      setRoutines(result);
+
+      if (Array.isArray(result)) {
+        setRoutines(result);
+      }
       return result;
     } catch (error) {}
   }

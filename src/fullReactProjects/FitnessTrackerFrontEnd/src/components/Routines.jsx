@@ -9,7 +9,9 @@ const Routines = ({ setSelectedUser, setSelectedActivity }) => {
   async function getRoutines() {
     try {
       const result = await getAllRoutines();
-      setRoutine(result);
+      if (Array.isArray(result)) {
+        setRoutine(result);
+      }
       return result;
     } catch (error) {
       console.log(error);
