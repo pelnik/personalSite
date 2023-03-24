@@ -1,5 +1,4 @@
 import React from 'react';
-import '../css/site.css';
 import { Link, useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 

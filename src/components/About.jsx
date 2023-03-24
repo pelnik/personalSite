@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import '../css/site.css';
 import { Header, Footer } from '.';
 
 function About() {

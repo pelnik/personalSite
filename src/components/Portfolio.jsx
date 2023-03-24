@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Header, Footer } from '.';
-import '../css/site.css';
 import { Link } from 'react-router-dom';
 
 function Portfolio() {

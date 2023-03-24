@@ -9,6 +9,7 @@ import {
   JuiceboxDoc,
   FitnessDoc,
 } from '.';
+import '../css/site-redesign.css';
 import { JuiceboxMain } from '../fullReactProjects/juicebox/components';
 import { StrangerMain } from '../fullReactProjects/stranger/src/components';
 import { FitnessMain } from '../fullReactProjects/FitnessTrackerFrontEnd/src/components';

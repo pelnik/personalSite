@@ -1,0 +1,27 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.siteFullWindow {
+  --myLightGray: #D4D4D4;
+  --myLightBrown: #BF9E93;
+  --myLightBlue: #4E72A3;
+  --myReddishBrown: #C26D63;
+  --blue: #ADC0DB;;
+  font-family: apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+
+  height: 100vh;
+} 
+
+.siteFullWindow * {
+  border-radius: 5px;
+}
+
+.siteFullWindow a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+}
