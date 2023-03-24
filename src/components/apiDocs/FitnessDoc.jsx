@@ -4,7 +4,7 @@ import { Header, Footer } from '..';
 
 function JuiceboxDoc() {
   useEffect(() => {
-    document.title = `JuiceBox API Documentation -
+    document.title = `Fitness Tracker API Documentation -
       Matthew Pelnik, Full Stack Web Software Engineer`;
   }, []);
 
