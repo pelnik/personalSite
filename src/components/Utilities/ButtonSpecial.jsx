@@ -1,7 +1,14 @@
 import React from 'react';
 
 function ButtonSpecial() {
-  return <div>Test</div>;
+
+  function
+
+  return (
+    <div onClick={buttonSpecialClick} className="button-special">
+      <button className="navbar-button">About</button>
+    </div>
+  );
 }
 
 export default ButtonSpecial;
