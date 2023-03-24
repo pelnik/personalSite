@@ -15,7 +15,7 @@ function JuiceboxDoc() {
         <div className="mainContainer" id="jb-main-container">
           <div className="textContentContainer" id="indexTextContentContainer">
             <div className="indexTextContent api-text-content">
-              <h1>Juicebox API Documentation</h1>
+              <h1>Fitness Tracker API Documentation</h1>
               <p className="jbText">
                 Thanks for looking into my API documentation! The following will
                 summarize <u>a few</u> of the various paths that can be accessed
@@ -40,48 +40,47 @@ function JuiceboxDoc() {
                 <br />
                 <span className="important">
                   For values in square brackets, &#91;&#93;, you will need to
-                  use your own value. Most commonly usernames and tokens.
+                  use your own value or it is optional in some cases. Most
+                  commonly it is for username, passwords and tokens.
                 </span>
               </p>
               <hr className="api-rule" />
               <h2>Registration</h2>
-              <p className="jbCode">pelnik.dev/api/juicebox/register</p>
+              <p className="jbCode">pelnik.dev/api/fitness/register</p>
               <p className="jbText">
-                You can get posts without a user token, but to do most things,
-                first you will need a user token. To register a user, you will
-                need to send a username, password, name, and location.
+                You can get routines and activities without a user token, but to
+                do most things, first you will need a user token. To register a
+                user, you will need to send just a username and password.
               </p>
               <p className="jbCurl">
                 curl https://pelnik.dev/api/juicebox/users/register -X POST -H
                 &quot;Content-Type: application/json&quot; -d &apos;&#123;
                 &quot;username&quot;: &quot;&#91;FunGuy23&#93;&quot;,
-                &quot;password&quot;: &quot;&#91;verysecure&#93;&quot;,
-                &quot;name&quot;: &quot;&#91;Billy&#93;&quot;,
-                &quot;location&quot;: &quot;&#91;Kansas&#93;&quot; &#125;&apos;
+                &quot;password&quot;:
+                &quot;&#91;verysecure&#93;&quot;&#125;&apos;
               </p>
               <hr className="api-rule" />
               <h2>Login</h2>
-              <p className="jbCode">pelnik.dev/api/juicebox/login</p>
+              <p className="jbCode">pelnik.dev/api/fitness/login</p>
               <p className="jbText">
-                You can get posts without a user token, but to do most things,
-                first you will need a user token. To login a user, you will need
-                to send a username and password.
+                You can get routines and activities without a user token, but to
+                do most things, first you will need a user token. To login a
+                user, you will need to send a username and password.
               </p>
               <p className="jbCurl">
-                curl https://pelnik.dev/api/juicebox/users/login -X POST -H
+                curl https://pelnik.dev/api/fitness/users/login -X POST -H
                 &quot;Content-Type: application/json&quot; -d &apos;&#123;
                 &quot;username&quot;: &quot;&#91;FunGuy23&#93;&quot;,
                 &quot;password&quot;: &quot;&#91;verysecure&#93;&quot;
                 &#125;&apos;
               </p>
               <hr className="api-rule" />
-              <h2>Get Posts</h2>
-              <p className="jbCode">pelnik.dev/api/juicebox/posts</p>
+              <h2>Get My Routines</h2>
+              <p className="jbCode">pelnik.dev/api/fitness/users/me</p>
               <p className="jbText">
-                You can get posts without a user token, but if you include a
-                token the API will send you a flag with isAuthor to help the
-                front end identify the logged in user's posts. Get posts doesn't
-                require a body.
+                You can get you own public and private routines and activities
+                that you have created, as well as the duration and count of each
+                activity added to the routine.
               </p>
               <p className="jbCurl">
                 curl https://pelnik.dev/api/juicebox/posts -H
