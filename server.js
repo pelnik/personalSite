@@ -32,11 +32,12 @@ app.use(morgan('combined'));
 
 app.use('/api', apiRouter);
 
-app.use(express.static('build'));
-
 app.get('/scents', (req, res, next) => {
+  console.log('entered redirect');
   res.redirect('https://makes-scents.netlify.app');
 });
+
+app.use(express.static('build'));
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve('build', 'index.html'));

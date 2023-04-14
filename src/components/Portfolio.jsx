@@ -22,7 +22,7 @@ function Portfolio() {
           </p>
           <div className="projectContainer">
             <div className="project">
-              <Link to="/scents">
+              <a href="/scents" target="_blank" rel="noreferrer">
                 <img
                   src="/Media/main/project_scents_front.jpg"
                   alt="makes scents front end screenshot"
@@ -53,7 +53,7 @@ function Portfolio() {
                   sleep after a few minutes of inactivity, and it will take a
                   little while to spin up on first load.
                 </p>
-              </Link>
+              </a>
               <p>
                 <a
                   className="projectGithubLink"
