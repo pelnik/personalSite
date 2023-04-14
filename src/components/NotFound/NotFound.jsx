@@ -32,7 +32,7 @@ function NotFound() {
           </p>
         </div>
       </div>
-      <Header />
+      <Footer />
     </div>
   );
 }
