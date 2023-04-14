@@ -34,6 +34,10 @@ app.use('/api', apiRouter);
 
 app.use(express.static('build'));
 
+app.get('/scents', (req, res, next) => {
+  res.redirect('https://makes-scents.netlify.app');
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.resolve('build', 'index.html'));
 });
