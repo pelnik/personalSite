@@ -22,6 +22,50 @@ function Portfolio() {
           </p>
           <div className="projectContainer">
             <div className="project">
+              <Link to="/scents">
+                <img
+                  src="/Media/main/project_scents_front.jpg"
+                  alt="makes scents front end screenshot"
+                />
+                <p>
+                  Makes Scents is a full-stack eCommerce, fragrance store with
+                  an Express back end and a React front end. I designed the cart
+                  functionality on the front end and back end from the bottom
+                  up. The cart allows you to add items from different areas of
+                  the site and dynamically update the cart state, along with
+                  items subtotals and totals.
+                </p>
+                <p>
+                  A PostgreSQL database was used with an Express back end called
+                  through REST APIs using stateless user authentication and
+                  password encryption.
+                </p>
+                <p>
+                  The user can register, login, browse and filter products, add
+                  items to the cart, adjust quantities while adding to the cart
+                  or in the cart itself, and remove items from the cart. Admin
+                  users can update product and user information throughout the
+                  site without needing a developer to update the back end.
+                </p>
+                <p>
+                  PLEASE NOTE: Our app uses a free tier of a platform as a
+                  service site to host our back end. Because of that, it goes to
+                  sleep after a few minutes of inactivity, and it will take a
+                  little while to spin up on first load.
+                </p>
+              </Link>
+              <p>
+                <a
+                  className="projectGithubLink"
+                  href="https://github.com/The-Underdogs-2301"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Github repo
+                </a>
+              </p>
+            </div>
+            <div className="project">
               <Link to="/api/fitness/docs">
                 <img
                   src="/Media/main/fitness-back-end.jpg"
@@ -36,9 +80,9 @@ function Portfolio() {
                   stateless user authentication.
                 </p>
                 <p>
-                  The API was built using a test driven development design where
-                  Jest test were provided specifying the needed capabilities,
-                  and the API was built to meet those.
+                  The REST APIs were built using a test driven development
+                  design where Jest test were provided specifying the needed
+                  capabilities, and the API was built to meet those.
                 </p>
                 <p>
                   Several features typical of a site of this nature are built
