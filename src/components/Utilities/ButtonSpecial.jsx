@@ -1,71 +1,33 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-function ButtonSpecial() {
-  const parentRef = useRef({});
-  const buttonRef = useRef({});
+function ButtonSpecial({ className }) {
+  const [childButtonClass, setChildButtonClass] = useState('button-special');
+  const [parentButtonClass, setParentButtonClass] = useState(
+    'button-special-parent '
+  );
 
-  const parentOriginalPadding = useRef(0);
-  const buttonOriginalPadding = useRef(0);
-
-  const [parentPadding, setParentPadding] = useState(null);
-  const [buttonPadding, setButtonPadding] = useState(null);
-
-  function buttonSpecialClick(evt) {}
-
-  function updateEachPadding(objectToUpdate, paddingObject) {
-    const tempObject = {};
-    tempObject.paddingTop = paddingObject.paddingTop;
-    tempObject.paddingRight = paddingObject.paddingRight;
-    tempObject.paddingBottom = paddingObject.paddingBottom;
-    tempObject.paddingLeft = paddingObject.paddingLeft;
-
-    console.log('objectToUpdate', objectToUpdate);
-    objectToUpdate.current = tempObject;
-    console.log('objectToUpdate', objectToUpdate);
-  }
-
-  function addStyle(padding) {
-    const styleObject = {};
-    styleObject.backgroundColor = 'yellow';
-
-    if (padding) {
-      styleObject.paddingTop = padding.paddingTop;
-      styleObject.paddingRight = padding.paddingRight;
-      styleObject.paddingBottom = padding.paddingBottom;
-      styleObject.paddingLeft = padding.paddingLeft;
-    }
-
-    return styleObject;
-  }
+  //look into passing classes from parent
 
   function handleMouseEnter() {
-    setParentPadding({});
+    setChildButtonClass('button-special-hover');
+    setParentButtonClass('button-special-parent-hover');
   }
 
-  useEffect(() => {
-    updateEachPadding(
-      parentOriginalPadding,
-      window.getComputedStyle(parentRef.current)
-    );
-
-    updateEachPadding(
-      buttonOriginalPadding,
-      window.getComputedStyle(buttonRef.current)
-    );
-  }, []);
+  function handleMouseLeave() {
+    setChildButtonClass('button-special');
+    setParentButtonClass('button-special-parent');
+  }
 
   return (
     <div
-      onClick={buttonSpecialClick}
-      ref={parentRef}
-      className="button-special"
-      style={addStyle(parentPadding)}
+      className={[parentButtonClass, 'all-button-special'].join(' ')}
       onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <button
-        ref={buttonRef}
-        className="navbar-button"
-        style={addStyle(buttonPadding)}
+        className={[childButtonClass, className, 'all-button-special'].join(
+          ' '
+        )}
       >
         About
       </button>

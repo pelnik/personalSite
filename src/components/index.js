@@ -3,6 +3,7 @@ export { default as Home } from './Home';
 export { default as HomeHeader } from './HomeHeader';
 export { default as HomeFooter } from './HomeFooter';
 export { default as HomeContent } from './HomeContent';
+export { default as ProjectCard } from './Utilities/ProjectCard';
 export { default as Portfolio } from './Portfolio';
 export { default as About } from './About';
 export { default as OldHeader } from './old-site/OldHeader';

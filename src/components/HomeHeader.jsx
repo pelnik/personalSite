@@ -10,7 +10,7 @@ function HomeHeader() {
         </p>
       </div>
       <div className="subnavbar" id="right-navbar">
-        <ButtonSpecial>About</ButtonSpecial>
+        <ButtonSpecial className="navbar-button">About</ButtonSpecial>
       </div>
     </div>
   );
