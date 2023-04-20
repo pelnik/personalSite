@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-function ButtonSpecial({ className }) {
+function ButtonSpecial({ className, handleClick, children }) {
   const [childButtonClass, setChildButtonClass] = useState('button-special');
   const [parentButtonClass, setParentButtonClass] = useState(
     'button-special-parent '
@@ -23,13 +23,14 @@ function ButtonSpecial({ className }) {
       className={[parentButtonClass, 'all-button-special'].join(' ')}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleClick || null}
     >
       <button
         className={[childButtonClass, className, 'all-button-special'].join(
           ' '
         )}
       >
-        About
+        {children}
       </button>
     </div>
   );

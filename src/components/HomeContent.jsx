@@ -1,26 +1,17 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { ProjectCard } from '.';
 
-function HomeContent() {
-  const testRef = useRef(null);
-
+function HomeContent({ portfolioRef }) {
   return (
-    <div id="project-container">
-      <button
-        onClick={(evt) => {
-          testRef.current.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-            inline: 'center',
-          });
-        }}
-      >
-        Scroll to 3
-      </button>
-      <ProjectCard />
-      <ProjectCard />
-      <ProjectCard testRef={testRef} />
-      <ProjectCard />
+    <div ref={portfolioRef} id="portfolio-section-container">
+      <p>Portfolio</p>
+      <div id="project-container">
+        <button>Scroll to 3</button>
+        <ProjectCard />
+        <ProjectCard />
+        <ProjectCard portfolioRef={portfolioRef} />
+        <ProjectCard />
+      </div>
     </div>
   );
 }

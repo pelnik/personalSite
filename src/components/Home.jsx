@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { HomeHeader, HomeContent, HomeFooter } from '.';
 
 function Home() {
+  const portfolioRef = useRef(null);
+
   useEffect(() => {
     document.title =
       'Homepage - Matthew Pelnik, Full Stack Web Software Engineer';
@@ -9,8 +11,8 @@ function Home() {
 
   return (
     <div className="site-full-window">
-      <HomeHeader />
-      <HomeContent />
+      <HomeHeader portfolioRef={portfolioRef} />
+      <HomeContent portfolioRef={portfolioRef} />
       <HomeFooter />
     </div>
   );
