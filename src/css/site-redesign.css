@@ -96,6 +96,18 @@
 .site-full-window .individual-project {
   color: white;
   background-color: var(--myLightBlue);
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  padding: 20px;
+}
+
+.site-full-window .project-link-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 
