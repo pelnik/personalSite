@@ -6,10 +6,20 @@ function HomeContent({ portfolioRef }) {
     <div ref={portfolioRef} id="portfolio-section-container">
       <p>Portfolio</p>
       <div id="project-container">
-        <button>Scroll to 3</button>
         <ProjectCard />
         <ProjectCard />
-        <ProjectCard portfolioRef={portfolioRef} />
+        <ProjectCard />
+        <ProjectCard />
+        <ProjectCard />
+        <ProjectCard />
+        <ProjectCard />
+        <ProjectCard />
+        <ProjectCard />
+        <ProjectCard />
+        <ProjectCard />
+        <ProjectCard />
+        <ProjectCard />
+        <ProjectCard />
         <ProjectCard />
       </div>
     </div>
