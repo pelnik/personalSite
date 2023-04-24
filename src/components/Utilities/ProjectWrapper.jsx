@@ -4,14 +4,13 @@ import { ProjectDetails } from '..';
 import { Link } from 'react-router-dom';
 
 function ProjectWrapper({ project }) {
-  if (project?.external) {
+  return project.external ? (
     <div className="individual-project">
       <a href={project.link} target="_blank" rel="noreferrer">
         <ProjectDetails project={project} />
       </a>
-    </div>;
-  }
-  return (
+    </div>
+  ) : (
     <div className="individual-project">
       <Link to={project?.link}>
         <ProjectDetails project={project} />

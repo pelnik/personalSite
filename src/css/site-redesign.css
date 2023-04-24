@@ -93,12 +93,11 @@
   transition: padding 0.5s, border-radius 0.5s;
 }
 
-.site-full-window .project-card {
-  display: flex;
-  flex-direction: row;
-  border: solid 1px white;
+.site-full-window .individual-project {
+  color: white;
   background-color: var(--myLightBlue);
 }
+
 
 .site-full-window #project-container {
   display: grid;
@@ -108,10 +107,19 @@
   align-items:stretch;
 }
 
-.site-full-window {
-
+.site-full-window .project-content {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
 }
 
-.site-full-window {
+.site-full-window .project-content img {
+  width: 400px;
+}
+
+.site-full-window .project-description {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 
 }

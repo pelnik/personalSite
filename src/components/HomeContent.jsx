@@ -3,11 +3,12 @@ import { ProjectWrapper } from '.';
 
 const PROJECTS = [
   {
+    id: 100,
     img: '/Media/main/project_scents_front.jpg',
     img_alt: 'makes scents front end screenshot',
     link: '/scents',
     external: true,
-    project_description: [
+    description: [
       `Makes Scents is a full-stack eCommerce, fragrance store with
       an Express back end and a React front end. I designed the cart
       functionality on the front end and back end from the bottom
@@ -361,28 +362,15 @@ const PROJECTS = [
 }
 
 function HomeContent({ portfolioRef }) {
+  console.log('PROJECTS', PROJECTS);
+
   return (
     <div ref={portfolioRef} id="portfolio-section-container">
       <p>Portfolio</p>
       <div id="project-container">
         {PROJECTS.map((project) => {
-          <ProjectWrapper project={project} />;
+          return <ProjectWrapper key={project.id} project={project} />;
         })}
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
-        <ProjectWrapper />
       </div>
     </div>
   );
