@@ -10,6 +10,14 @@ function ProjectDetails({ project }) {
         {project.description.map((section, idx) => {
           return <p key={idx}>{section}</p>;
         })}
+        <a
+          className="github-link"
+          href={project.github_link}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Github repo
+        </a>
       </div>
     </div>
   );

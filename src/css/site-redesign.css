@@ -102,7 +102,7 @@
 .site-full-window #project-container {
   display: grid;
   grid-template-rows: repeat(auto-fill, minmax(1rem, max-content));
-  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 10px;
   align-items:stretch;
 }
@@ -116,10 +116,15 @@
 
 .site-full-window .img-container {
   min-width: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .site-full-window .img-container img {
-  width: 100%;
+  max-width: 100%;
+  max-height: 400px;
 }
 
 
