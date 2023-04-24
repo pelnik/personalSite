@@ -111,15 +111,21 @@
   display: flex;
   gap: 20px;
   flex-direction: column;
+  padding: 10px;
 }
 
-.site-full-window .project-content img {
-  width: 400px;
+.site-full-window .img-container {
+  min-width: 0;
 }
+
+.site-full-window .img-container img {
+  width: 100%;
+}
+
 
 .site-full-window .project-description {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 
 }
