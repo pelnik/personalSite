@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProjectDetails } from '..';
+import { ProjectDescription } from '..';
 
 import { Link } from 'react-router-dom';
 
@@ -17,11 +17,7 @@ function ProjectWrapper({ project }) {
         <div className="img-container">
           <img src={project.img} alt={project.img_alt} />
         </div>
-        <div className="project-description">
-          {project.description.map((section, idx) => {
-            return <p key={idx}>{section}</p>;
-          })}
-        </div>
+        <ProjectDescription project={project} />
       </a>
       <a
         className="github-link"
@@ -38,11 +34,7 @@ function ProjectWrapper({ project }) {
         <div className="img-container">
           <img src={project.img} alt={project.img_alt} />
         </div>
-        <div className="project-description">
-          {project.description.map((section, idx) => {
-            return <p key={idx}>{section}</p>;
-          })}
-        </div>
+        <ProjectDescription project={project} />
       </Link>
       <a
         className="github-link"

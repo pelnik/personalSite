@@ -140,9 +140,11 @@
 }
 
 
-.site-full-window .project-description {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.site-full-window .project-description-container {
+  align-self: flex-start;
+}
 
+.site-full-window .project-description-container .description-selector {
+  height: 0.5em;
+  width: 0.5em;
 }
