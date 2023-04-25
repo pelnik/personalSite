@@ -3,6 +3,8 @@ import { ProjectDetails } from '..';
 
 import { Link } from 'react-router-dom';
 
+// Work on Project description navigation
+
 function ProjectWrapper({ project }) {
   return project.external ? (
     <div className="individual-project">
