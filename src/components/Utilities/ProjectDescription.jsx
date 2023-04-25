@@ -2,12 +2,30 @@ import React from 'react';
 
 import CircleIcon from '@mui/icons-material/Circle';
 
-function ProjectDescription({ project }) {
+function ProjectDescription({ project, descriptionTracker }) {
   const descriptions = project.description;
+
+  console.log('descriptionTracker', descriptionTracker);
 
   return (
     <div className="project-description-container">
-      <CircleIcon className="description-selector" fontSize="small" />
+      <div className="project-description-icons">
+        {descriptions.map((description, idx) => {
+          if (descriptionTracker[project.id][idx]) {
+            return (
+              <CircleIcon key={idx} className="description-selector selected" />
+            );
+          }
+
+          return (
+            <CircleIcon
+              key={idx}
+              className="description-selector not-selected"
+            />
+          );
+        })}
+      </div>
+      <div className="description-text">{descriptions[0]}</div>
     </div>
   );
 }

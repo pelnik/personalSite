@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 // Work on Project description navigation
 
-function ProjectWrapper({ project }) {
+function ProjectWrapper({ project, descriptionTracker }) {
   return project.external ? (
     <div className="individual-project">
       <a
@@ -17,7 +17,10 @@ function ProjectWrapper({ project }) {
         <div className="img-container">
           <img src={project.img} alt={project.img_alt} />
         </div>
-        <ProjectDescription project={project} />
+        <ProjectDescription
+          project={project}
+          descriptionTracker={descriptionTracker}
+        />
       </a>
       <a
         className="github-link"
@@ -34,7 +37,10 @@ function ProjectWrapper({ project }) {
         <div className="img-container">
           <img src={project.img} alt={project.img_alt} />
         </div>
-        <ProjectDescription project={project} />
+        <ProjectDescription
+          project={project}
+          descriptionTracker={descriptionTracker}
+        />
       </Link>
       <a
         className="github-link"

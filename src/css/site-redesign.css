@@ -141,10 +141,30 @@
 
 
 .site-full-window .project-description-container {
-  align-self: flex-start;
+  align-self: stretch;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.site-full-window .project-description-icons {
+  align-self: center;
+
+  display: flex;
+  gap: 4px;
 }
 
 .site-full-window .project-description-container .description-selector {
   height: 0.5em;
   width: 0.5em;
+}
+
+.site-full-window .project-description-container .description-selector.selected {
+  opacity: 1;
+}
+
+.site-full-window .project-description-container .description-selector.not-selected {
+  opacity: 0.5;
 }
