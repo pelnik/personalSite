@@ -41,12 +41,21 @@ function ProjectDescription({
     return true;
   }
 
-  function moveTracker(position) {
+  function getNewIndex(position) {
     const trueIndex = descriptionTracker[project.id].findIndex(
       (track) => track === true
     );
 
-    console.log(trueIndex);
+    const newPosition = trueIndex + position;
+
+    if (
+      newPosition < 0 ||
+      newPosition > descriptionTracker[project.id].length - 1
+    ) {
+      return trueIndex;
+    }
+
+    return newPosition;
   }
 
   function displayBackArrow() {
@@ -55,6 +64,11 @@ function ProjectDescription({
     }
 
     return true;
+  }
+
+  function updateDescription(position) {
+    const newIndex = getNewIndex(position);
+    scrollToDescriptionIdx(newIndex);
   }
 
   return (
@@ -114,9 +128,17 @@ function ProjectDescription({
       <div className="description-scrolling-icons">
         <ArrowBackIosNewIcon
           className={displayForwardArrow() ? null : 'no-display'}
+          onClick={(evt) => {
+            evt.preventDefault();
+            updateDescription(-1);
+          }}
         />
         <ArrowForwardIosIcon
           className={displayBackArrow() ? null : 'no-display'}
+          onClick={(evt) => {
+            evt.preventDefault();
+            updateDescription(1);
+          }}
         />
       </div>
     </div>
