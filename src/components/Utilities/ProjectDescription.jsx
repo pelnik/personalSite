@@ -73,7 +73,12 @@ function ProjectDescription({
 
   return (
     <div className="project-description-container">
-      <div className="project-description-icons">
+      <div
+        className="project-description-icons"
+        onClick={(evt) => {
+          evt.preventDefault();
+        }}
+      >
         {descriptions.map((description, idx) => {
           if (descriptionTracker[project.id][idx]) {
             return (
