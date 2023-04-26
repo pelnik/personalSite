@@ -172,10 +172,23 @@
 .site-full-window .description-text {
   display: flex;
   flex-direction: row;
-  justify-content: stretch;
+  justify-content: flex-start;
   align-items: stretch;
+  overflow: hidden;
 }
 
-.site-full-window .individual-description {
+.site-full-window .description-text-scrolling {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  min-width:max-content;
+  gap: 10px;
+}
 
+.site-full-window .description-scrolling-icons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

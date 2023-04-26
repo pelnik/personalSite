@@ -61,6 +61,7 @@ function ProjectWrapper({
         <ProjectDescription
           project={project}
           descriptionTracker={descriptionTracker}
+          projectWidth={projectWidth}
         />
       </Link>
       <a

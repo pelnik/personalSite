@@ -1,8 +1,10 @@
 import React from 'react';
 
 import CircleIcon from '@mui/icons-material/Circle';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-function ProjectDescription({ project, descriptionTracker }) {
+function ProjectDescription({ project, descriptionTracker, projectWidth }) {
   const descriptions = project.description;
 
   return (
@@ -24,21 +26,25 @@ function ProjectDescription({ project, descriptionTracker }) {
         })}
       </div>
       <div className="description-text">
-        {descriptions.map((description, idx) => {
-          return (
-            <p
-              className="individual-description"
-              key={idx}
-              style={
-                {
-                  // display:
-                }
-              }
-            >
-              {description}
-            </p>
-          );
-        })}
+        <div className="description-text-scrolling">
+          {descriptions.map((description, idx) => {
+            return (
+              <p
+                className="individual-description"
+                key={idx}
+                style={{
+                  width: projectWidth,
+                }}
+              >
+                {description}
+              </p>
+            );
+          })}
+        </div>
+      </div>
+      <div className="description-scrolling-icons">
+        <ArrowBackIosNewIcon />
+        <ArrowForwardIosIcon />
       </div>
     </div>
   );
