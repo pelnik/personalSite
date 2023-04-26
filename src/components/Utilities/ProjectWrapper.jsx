@@ -11,6 +11,7 @@ function ProjectWrapper({
   firstProjectID,
   projectElement,
   projectWidth,
+  setDescriptionTracker,
 }) {
   return project.external ? (
     <div className="individual-project">
@@ -28,6 +29,7 @@ function ProjectWrapper({
           project={project}
           projectWidth={projectWidth}
           descriptionTracker={descriptionTracker}
+          setDescriptionTracker={setDescriptionTracker}
         />
       </a>
       <a
@@ -51,8 +53,9 @@ function ProjectWrapper({
         </div>
         <ProjectDescription
           project={project}
-          descriptionTracker={descriptionTracker}
           projectWidth={projectWidth}
+          descriptionTracker={descriptionTracker}
+          setDescriptionTracker={setDescriptionTracker}
         />
       </Link>
       <a

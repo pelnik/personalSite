@@ -76,6 +76,7 @@ function HomeContent({ portfolioRef }) {
               firstProjectID={firstProjectID}
               projectElement={projectElement}
               projectWidth={projectWidth}
+              setDescriptionTracker={setDescriptionTracker}
             />
           );
         })}

@@ -4,7 +4,12 @@ import CircleIcon from '@mui/icons-material/Circle';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-function ProjectDescription({ project, descriptionTracker, projectWidth }) {
+function ProjectDescription({
+  project,
+  descriptionTracker,
+  setDescriptionTracker,
+  projectWidth,
+}) {
   const descriptions = project.description;
   const descriptionRef = useRef(new Map());
 
@@ -12,14 +17,44 @@ function ProjectDescription({ project, descriptionTracker, projectWidth }) {
 
   function scrollToDescriptionIdx(idx) {
     const map = descriptionRef.current;
-    console.log('map', map);
     const node = map.get(idx);
-    console.log('node', node);
     node.scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
       inline: 'center',
     });
+    setDescriptionTracker({
+      ...descriptionTracker,
+      [project.id]: descriptionTracker[project.id].map(
+        (description, descriptionTrackerIdx) => {
+          return descriptionTrackerIdx === idx ? true : false;
+        }
+      ),
+    });
+  }
+
+  function displayForwardArrow() {
+    if (descriptionTracker[project.id][0] === true) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function moveTracker(position) {
+    const trueIndex = descriptionTracker[project.id].findIndex(
+      (track) => track === true
+    );
+
+    console.log(trueIndex);
+  }
+
+  function displayBackArrow() {
+    if (descriptionTracker[project.id].at(-1) === true) {
+      return false;
+    }
+
+    return true;
   }
 
   return (
@@ -77,8 +112,12 @@ function ProjectDescription({ project, descriptionTracker, projectWidth }) {
         </div>
       </div>
       <div className="description-scrolling-icons">
-        <ArrowBackIosNewIcon />
-        <ArrowForwardIosIcon />
+        <ArrowBackIosNewIcon
+          className={displayForwardArrow() ? null : 'no-display'}
+        />
+        <ArrowForwardIosIcon
+          className={displayBackArrow() ? null : 'no-display'}
+        />
       </div>
     </div>
   );
