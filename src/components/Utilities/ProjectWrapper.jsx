@@ -12,15 +12,6 @@ function ProjectWrapper({
   projectElement,
   projectWidth,
 }) {
-  console.log(
-    'ref check',
-    firstProjectID === project.id,
-    'first',
-    firstProjectID,
-    'project ID',
-    project.id
-  );
-
   return project.external ? (
     <div className="individual-project">
       <a

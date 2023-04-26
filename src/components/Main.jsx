@@ -14,7 +14,12 @@ import { JuiceboxMain } from '../fullReactProjects/juicebox/components';
 import { StrangerMain } from '../fullReactProjects/stranger/src/components';
 import { FitnessMain } from '../fullReactProjects/FitnessTrackerFrontEnd/src/components';
 
+let loads = 0;
+
 function Main() {
+  loads += 1;
+  console.log('loads', loads);
+
   return (
     <main className="full-window">
       <Routes>

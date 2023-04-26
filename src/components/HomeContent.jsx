@@ -7,6 +7,8 @@ function HomeContent({ portfolioRef }) {
   const [projectWidth, setProjectWidth] = useState(null);
   const projectElement = useRef(null);
 
+  console.log('description Tracker', descriptionTracker);
+
   let firstProjectID = 100;
 
   function createDescriptionTracker(projects) {
@@ -22,6 +24,13 @@ function HomeContent({ portfolioRef }) {
   }
 
   createDescriptionTracker(projects);
+
+  function getProjectElementWidth() {
+    let stringWidth = getComputedStyle(projectElement.current).width;
+    stringWidth = stringWidth.slice(0, -2);
+
+    return Number(stringWidth);
+  }
 
   if (projects.length === 0) {
     fetch('/data/portfolio.txt')
@@ -44,9 +53,15 @@ function HomeContent({ portfolioRef }) {
       let stringWidth = getComputedStyle(projectElement.current).width;
       stringWidth = stringWidth.slice(0, -2);
 
-      setProjectWidth(Number(stringWidth));
+      setProjectWidth(getProjectElementWidth());
     });
   }, []);
+
+  useEffect(() => {
+    if (Object.keys(projects).length !== 0) {
+      setProjectWidth(getProjectElementWidth());
+    }
+  }, [projects]);
 
   return (
     <div ref={portfolioRef} id="portfolio-section-container">
