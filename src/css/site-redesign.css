@@ -127,11 +127,13 @@
 }
 
 .site-full-window .img-container {
-  min-width: 0;
-
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: stretch;
+  
+  align-self: stretch;
+
+  overflow-x: scroll;
 }
 
 .site-full-window .img-container img {
@@ -196,4 +198,14 @@
 .site-full-window .no-display {
   visibility: hidden;
   pointer-events: none;
+}
+
+.site-full-window .img-scrolling {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  min-width:max-content;
+  gap: 10px;
 }

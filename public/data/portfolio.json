@@ -1,8 +1,16 @@
 [
   {
     "id": 100,
-    "img": "/Media/main/project_scents_front.jpg",
-    "img_alt": "makes scents front end screenshot",
+    "img": [
+      {
+        "url": "/Media/main/project_scents_front.jpg",
+        "alt": "makes scents front end screenshot"
+      },
+      {
+        "url": "/Media/main/project_scents_front.jpg",
+        "alt": "makes scents front end screenshot"
+      }
+    ],
     "link": "/scents",
     "external": true,
     "github_link": "https://github.com/The-Underdogs-2301",
@@ -15,8 +23,12 @@
   },
   {
     "id": 99,
-    "img": "/Media/main/fitness-back-end.jpg",
-    "img_alt": "fitness tracker back end screenshot",
+    "img": [
+      {
+        "url": "/Media/main/fitness-back-end.jpg",
+        "alt": "fitness tracker back end screenshot"
+      }
+    ],
     "link": "/api/fitness/docs",
     "external": false,
     "github_link": "https://github.com/jina366/FitnessTrackerFront",
@@ -29,8 +41,12 @@
   },
   {
     "id": 98,
-    "img": "/Media/main/fitness-front-end.jpg",
-    "img_alt": "fitness tracker front end screenshot",
+    "img": [
+      {
+        "url": "/Media/main/fitness-front-end.jpg",
+        "alt": "fitness tracker front end screenshot"
+      }
+    ],
     "link": "/fitness",
     "external": false,
     "github_link": "https://github.com/pelnik/FitnessTracker",
@@ -41,8 +57,12 @@
   },
   {
     "id": 97,
-    "img": "/Media/main/juicebox-back-end.jpg",
-    "img_alt": "Juicebox back end screenshot",
+    "img": [
+      {
+        "url": "/Media/main/juicebox-back-end.jpg",
+        "alt": "Juicebox back end screenshot"
+      }
+    ],
     "link": "/api/juicebox/docs",
     "external": false,
     "github_link": "https://github.com/pelnik/juicebox",
@@ -54,8 +74,12 @@
   },
   {
     "id": 96,
-    "img": "/Media/main/juicebox-front-end.jpg",
-    "img_alt": "Juicebox front end screenshot",
+    "img": [
+      {
+        "url": "/Media/main/juicebox-front-end.jpg",
+        "alt": "Juicebox front end screenshot"
+      }
+    ],
     "link": "/juicebox",
     "external": false,
     "github_link": "https://github.com/pelnik/JuiceboxFrontEnd",
@@ -66,8 +90,12 @@
   },
   {
     "id": 95,
-    "img": "/Media/main/Strangers_Things_screenshot.png",
-    "img_alt": "Strangers Things screenshot",
+    "img": [
+      {
+        "url": "/Media/main/Strangers_Things_screenshot.png",
+        "alt": "Strangers Things screenshot"
+      }
+    ],
     "link": "/stranger",
     "external": false,
     "github_link": "https://github.com/pelnik/StrangersThings",
@@ -77,8 +105,12 @@
   },
   {
     "id": 94,
-    "img": "/Media/main/snake-screenshot.png",
-    "img_alt": "snake game screenshot",
+    "img": [
+      {
+        "url": "/Media/main/snake-screenshot.png",
+        "alt": "snake game screenshot"
+      }
+    ],
     "link": "/snake",
     "external": false,
     "github_link": "https://github.com/pelnik/arcade",
@@ -88,8 +120,12 @@
   },
   {
     "id": 93,
-    "img": "/Media/main/Zoo Clicker.jpg",
-    "img_alt": "Zoo clicker game screenshot",
+    "img": [
+      {
+        "url": "/Media/main/Zoo Clicker.jpg",
+        "alt": "Zoo clicker game screenshot"
+      }
+    ],
     "link": "/portfolio/ZooClicker/index.html",
     "external": true,
     "github_link": "https://github.com/pelnik/CookieClicker",
@@ -99,8 +135,12 @@
   },
   {
     "id": 92,
-    "img": "/Media/main/deucesWildPic.jpg",
-    "img_alt": "Deuces Wild screenshot",
+    "img": [
+      {
+        "url": "/Media/main/deucesWildPic.jpg",
+        "alt": "Deuces Wild screenshot"
+      }
+    ],
     "link": "/portfolio/deucesWild/index.html",
     "external": true,
     "github_link": "https://github.com/pelnik/Deuces-Wild",
@@ -110,8 +150,12 @@
   },
   {
     "id": 91,
-    "img": "/Media/main/qwirty-screenshot.jpg",
-    "img_alt": "qwirty site screenshot",
+    "img": [
+      {
+        "url": "/Media/main/qwirty-screenshot.jpg",
+        "alt": "qwirty site screenshot"
+      }
+    ],
     "link": "/portfolio/qwirty/index.html",
     "external": true,
     "github_link": "https://github.com/pelnik/qwirtyStorePage",

@@ -33,13 +33,15 @@ function HomeContent({ portfolioRef }) {
   }
 
   if (projects.length === 0) {
-    fetch('/data/portfolio.txt')
+    fetch('/data/portfolio.json')
       .then((response) => {
         return response.json();
       })
       .then((result) => {
         setDescriptionTracker(createDescriptionTracker(result));
+        console.log('descriptionTracker', createDescriptionTracker(result));
         setProjects(result);
+        console.log('projects', result);
       })
       .catch((error) => {
         console.error('error fetching portfolio.txt file', error);

@@ -13,8 +13,6 @@ function ProjectDescription({
   const descriptions = project.description;
   const descriptionRef = useRef(new Map());
 
-  console.log('description tracker', descriptionTracker);
-
   function scrollToDescriptionIdx(idx) {
     const map = descriptionRef.current;
     const node = map.get(idx);

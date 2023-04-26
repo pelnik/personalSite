@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProjectDescription } from '..';
+import { ProjectDescription, ProjectImages } from '..';
 
 import { Link } from 'react-router-dom';
 
@@ -22,9 +22,7 @@ function ProjectWrapper({
         rel="noreferrer"
         ref={firstProjectID === project.id ? projectElement : null}
       >
-        <div className="img-container">
-          <img src={project.img} alt={project.img_alt} />
-        </div>
+        <ProjectImages project={project} projectWidth={projectWidth} />
         <ProjectDescription
           project={project}
           projectWidth={projectWidth}
@@ -48,9 +46,7 @@ function ProjectWrapper({
         ref={firstProjectID === project.id ? projectElement : null}
         to={project.link}
       >
-        <div className="img-container">
-          <img src={project.img} alt={project.img_alt} />
-        </div>
+        <ProjectImages project={project} projectWidth={projectWidth} />
         <ProjectDescription
           project={project}
           projectWidth={projectWidth}
