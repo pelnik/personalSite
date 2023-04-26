@@ -5,8 +5,6 @@ import CircleIcon from '@mui/icons-material/Circle';
 function ProjectDescription({ project, descriptionTracker }) {
   const descriptions = project.description;
 
-  console.log('descriptionTracker', descriptionTracker);
-
   return (
     <div className="project-description-container">
       <div className="project-description-icons">

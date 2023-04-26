@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ProjectWrapper } from '.';
 
 function HomeContent({ portfolioRef }) {
   const [projects, setProjects] = useState([]);
   const [descriptionTracker, setDescriptionTracker] = useState({});
+  const [projectWidth, setProjectWidth] = useState(null);
+  const projectElement = useRef(null);
+
+  let firstProjectID = 100;
 
   function createDescriptionTracker(projects) {
     const initialTracker = {};
@@ -31,9 +35,18 @@ function HomeContent({ portfolioRef }) {
       .catch((error) => {
         console.error('error fetching portfolio.txt file', error);
       });
+  } else if (projects.length > 1) {
+    firstProjectID = projects[0].id;
   }
 
-  console.log('projects', projects);
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      let stringWidth = getComputedStyle(projectElement.current).width;
+      stringWidth = stringWidth.slice(0, -2);
+
+      setProjectWidth(Number(stringWidth));
+    });
+  }, []);
 
   return (
     <div ref={portfolioRef} id="portfolio-section-container">
@@ -45,6 +58,9 @@ function HomeContent({ portfolioRef }) {
               key={project.id}
               project={project}
               descriptionTracker={descriptionTracker}
+              firstProjectID={firstProjectID}
+              projectElement={projectElement}
+              projectWidth={projectWidth}
             />
           );
         })}
