@@ -168,3 +168,14 @@
 .site-full-window .project-description-container .description-selector.not-selected {
   opacity: 0.5;
 }
+
+.site-full-window .description-text {
+  display: flex;
+  flex-direction: row;
+  justify-content: stretch;
+  align-items: stretch;
+}
+
+.site-full-window .individual-description {
+
+}

@@ -25,7 +25,23 @@ function ProjectDescription({ project, descriptionTracker }) {
           );
         })}
       </div>
-      <div className="description-text">{descriptions[0]}</div>
+      <div className="description-text">
+        {descriptions.map((description, idx) => {
+          return (
+            <p
+              className="individual-description"
+              key={idx}
+              style={
+                {
+                  // display:
+                }
+              }
+            >
+              {description}
+            </p>
+          );
+        })}
+      </div>
     </div>
   );
 }
