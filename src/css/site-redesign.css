@@ -200,6 +200,10 @@
   pointer-events: none;
 }
 
+.site-full-window .img-container {
+  overflow-x: hidden;
+}
+
 .site-full-window .img-scrolling {
   display: flex;
   flex-direction: row;
