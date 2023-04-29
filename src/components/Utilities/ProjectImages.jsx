@@ -3,14 +3,14 @@ import React, { useState, useRef } from 'react';
 function ProjectImages({ project, projectWidth }) {
   const images = project.img;
 
-  const [activeImages, setActiveImages] = useState(
+  const activeImages = useRef(
     images.map((image, idx) => {
       return idx === 0;
     })
   );
   const imageRef = useRef(new Map());
-
-  console.log('active images', activeImages);
+  const scrollingInterval = useRef([]);
+  console.log('each render active image', activeImages);
 
   function scrollToImageIdx(idx) {
     const map = imageRef.current;
@@ -20,15 +20,56 @@ function ProjectImages({ project, projectWidth }) {
       block: 'nearest',
       inline: 'center',
     });
-    setActiveImages(
-      [...activeImages].map((image, newIdx) => {
-        return (idx = newIdx);
+
+    console.log(
+      'new array to set ',
+      activeImages.current.map((image, newIdx) => {
+        return idx === newIdx;
       })
     );
+
+    activeImages.current = [...activeImages.current].map((image, newIdx) => {
+      return idx === newIdx;
+    });
   }
 
+  function getCurrentImage() {
+    console.log('activeImages inside of getCurrent', activeImages.current);
+    console.log(
+      'get current image',
+      activeImages.current.findIndex((imageActive) => imageActive)
+    );
+    return activeImages.current.findIndex((imageActive) => imageActive);
+  }
+
+  const onMouseEnter = (evt) => {
+    const intervalID = setInterval(() => {
+      console.log('hover scope active images', activeImages.current);
+      const currentIdx = getCurrentImage();
+      const nextIdx =
+        currentIdx + 1 > activeImages.current.length - 1 ? 0 : currentIdx + 1;
+
+      console.log('next idx, passed into funtion', nextIdx);
+
+      scrollToImageIdx(nextIdx);
+    }, 2000);
+    scrollingInterval.current.push(intervalID);
+  };
+
+  const onMouseLeave = (evt) => {
+    scrollingInterval.current.forEach((intervalID) => {
+      clearInterval(intervalID);
+    });
+
+    scrollingInterval.current = [];
+  };
+
   return (
-    <div className="img-container">
+    <div
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      className="img-container"
+    >
       <div className="img-scrolling">
         {images.map((image, idx) => {
           return (
