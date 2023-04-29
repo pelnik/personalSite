@@ -7,8 +7,6 @@ function HomeContent({ portfolioRef }) {
   const [projectWidth, setProjectWidth] = useState(null);
   const projectElement = useRef(null);
 
-  console.log('description Tracker', descriptionTracker);
-
   let firstProjectID = 100;
 
   function createDescriptionTracker(projects) {
@@ -39,9 +37,7 @@ function HomeContent({ portfolioRef }) {
       })
       .then((result) => {
         setDescriptionTracker(createDescriptionTracker(result));
-        console.log('descriptionTracker', createDescriptionTracker(result));
         setProjects(result);
-        console.log('projects', result);
       })
       .catch((error) => {
         console.error('error fetching portfolio.txt file', error);

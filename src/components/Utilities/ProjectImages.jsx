@@ -1,8 +1,6 @@
 import React from 'react';
 
 function ProjectImages({ project, projectWidth, imageRef, images }) {
-  console.log('projectImages', images);
-
   return (
     <div className="img-container">
       <div className="img-scrolling">

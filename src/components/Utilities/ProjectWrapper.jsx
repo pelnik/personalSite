@@ -33,39 +33,34 @@ function ProjectWrapper({
       inline: 'center',
     });
 
-    console.log(
-      'new array to set ',
-      activeImages.current.map((image, newIdx) => {
-        return idx === newIdx;
-      })
-    );
-
     activeImages.current = [...activeImages.current].map((image, newIdx) => {
       return idx === newIdx;
     });
   }
 
   function getCurrentImage() {
-    console.log('activeImages inside of getCurrent', activeImages.current);
-    console.log(
-      'get current image',
-      activeImages.current.findIndex((imageActive) => imageActive)
-    );
     return activeImages.current.findIndex((imageActive) => imageActive);
   }
 
+  function setScrollingInterval(withTimeout) {
+    if (scrollingInterval.current.length === 0) {
+      const intervalID = setInterval(() => {
+        const currentIdx = getCurrentImage();
+        const nextIdx =
+          currentIdx + 1 > activeImages.current.length - 1 ? 0 : currentIdx + 1;
+
+        scrollToImageIdx(nextIdx);
+      }, 3000);
+      scrollingInterval.current.push(intervalID);
+
+      if (withTimeout) {
+        setTimeout(onMouseLeave, 9000);
+      }
+    }
+  }
+
   const onMouseEnter = (evt) => {
-    const intervalID = setInterval(() => {
-      console.log('hover scope active images', activeImages.current);
-      const currentIdx = getCurrentImage();
-      const nextIdx =
-        currentIdx + 1 > activeImages.current.length - 1 ? 0 : currentIdx + 1;
-
-      console.log('next idx, passed into funtion', nextIdx);
-
-      scrollToImageIdx(nextIdx);
-    }, 2000);
-    scrollingInterval.current.push(intervalID);
+    setScrollingInterval(false);
   };
 
   const onMouseLeave = (evt) => {
@@ -76,10 +71,15 @@ function ProjectWrapper({
     scrollingInterval.current = [];
   };
 
+  function onTouchMove(evt) {
+    setScrollingInterval(true);
+  }
+
   return project.external ? (
     <div
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onTouchMove={onTouchMove}
       className="individual-project"
     >
       <a
@@ -115,6 +115,8 @@ function ProjectWrapper({
     <div
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onTouchStart={onMouseEnter}
+      onTouchEnd={onMouseLeave}
       className="individual-project"
     >
       <Link
