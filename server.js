@@ -34,7 +34,7 @@ app.use('/api', apiRouter);
 
 app.get('/scents', (req, res, next) => {
   console.log('entered redirect');
-  res.redirect('https://makes-scents.netlify.app');
+  res.redirect('https://makes-scents-store.netlify.app/');
 });
 
 app.use(express.static('build'));
