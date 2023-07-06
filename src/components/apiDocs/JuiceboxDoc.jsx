@@ -95,8 +95,8 @@ function JuiceboxDoc() {
                 target="_blank"
                 className="jbLink"
               >
-                Click here to take look around at the front end to see all API's
-                employed.
+                Click here to take look around at the front end repo to see all
+                APIs employed.
               </a>
               <a
                 href="https://github.com/pelnik/juicebox"

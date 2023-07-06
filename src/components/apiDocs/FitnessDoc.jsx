@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { Header, Footer } from '..';
 
-function JuiceboxDoc() {
+function FitnessDoc() {
   useEffect(() => {
     document.title = `Fitness Tracker API Documentation -
       Matthew Pelnik, Full Stack Web Software Engineer`;
@@ -46,14 +46,14 @@ function JuiceboxDoc() {
               </p>
               <hr className="api-rule" />
               <h2>Registration</h2>
-              <p className="jbCode">pelnik.dev/api/fitness/register</p>
+              <p className="jbCode">pelnik.dev/api/fitness/users/register</p>
               <p className="jbText">
                 You can get routines and activities without a user token, but to
                 do most things, first you will need a user token. To register a
                 user, you will need to send just a username and password.
               </p>
               <p className="jbCurl">
-                curl https://pelnik.dev/api/juicebox/users/register -X POST -H
+                curl https://pelnik.dev/api/fitness/users/register -X POST -H
                 &quot;Content-Type: application/json&quot; -d &apos;&#123;
                 &quot;username&quot;: &quot;&#91;FunGuy23&#93;&quot;,
                 &quot;password&quot;:
@@ -61,7 +61,7 @@ function JuiceboxDoc() {
               </p>
               <hr className="api-rule" />
               <h2>Login</h2>
-              <p className="jbCode">pelnik.dev/api/fitness/login</p>
+              <p className="jbCode">pelnik.dev/api/fitness/users/login</p>
               <p className="jbText">
                 You can get routines and activities without a user token, but to
                 do most things, first you will need a user token. To login a
@@ -83,27 +83,19 @@ function JuiceboxDoc() {
                 activity added to the routine.
               </p>
               <p className="jbCurl">
-                curl https://pelnik.dev/api/juicebox/posts -H
+                curl https://pelnik.dev/api/fitness/users/me -H
                 &quot;Content-Type: application/json&quot; &#91;-H
                 &quot;Authorization: Bearer &#91;token&#93;&quot;&#93;
               </p>
               <hr className="api-rule" />
               <h2>And Many More!</h2>
               <a
-                href="https://github.com/pelnik/JuiceboxFrontEnd"
+                href="https://github.com/pelnik/FitnessTracker"
                 target="_blank"
                 className="jbLink"
               >
-                Click here to take look around at the front end to see all API's
-                employed.
-              </a>
-              <a
-                href="https://github.com/pelnik/juicebox"
-                target="_blank"
-                className="jbLink"
-              >
-                Or if you really want to dig into it, look at the back end repo
-                I created directly!
+                Click here to take look around at the back end repo I created
+                directly!
               </a>
               <a
                 href="https://github.com/pelnik/personalSite"
@@ -122,4 +114,4 @@ function JuiceboxDoc() {
   );
 }
 
-export default JuiceboxDoc;
+export default FitnessDoc;
