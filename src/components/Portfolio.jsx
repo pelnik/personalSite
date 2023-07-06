@@ -294,7 +294,7 @@ function Portfolio() {
               </p>
             </div>
             <div className="project">
-              <a href="/portfolio/deucesWild/index.html" target="_blank">
+              <a href="/portfolio/DeucesWild/index.html" target="_blank">
                 <img
                   src="/Media/main/deucesWildPic.jpg"
                   alt="Deuces Wild screenshot"
