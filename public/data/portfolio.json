@@ -7,8 +7,12 @@
         "alt": "makes scents front end screenshot"
       },
       {
-        "url": "/Media/main/project_scents_front.jpg",
-        "alt": "makes scents front end screenshot"
+        "url": "/Media/main/scents2.jpg",
+        "alt": "makes scents cart"
+      },
+      {
+        "url": "/Media/main/scents3.jpg",
+        "alt": "makes scents checkout"
       }
     ],
     "link": "/scents",

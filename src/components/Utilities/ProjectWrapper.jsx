@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ProjectDescription, ProjectImages } from '..';
 
 import { Link } from 'react-router-dom';
@@ -42,6 +42,14 @@ function ProjectWrapper({
     return activeImages.current.findIndex((imageActive) => imageActive);
   }
 
+  function clearIntervals() {
+    scrollingInterval.current.forEach((intervalID) => {
+      clearInterval(intervalID);
+    });
+
+    scrollingInterval.current = [];
+  }
+
   function setScrollingInterval(withTimeout) {
     if (scrollingInterval.current.length === 0) {
       const intervalID = setInterval(() => {
@@ -54,7 +62,7 @@ function ProjectWrapper({
       scrollingInterval.current.push(intervalID);
 
       if (withTimeout) {
-        setTimeout(onMouseLeave, 9000);
+        setTimeout(clearIntervals, 9000);
       }
     }
   }
@@ -63,23 +71,20 @@ function ProjectWrapper({
     setScrollingInterval(false);
   };
 
-  const onMouseLeave = (evt) => {
-    scrollingInterval.current.forEach((intervalID) => {
-      clearInterval(intervalID);
-    });
-
-    scrollingInterval.current = [];
-  };
-
   function onTouchMove(evt) {
     setScrollingInterval(true);
   }
 
+  useEffect(() => {
+    return clearIntervals;
+  }, []);
+
   return project.external ? (
     <div
       onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      onMouseLeave={clearIntervals}
       onTouchMove={onTouchMove}
+      onTouchEnd={clearIntervals}
       className="individual-project"
     >
       <a
@@ -114,9 +119,9 @@ function ProjectWrapper({
   ) : (
     <div
       onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      onMouseLeave={clearIntervals}
       onTouchStart={onMouseEnter}
-      onTouchEnd={onMouseLeave}
+      onTouchEnd={clearIntervals}
       className="individual-project"
     >
       <Link

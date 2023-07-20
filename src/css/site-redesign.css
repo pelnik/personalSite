@@ -213,3 +213,14 @@
   min-width:max-content;
   gap: 10px;
 }
+
+.site-full-window .individual-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.site-full-window .individual-image img {
+  object-fit: contain;
+  height: 100%;
+}
