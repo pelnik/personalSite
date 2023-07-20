@@ -53,7 +53,7 @@ function HomeContent({ portfolioRef }) {
 
       setProjectWidth(getProjectElementWidth());
     });
-  }, []);
+  }, [projectElement]);
 
   useEffect(() => {
     if (Object.keys(projects).length !== 0) {
@@ -66,7 +66,6 @@ function HomeContent({ portfolioRef }) {
       <div id="home-content-flex">
         <About />
         <div ref={portfolioRef} id="portfolio-section-container">
-          <p>Portfolio</p>
           <div id="project-container">
             {projects.map((project) => {
               return (
