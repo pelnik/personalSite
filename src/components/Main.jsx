@@ -24,8 +24,8 @@ function Main() {
     <main className="full-window">
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/about" element={<Home />} />
+        <Route path="/portfolio" element={<Home />} />
         <Route path="/snake" element={<Snake />} />
         <Route path="/stranger/*" element={<StrangerMain />} />
         <Route path="/juicebox/*" element={<JuiceboxMain />} />

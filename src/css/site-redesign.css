@@ -89,6 +89,16 @@
   padding: 12px 24px;
 }
 
+.site-full-window #home-content-parent {
+  padding: 50px;
+}
+
+.site-full-window #home-content-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .site-full-window .all-button-special {
   transition: padding 0.5s, border-radius 0.5s;
 }

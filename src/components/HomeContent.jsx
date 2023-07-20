@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ProjectWrapper } from '.';
+import { About, ProjectWrapper } from '.';
 
 function HomeContent({ portfolioRef }) {
   const [projects, setProjects] = useState([]);
@@ -62,22 +62,27 @@ function HomeContent({ portfolioRef }) {
   }, [projects]);
 
   return (
-    <div ref={portfolioRef} id="portfolio-section-container">
-      <p>Portfolio</p>
-      <div id="project-container">
-        {projects.map((project) => {
-          return (
-            <ProjectWrapper
-              key={project.id}
-              project={project}
-              descriptionTracker={descriptionTracker}
-              firstProjectID={firstProjectID}
-              projectElement={projectElement}
-              projectWidth={projectWidth}
-              setDescriptionTracker={setDescriptionTracker}
-            />
-          );
-        })}
+    <div id="home-content-parent">
+      <div id="home-content-flex">
+        <About />
+        <div ref={portfolioRef} id="portfolio-section-container">
+          <p>Portfolio</p>
+          <div id="project-container">
+            {projects.map((project) => {
+              return (
+                <ProjectWrapper
+                  key={project.id}
+                  project={project}
+                  descriptionTracker={descriptionTracker}
+                  firstProjectID={firstProjectID}
+                  projectElement={projectElement}
+                  projectWidth={projectWidth}
+                  setDescriptionTracker={setDescriptionTracker}
+                />
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
