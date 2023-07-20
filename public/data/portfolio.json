@@ -49,6 +49,10 @@
       {
         "url": "/Media/main/fitness-front-end.jpg",
         "alt": "fitness tracker front end screenshot"
+      },
+      {
+        "url": "/Media/main/fitness2.jpg",
+        "alt": "fitness tracker activities"
       }
     ],
     "link": "/fitness",
@@ -81,6 +85,10 @@
     "img": [
       {
         "url": "/Media/main/juicebox-front-end.jpg",
+        "alt": "Juicebox front end screenshot"
+      },
+      {
+        "url": "/Media/main/juicebox2.jpg",
         "alt": "Juicebox front end screenshot"
       }
     ],

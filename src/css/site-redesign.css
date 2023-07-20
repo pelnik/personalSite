@@ -224,3 +224,7 @@
   object-fit: contain;
   height: 100%;
 }
+
+.site-full-window .description-arrow:hover {
+  filter: brightness(80%)
+}

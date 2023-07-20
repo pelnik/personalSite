@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 import CircleIcon from '@mui/icons-material/Circle';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { pink } from '@mui/material/colors';
 
 function ProjectDescription({
   project,
@@ -130,14 +131,22 @@ function ProjectDescription({
       </div>
       <div className="description-scrolling-icons">
         <ArrowBackIosNewIcon
-          className={displayForwardArrow() ? null : 'no-display'}
+          className={
+            displayForwardArrow()
+              ? 'description-arrow'
+              : 'description-arrow no-display'
+          }
           onClick={(evt) => {
             evt.preventDefault();
             updateDescription(-1);
           }}
         />
         <ArrowForwardIosIcon
-          className={displayBackArrow() ? null : 'no-display'}
+          className={
+            displayBackArrow()
+              ? 'description-arrow'
+              : 'description-arrow no-display'
+          }
           onClick={(evt) => {
             evt.preventDefault();
             updateDescription(1);
