@@ -96,7 +96,23 @@
 .site-full-window #home-content-flex {
   display: flex;
   flex-direction: column;
+  gap: 5vh;
+}
+
+.site-full-window #about-pic-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
+}
+
+.site-full-window .personal-pic {
+  border-radius: 50%;
+  width: 10vw;
+  height: 10vw;
+  min-width: 200px;
+  min-height: 200px;
 }
 
 .site-full-window .all-button-special {
@@ -237,4 +253,14 @@
 
 .site-full-window .description-arrow:hover {
   filter: brightness(80%)
+}
+
+@media (max-width: 600px) {
+  .site-full-window #about-pic-flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+  }
 }
