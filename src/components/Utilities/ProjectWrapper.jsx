@@ -87,6 +87,7 @@ function ProjectWrapper({
       onTouchEnd={clearIntervals}
       className="individual-project"
     >
+      <h3 className="subsection-title">{project.title}</h3>
       <a
         className="project-link-container"
         href={project.link}
@@ -124,6 +125,7 @@ function ProjectWrapper({
       onTouchEnd={clearIntervals}
       className="individual-project"
     >
+      <h3 className="subsection-title">{project.title}</h3>
       <Link
         className="project-link-container"
         ref={firstProjectID === project.id ? projectElement : null}
