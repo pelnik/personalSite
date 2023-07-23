@@ -1,5 +1,6 @@
 import React from 'react';
 import { ButtonSpecial } from '.';
+import { Link } from 'react-router-dom';
 
 function HomeHeader({ portfolioRef }) {
   function handlePortfolioClick(evt) {
@@ -13,9 +14,9 @@ function HomeHeader({ portfolioRef }) {
   return (
     <div id="navbar">
       <div className="subnavbar" id="left-navbar">
-        <p className="center-text" id="navbar-my-name">
+        <Link to="/" className="center-text" id="navbar-my-name">
           Matthew Pelnik
-        </p>
+        </Link>
       </div>
       <div className="subnavbar" id="right-navbar">
         <ButtonSpecial
