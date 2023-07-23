@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { About, ProjectWrapper } from '.';
 
 function HomeContent({ portfolioRef }) {
@@ -46,14 +46,22 @@ function HomeContent({ portfolioRef }) {
     firstProjectID = projects[0].id;
   }
 
+  // Figure out why sometimes there's a resize error
+
   useEffect(() => {
-    window.addEventListener('resize', () => {
+    function setEventListenerOnResize() {
       let stringWidth = getComputedStyle(projectElement.current).width;
       stringWidth = stringWidth.slice(0, -2);
 
       setProjectWidth(getProjectElementWidth());
-    });
-  }, [projectElement]);
+    }
+
+    window.addEventListener('resize', setEventListenerOnResize);
+
+    return () => {
+      window.removeEventListener('resize', setEventListenerOnResize);
+    };
+  }, [projectElement.current]);
 
   useEffect(() => {
     if (Object.keys(projects).length !== 0) {
@@ -65,7 +73,9 @@ function HomeContent({ portfolioRef }) {
     <div id="home-content-parent">
       <div id="home-content-flex">
         <About />
+        <hr className="main-page-separator" />
         <div ref={portfolioRef} id="portfolio-section-container">
+          <h2 id="portfolio-title">Projects</h2>
           <div id="project-container">
             {projects.map((project) => {
               return (
