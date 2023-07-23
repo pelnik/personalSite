@@ -46,8 +46,6 @@ function HomeContent({ portfolioRef }) {
     firstProjectID = projects[0].id;
   }
 
-  // Figure out why sometimes there's a resize error
-
   useEffect(() => {
     function setEventListenerOnResize() {
       let stringWidth = getComputedStyle(projectElement.current).width;

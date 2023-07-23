@@ -49,7 +49,7 @@
 .site-full-window #navbar {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 
   padding: 2% 15%;
@@ -60,6 +60,10 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.site-full-window #right-navbar {
+  display: none;
 }
 
 .site-full-window .navbar-button {
@@ -272,6 +276,54 @@
   filter: brightness(80%)
 }
 
+.site-full-window #footer-parent {
+  padding: 10% 10%;
+  background-color: black;
+  color: white;
+
+  display: flex;
+}
+
+.site-full-window #footer-grid-parent {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  gap: 45px;
+
+  flex-grow: 1;
+}
+
+.site-full-window #middle-footer-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+}
+
+.site-full-window #footer-icon-parent {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.site-full-window .footer-icon {
+  width: 40px;
+}
+
+.site-full-window #contact-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.site-full-window #contact-title-footer {
+  text-align: center;
+
+  font-size: 1.5rem;
+  text-decoration: underline;
+  margin-bottom: 1rem;
+  font-weight: normal;
+}
+
 @media (max-width: 600px) {
   .site-full-window #about-pic-flex {
     display: flex;
@@ -283,5 +335,13 @@
 
   .site-full-window #project-container {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  .site-full-window #footer-grid-parent {
+    grid-template-columns: 1fr;
+  }
+
+  .site-full-window .hide-footer-mobile {
+    display: none;
   }
 }
