@@ -12,11 +12,11 @@
 }
 
 .site-full-window {
-  --myLightGray: #D4D4D4;
-  --myLightBrown: #BF9E93;
-  --myLightBlue: #4E72A3;
-  --myReddishBrown: #C26D63;
-  --blue: #ADC0DB;;
+  --myLightGray: #F0F2F0;
+  --myYellow: #FAD67D;
+  --myDarkBlue: #A1A8B3;
+  --myYellowBrown: #AB9E7D;
+  --blue: #DEECFF;
   font-family: apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
 
   overflow-y: scroll;
@@ -58,6 +58,8 @@
 
   padding: 2% 15%;
   border-bottom: solid black 2px;
+
+  border-radius: 0;
 }
 
 .site-full-window .subnavbar {
@@ -112,7 +114,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 75px;
 }
 
 .site-full-window .personal-pic {
@@ -152,14 +154,16 @@
 }
 
 .site-full-window .individual-project {
-  color: white;
-  background-color: var(--myLightBlue);
+  color: black;
+  background-color: var(--blue);
 
   display: flex;
   flex-direction: column;
   gap: 20px;
 
   padding: 20px;
+  border-radius: 15px;
+  border: solid 1px black;
 }
 
 .site-full-window .project-link-container {
