@@ -13,7 +13,6 @@ export { default as OldHeader } from './old-site/OldHeader';
 export { default as OldFooter } from './old-site/OldFooter';
 export { default as Snake } from './portfolio/snake/Snake';
 export { default as NotFound } from './NotFound/NotFound';
-export { default as ErrorIcon } from './NotFound/ErrorIcon';
 export { default as JuiceboxDoc } from './apiDocs/JuiceboxDoc';
 export { default as FitnessDoc } from './apiDocs/FitnessDoc';
 export { default as ButtonSpecial } from './Utilities/ButtonSpecial';

@@ -43,7 +43,7 @@ function Navbar({ userToken, setUserToken, setPostFilter }) {
   return (
     <div id="Navbar">
       <div id="leftNavbar">
-        <Link to="/stranger">
+        <Link to="/">
           <div className="icon-wrapper">
             <HomeSVG fill="#FFFFFF" />
             <p>Home</p>

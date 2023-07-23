@@ -68,12 +68,12 @@ function HomeContent({ portfolioRef }) {
   }, [projects]);
 
   return (
-    <div id="home-content-parent">
-      <div id="home-content-flex">
+    <div className="home-content-parent">
+      <div className="home-content-flex">
         <About />
         <hr className="main-page-separator" />
         <div ref={portfolioRef} id="portfolio-section-container">
-          <h2 id="portfolio-title">Projects</h2>
+          <h2 className="section-title">Projects</h2>
           <div id="project-container">
             {projects.map((project) => {
               return (
