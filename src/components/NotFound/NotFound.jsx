@@ -11,7 +11,7 @@ function NotFound() {
   }, []);
 
   return (
-    <div className="site-full-window">
+    <div className="site-full-window not-found-full-window">
       <HomeHeader />
       <div className="home-content-parent" id="not-found-content">
         <div className="not-found-flex">

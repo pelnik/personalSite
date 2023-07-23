@@ -294,7 +294,7 @@
 .site-full-window #footer-parent {
   padding: 10% 10%;
   background-color: black;
-  color: white;
+  color: var(--myLightGray);
 
   display: flex;
 }
@@ -337,6 +337,15 @@
   text-decoration: underline;
   margin-bottom: 1rem;
   font-weight: normal;
+}
+
+.site-full-window.not-found-full-window {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-full-window #not-found-content {
+  flex-grow: 1;
 }
 
 .site-full-window #not-found-content a {
