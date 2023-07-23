@@ -109,6 +109,10 @@
   gap: 5vh;
 }
 
+.site-full-window .about-text {
+  font-size: 1.25em;
+}
+
 .site-full-window #about-pic-flex {
   display: flex;
   flex-direction: row;
@@ -153,6 +157,21 @@
   font-weight: normal;
 }
 
+.site-full-window .project-link-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+.site-full-window #project-container {
+  display: grid;
+  grid-template-rows: repeat(auto-fill, minmax(1rem, max-content));
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 60px;
+  align-items:stretch;
+}
+
 .site-full-window .individual-project {
   color: black;
   background-color: var(--blue);
@@ -164,21 +183,6 @@
   padding: 20px;
   border-radius: 15px;
   border: solid 1px black;
-}
-
-.site-full-window .project-link-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-
-.site-full-window #project-container {
-  display: grid;
-  grid-template-rows: repeat(auto-fill, minmax(1rem, max-content));
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 60px;
-  align-items:stretch;
 }
 
 .site-full-window .project-content {

@@ -9,7 +9,7 @@ function JuiceboxDoc() {
   }, []);
 
   return (
-    <div className="siteFullWindow">
+    <div className="site-full-window">
       <HomeHeader />
       <div className="home-content-parent">
         <div className="doc-flex">
