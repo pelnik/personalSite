@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 
 function ButtonSpecial({ className, handleClick, children }) {
   const [childButtonClass, setChildButtonClass] = useState('button-special');

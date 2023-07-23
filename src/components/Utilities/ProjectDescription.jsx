@@ -3,7 +3,6 @@ import React, { useRef } from 'react';
 import CircleIcon from '@mui/icons-material/Circle';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { pink } from '@mui/material/colors';
 
 function ProjectDescription({
   project,
