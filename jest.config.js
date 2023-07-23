@@ -3,10 +3,11 @@ let config = {};
 if (process.env.JEST_ENV === 'fitness') {
   config = {
     verbose: true,
-    globalSetup: './src/api/fitness-tracker/tests/setup.js',
-    globalTeardown: './src/api/fitness-tracker/tests/tearDown.js',
+    globalSetup: './tests/setup.js',
+    globalTeardown: './tests/tearDown.js',
     collectCoverage: false,
     forceExit: true,
+    rootDir: './src/api/fitness-tracker',
   };
 } else {
   config = {
