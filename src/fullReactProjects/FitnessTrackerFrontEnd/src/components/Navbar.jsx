@@ -16,16 +16,13 @@ const Navbar = ({ setToken, token }) => {
           }}
           className="navbar-icons"
         />
-        <div id="navbar-logo">
+        <Link to="/fitness/" id="navbar-logo">
           <Logo />
-        </div>
+        </Link>
       </div>
       <div id="navbarTabs">
         <div id="navbarTabs-container">
           <Link to="/fitness/">
-            <h2>Home</h2>
-          </Link>
-          <Link to="routines">
             <h2>Routines</h2>
           </Link>
           {token ? (

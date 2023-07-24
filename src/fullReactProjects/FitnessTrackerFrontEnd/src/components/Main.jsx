@@ -38,7 +38,16 @@ const Main = () => {
     <div id="fitnessMain">
       <Navbar setToken={setToken} token={token} />
       <Routes>
-        <Route path="/" element={<Homepage />} />
+        <Route
+          path="/"
+          element={
+            <Routines
+              setSelectedUser={setSelectedUser}
+              selectedActivity={selectedActivity}
+              setSelectedActivity={setSelectedActivity}
+            />
+          }
+        />
         <Route
           path="users/register"
           element={<Register setToken={setToken} token={token} />}
