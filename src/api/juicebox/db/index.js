@@ -17,7 +17,7 @@ let client = new Pool({
 client.on('error', (e) => {
   console.error('Database error at juicebox', e.stack);
   client = new Pool({
-    connectionString,
+    DATABASE_URL,
     ssl:
       process.env.NODE_ENV === 'production'
         ? { rejectUnauthorized: false }
