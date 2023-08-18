@@ -154,6 +154,9 @@ async function updatePost(postId, fields = {}) {
 
 async function getAllPosts() {
   try {
+    console.log('getAllPosts client', client);
+    console.log('getAllPosts database URL', DATABASE_URL);
+
     const { rows: postIds } = await client.query(
       `SELECT id
       FROM posts;
