@@ -6,6 +6,7 @@ const { requireUser, requireActiveUser } = require('./utils');
 
 postRouter.use((req, res, next) => {
   console.log('A request is being made to /posts');
+  console.log('req.body', req.body);
 
   next();
 });

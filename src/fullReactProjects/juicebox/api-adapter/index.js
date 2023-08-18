@@ -1,6 +1,10 @@
 import { saveToLocalStorage } from '../utils/localStorage';
 
-const BASE_URL = 'https://pelnik.dev/api/juicebox';
+// const BASE_URL = 'https://pelnik.dev/api/juicebox';
+const BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://pelnik.dev/api/juicebox'
+    : 'http://localhost:3000/api/juicebox';
 
 export async function login(username, password) {
   try {
