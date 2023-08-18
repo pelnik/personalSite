@@ -1,11 +1,30 @@
 require('dotenv').config();
 
-const { Client } = require('pg');
+const { Pool } = require('pg');
 
 const { DATABASE_URL } = process.env;
 console.log('DATABASE_URL', DATABASE_URL);
-const client = new Client(DATABASE_URL);
-// const client = new Client('postgres://localhost:5432/juicebox-dev');
+
+let client = new Pool({
+  DATABASE_URL,
+  ssl:
+    process.env.NODE_ENV === 'production'
+      ? { rejectUnauthorized: false }
+      : undefined,
+  idleTimeoutMillis: 30000,
+});
+
+client.on('error', (e) => {
+  console.error('Database error at juicebox', e.stack);
+  client = new Pool({
+    connectionString,
+    ssl:
+      process.env.NODE_ENV === 'production'
+        ? { rejectUnauthorized: false }
+        : undefined,
+    idleTimeoutMillis: 30000,
+  });
+});
 
 async function getAllUsers() {
   const { rows } = await client.query(

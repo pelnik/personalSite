@@ -6,10 +6,8 @@ const {
   createPost,
   updatePost,
   getAllPosts,
-  getPostsByUser,
   getUserById,
   createTags,
-  createPostTag,
   addTagsToPost,
   getPostsByTagName,
 } = require('./index');
@@ -227,7 +225,4 @@ async function testDB() {
   }
 }
 
-rebuildDB()
-  .then(testDB)
-  .catch(console.error)
-  .finally(() => client.end());
+rebuildDB().then(testDB).catch(console.error);

@@ -8,7 +8,6 @@ const path = require('path');
 const morgan = require('morgan');
 const cors = require('cors');
 const apiRouter = require('./src/api');
-const { client } = require('./src/api/juicebox/db');
 
 let PORT = 80;
 let sshPORT = 443;
@@ -42,8 +41,6 @@ app.use(express.static('build'));
 app.get('*', (req, res) => {
   res.sendFile(path.resolve('build', 'index.html'));
 });
-
-client.connect();
 
 http.createServer(app).listen(PORT, () => {
   console.log(`http server listing on ${PORT}`);
