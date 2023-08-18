@@ -6,7 +6,7 @@ const { DATABASE_URL } = process.env;
 console.log('DATABASE_URL', DATABASE_URL);
 
 let client = new Pool({
-  DATABASE_URL,
+  connectionString: DATABASE_URL,
   ssl:
     process.env.NODE_ENV === 'production'
       ? { rejectUnauthorized: false }
@@ -17,7 +17,7 @@ let client = new Pool({
 client.on('error', (e) => {
   console.error('Database error at juicebox', e.stack);
   client = new Pool({
-    DATABASE_URL,
+    connectionString: DATABASE_URL,
     ssl:
       process.env.NODE_ENV === 'production'
         ? { rejectUnauthorized: false }
