@@ -3,6 +3,64 @@
     "id": 100,
     "img": [
       {
+        "url": "/Media/main/fitness-front-end.jpg",
+        "alt": "fitness tracker front end screenshot"
+      },
+      {
+        "url": "/Media/main/fitness2.jpg",
+        "alt": "fitness tracker activities"
+      }
+    ],
+    "link": "/fitness",
+    "external": false,
+    "github_link": "https://github.com/pelnik/FitnessTracker",
+    "title": "Fitness Tracker",
+    "description": [
+      "The front end for our fitness tracker was developed on top of      the API built allowing users to track their own fitness      efforts. The site uses extensive routing to allow the user to      navigate directly to certain pages, like \"create new activity\"      for instance and also implements the Material UI React      framework for icons.",
+      "The front end allows the user to use the features described in      the backend section, such as registering a user, logging in,      creating a routine or activity, adding activities to the      routine, editing, and deleting. Register a user and play      around in the site!"
+    ]
+  },
+  {
+    "id": 98,
+    "img": [
+      {
+        "url": "/Media/main/Zoo Clicker.jpg",
+        "alt": "Zoo clicker game screenshot"
+      }
+    ],
+    "link": "/portfolio/ZooClicker/index.html",
+    "external": true,
+    "github_link": "https://github.com/pelnik/CookieClicker",
+    "title": "Zoo Clicker",
+    "description": [
+      "An interactive game in vanilla JS, HTML, and CSS that lets the      user gain more points as they click. It has a mobile view as      well as a standard desktop view with a seamless responsive      design. The user can buy producers with the currency      they'&apos;'ve acquired, generating more clicks, and unlocking      more animals."
+    ]
+  },
+  {
+    "id": 96,
+    "img": [
+      {
+        "url": "/Media/main/juicebox-front-end.jpg",
+        "alt": "Juicebox front end screenshot"
+      },
+      {
+        "url": "/Media/main/juicebox2.jpg",
+        "alt": "Juicebox front end screenshot"
+      }
+    ],
+    "link": "/juicebox",
+    "external": false,
+    "github_link": "https://github.com/pelnik/JuiceboxFrontEnd",
+    "title": "Juicebox Social",
+    "description": [
+      "A pair project developing a social media site that implements      the API backend we built, described in the back end section.      We implemented the popular Material UI React framework to      allow for quick implementation of advanced UI features for      form input and other visual components.",
+      "The front end allows the user to use the features described in      the backend section, such as registering a user, logging in,      creating a post, editing, and deleting. Register a user and      play around in the site!"
+    ]
+  },
+  {
+    "id": 94,
+    "img": [
+      {
         "url": "/Media/main/project_scents_front.jpg",
         "alt": "makes scents front end screenshot"
       },
@@ -27,50 +85,7 @@
     ]
   },
   {
-    "id": 98,
-    "img": [
-      {
-        "url": "/Media/main/fitness-front-end.jpg",
-        "alt": "fitness tracker front end screenshot"
-      },
-      {
-        "url": "/Media/main/fitness2.jpg",
-        "alt": "fitness tracker activities"
-      }
-    ],
-    "link": "/fitness",
-    "external": false,
-    "github_link": "https://github.com/pelnik/FitnessTracker",
-    "title": "Fitness Tracker",
-    "description": [
-      "The front end for our fitness tracker was developed on top of      the API built allowing users to track their own fitness      efforts. The site uses extensive routing to allow the user to      navigate directly to certain pages, like \"create new activity\"      for instance and also implements the Material UI React      framework for icons.",
-      "The front end allows the user to use the features described in      the backend section, such as registering a user, logging in,      creating a routine or activity, adding activities to the      routine, editing, and deleting. Register a user and play      around in the site!"
-    ]
-  },
-
-  {
-    "id": 96,
-    "img": [
-      {
-        "url": "/Media/main/juicebox-front-end.jpg",
-        "alt": "Juicebox front end screenshot"
-      },
-      {
-        "url": "/Media/main/juicebox2.jpg",
-        "alt": "Juicebox front end screenshot"
-      }
-    ],
-    "link": "/juicebox",
-    "external": false,
-    "github_link": "https://github.com/pelnik/JuiceboxFrontEnd",
-    "title": "Juicebox Social",
-    "description": [
-      "A pair project developing a social media site that implements      the API backend we built, described in the back end section.      We implemented the popular Material UI React framework to      allow for quick implementation of advanced UI features for      form input and other visual components.",
-      "The front end allows the user to use the features described in      the backend section, such as registering a user, logging in,      creating a post, editing, and deleting. Register a user and      play around in the site!"
-    ]
-  },
-  {
-    "id": 95,
+    "id": 92,
     "img": [
       {
         "url": "/Media/main/Strangers_Things_screenshot.png",
@@ -86,7 +101,7 @@
     ]
   },
   {
-    "id": 94,
+    "id": 90,
     "img": [
       {
         "url": "/Media/main/snake-screenshot.png",
@@ -101,24 +116,9 @@
       "The classic game coded in vanilla Javascript. The game has      several difficulties, score tracking, and scales to multiple      desktop screen sizes. To run it features extensive Javascript      DOM interaction as well as event listeners for user input to      update HTML elements and give a seamless game experience. The      game is built for using arrow keys on desktop. Play a few      rounds!"
     ]
   },
+
   {
-    "id": 93,
-    "img": [
-      {
-        "url": "/Media/main/Zoo Clicker.jpg",
-        "alt": "Zoo clicker game screenshot"
-      }
-    ],
-    "link": "/portfolio/ZooClicker/index.html",
-    "external": true,
-    "github_link": "https://github.com/pelnik/CookieClicker",
-    "title": "Zoo Clicker",
-    "description": [
-      "An interactive game in vanilla JS, HTML, and CSS that lets the      user gain more points as they click. It has a mobile view as      well as a standard desktop view with a seamless responsive      design. The user can buy producers with the currency      they'&apos;'ve acquired, generating more clicks, and unlocking      more animals."
-    ]
-  },
-  {
-    "id": 99,
+    "id": 88,
     "img": [
       {
         "url": "/Media/main/fitness-back-end.jpg",
@@ -137,7 +137,7 @@
     ]
   },
   {
-    "id": 97,
+    "id": 86,
     "img": [
       {
         "url": "/Media/main/juicebox-back-end.jpg",
@@ -155,7 +155,7 @@
     ]
   },
   {
-    "id": 92,
+    "id": 84,
     "img": [
       {
         "url": "/Media/main/deucesWildPic.jpg",
@@ -168,22 +168,6 @@
     "title": "Deuces Wild",
     "description": [
       "This is a card game inspired by a trip with friends to Las      Vegas. While there, one theme that kept coming up was one      friend's obsession with Deuces Wild, and by the end of      the trip, everyone had played it. This game is coded in      vanilla Javascript, HTML, and CSS. It is completely modular,      object based, and it tracks your hand history."
-    ]
-  },
-  {
-    "id": 91,
-    "img": [
-      {
-        "url": "/Media/main/qwirty-screenshot.jpg",
-        "alt": "qwirty site screenshot"
-      }
-    ],
-    "link": "/portfolio/qwirty/index.html",
-    "external": true,
-    "github_link": "https://github.com/pelnik/qwirtyStorePage",
-    "title": "Qwirty",
-    "description": [
-      "For this project, the goal was to closely replicate a provided      template for a store page using just HTML and CSS. The page      extensively uses flexbox to adjust layout and dynamically      adjusts items, the header, and several other elements for a      responsive design."
     ]
   }
 ]
