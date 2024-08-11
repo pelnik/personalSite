@@ -19,7 +19,7 @@ function Snake() {
 
   useEffect(() => {
     document.title =
-      'Classic Snake Game - Matthew Pelnik, Full Stack Web Software Engineer';
+      'Classic Snake Game - Matthew Pelnik, Data Analyst and Full Stack Web Developer';
   }, []);
 
   return (

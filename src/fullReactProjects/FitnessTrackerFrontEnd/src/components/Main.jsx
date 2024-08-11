@@ -31,7 +31,7 @@ const Main = () => {
   useEffect(() => {
     setToken(getTokenFromLocalStorage());
     document.title = `FitnessTrackr - The Fun Fitness Routine Tracking Site! -
-    Matthew Pelnik, Full Stack Web Software Engineer`;
+    Matthew Pelnik, Data Analyst and Full Stack Web Developer`;
   }, []);
 
   return (

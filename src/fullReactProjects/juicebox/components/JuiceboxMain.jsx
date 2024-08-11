@@ -26,7 +26,7 @@ function Main() {
     setToken(localToken);
 
     document.title = `JuiceBox Social - A social media site project -
-      Matthew Pelnik, Full Stack Web Software Engineer`;
+      Matthew Pelnik, Data Analyst and Full Stack Web Developer`;
   }, []);
 
   return (

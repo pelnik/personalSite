@@ -7,7 +7,7 @@ function NotFound() {
 
   useEffect(() => {
     document.title =
-      'Oh no 404! - No Page Found - Matthew Pelnik, Full Stack Web Software Engineer';
+      'Oh no 404! - No Page Found - Matthew Pelnik, Data Analyst and Full Stack Web Developer';
   }, []);
 
   return (
