@@ -73,7 +73,7 @@ function HomeContent({ portfolioRef }) {
         <About />
         <hr className="main-page-separator" />
         <div ref={portfolioRef} id="portfolio-section-container">
-          <h2 className="section-title">Projects</h2>
+          <h2 className="section-title">Web Projects</h2>
           <div id="project-container">
             {projects.map((project) => {
               return (

@@ -35,6 +35,12 @@
   align-items: center;
 }
 
+.site-full-window a.resume-link {
+  text-decoration: underline;
+  color: inherit;
+  display:inline;
+}
+
 .site-full-window .important {
   font-weight: bold;
 }
