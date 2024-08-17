@@ -12,7 +12,6 @@ apiRouter.use((req, res, next) => {
   } else {
     express.json()(req, res, next);
   }
-  express.json();
 });
 apiRouter.use('/juicebox', jbRouter);
 apiRouter.use('/fitness', fitnessRouter);
