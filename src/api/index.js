@@ -6,7 +6,14 @@ const adminRouter = require('./admin/api');
 
 const apiRouter = express.Router();
 
-apiRouter.use(express.json());
+apiRouter.use((req, res, next) => {
+  if (req.originalUrl === '/api/admin/github/') {
+    express.text()(req, res, next);
+  } else {
+    express.json()(req, res, next);
+  }
+  express.json();
+});
 apiRouter.use('/juicebox', jbRouter);
 apiRouter.use('/fitness', fitnessRouter);
 apiRouter.use('/scents', scentsRouter);
