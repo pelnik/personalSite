@@ -54,6 +54,8 @@ function hexToBytes(hex) {
 adminRouter.post('/github', async (req, res, next) => {
   try {
     req_sha = req.get('X-Hub-Signature-256');
+    console.log('req body', req.body);
+    console.log('type of req body', typeof req.body);
 
     if (await verifySignature(GITHUB_WEBHOOK, req_sha, req.body)) {
       res.send(200);

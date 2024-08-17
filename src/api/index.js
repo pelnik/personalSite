@@ -8,7 +8,7 @@ const apiRouter = express.Router();
 
 apiRouter.use((req, res, next) => {
   if (req.originalUrl === '/api/admin/github/') {
-    express.text()(req, res, next);
+    express.text({ type: 'application/json' })(req, res, next);
   } else {
     express.json()(req, res, next);
   }
