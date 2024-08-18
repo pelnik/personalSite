@@ -13,7 +13,7 @@ function About() {
           <br />
           <br />
           🗃️{' '}
-          <a className="resume-link" href="/Resume, Matthew Pelnik.docx">
+          <a className="resume-link" href="/Resume, Matthew Pelnik.pdf">
             Take a look at my resume!
           </a>
           <br />
