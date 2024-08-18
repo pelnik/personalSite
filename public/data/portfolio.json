@@ -19,22 +19,6 @@
     "id": 98,
     "img": [
       {
-        "url": "/Media/main/snake-screenshot.png",
-        "alt": "snake game screenshot"
-      }
-    ],
-    "link": "/snake",
-    "external": false,
-    "github_link": "https://github.com/pelnik/arcade",
-    "title": "Classic Snake",
-    "description": [
-      "The classic game coded in vanilla Javascript. The game has      several difficulties, score tracking, and scales to multiple      desktop screen sizes. To run it features extensive Javascript      DOM interaction as well as event listeners for user input to      update HTML elements and give a seamless game experience. The      game is built for using arrow keys on desktop. Play a few      rounds!"
-    ]
-  },
-  {
-    "id": 96,
-    "img": [
-      {
         "url": "/Media/main/project_scents_front.jpg",
         "alt": "makes scents front end screenshot"
       },
@@ -56,6 +40,22 @@
       "A PostgreSQL database was used with an Express back end called      through REST APIs using stateless user authentication and      password encryption.",
       "The user can register, login, browse and filter products, add      items to the cart, adjust quantities while adding to the cart      or in the cart itself, and remove items from the cart. Admin      users can update product and user information throughout the      site without needing a developer to update the back end.",
       "PLEASE NOTE: Our app uses a free tier of a platform as a      service site to host our back end. Because of that, it goes to      sleep after a few minutes of inactivity, and it will take a      little while to spin up on first load."
+    ]
+  },
+  {
+    "id": 96,
+    "img": [
+      {
+        "url": "/Media/main/snake-screenshot.png",
+        "alt": "snake game screenshot"
+      }
+    ],
+    "link": "/snake",
+    "external": false,
+    "github_link": "https://github.com/pelnik/arcade",
+    "title": "Classic Snake",
+    "description": [
+      "For desktop browsers only. The classic game coded in vanilla Javascript. The game has      several difficulties, score tracking, and scales to multiple      desktop screen sizes. To run, it features extensive Javascript      DOM interaction as well as event listeners for user input to      update HTML elements and give a seamless game experience. The      game is built for using arrow keys on desktop. Play a few      rounds!"
     ]
   },
   {
