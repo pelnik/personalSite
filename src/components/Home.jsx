@@ -6,7 +6,7 @@ function Home() {
 
   useEffect(() => {
     document.title =
-      'Homepage - Matthew Pelnik, Data Analyst and Full Stack Web Developer';
+      'Homepage - Matthew Pelnik, Data Analyst and Web Developer - SAS, SQL, Matt Pelnik';
   }, []);
 
   return (

@@ -9,7 +9,8 @@ function About() {
           👋 Hi there, thank you for visiting my site! I'm a data analyst and
           web developer based out of Tulsa, Oklahoma. I specialize in data
           analytics using SAS, SQL, and Power BI. I am currently working a
-          federal contract identifying fraudulent providers billing Medicare.
+          federal contract using statistical and medical analyses to identify
+          fraudulent providers billing Medicare.
           <br />
           <br />
           🗃️{' '}
