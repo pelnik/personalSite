@@ -19,6 +19,27 @@
     "id": 98,
     "img": [
       {
+        "url": "/Media/main/fitness-front-end.jpg",
+        "alt": "fitness tracker front end screenshot"
+      },
+      {
+        "url": "/Media/main/fitness2.jpg",
+        "alt": "fitness tracker activities"
+      }
+    ],
+    "link": "/fitness",
+    "external": false,
+    "github_link": "https://github.com/pelnik/FitnessTracker",
+    "title": "Fitness Tracker",
+    "description": [
+      "The front end for our fitness tracker was developed on top of      the API built allowing users to track their own fitness      efforts. The site uses extensive routing to allow the user to      navigate directly to certain pages, like \"create new activity\"      for instance and also implements the Material UI React      framework for icons.",
+      "The front end allows the user to use the features described in      the backend section, such as registering a user, logging in,      creating a routine or activity, adding activities to the      routine, editing, and deleting. Register a user and play      around in the site!"
+    ]
+  },
+  {
+    "id": 96,
+    "img": [
+      {
         "url": "/Media/main/project_scents_front.jpg",
         "alt": "makes scents front end screenshot"
       },
@@ -43,7 +64,7 @@
     ]
   },
   {
-    "id": 96,
+    "id": 94,
     "img": [
       {
         "url": "/Media/main/snake-screenshot.png",
@@ -56,27 +77,6 @@
     "title": "Classic Snake",
     "description": [
       "For desktop browsers only. The classic game coded in vanilla Javascript. The game has      several difficulties, score tracking, and scales to multiple      desktop screen sizes. To run, it features extensive Javascript      DOM interaction as well as event listeners for user input to      update HTML elements and give a seamless game experience. The      game is built for using arrow keys on desktop. Play a few      rounds!"
-    ]
-  },
-  {
-    "id": 94,
-    "img": [
-      {
-        "url": "/Media/main/fitness-front-end.jpg",
-        "alt": "fitness tracker front end screenshot"
-      },
-      {
-        "url": "/Media/main/fitness2.jpg",
-        "alt": "fitness tracker activities"
-      }
-    ],
-    "link": "/fitness",
-    "external": false,
-    "github_link": "https://github.com/pelnik/FitnessTracker",
-    "title": "Fitness Tracker",
-    "description": [
-      "The front end for our fitness tracker was developed on top of      the API built allowing users to track their own fitness      efforts. The site uses extensive routing to allow the user to      navigate directly to certain pages, like \"create new activity\"      for instance and also implements the Material UI React      framework for icons.",
-      "The front end allows the user to use the features described in      the backend section, such as registering a user, logging in,      creating a routine or activity, adding activities to the      routine, editing, and deleting. Register a user and play      around in the site!"
     ]
   },
   {
