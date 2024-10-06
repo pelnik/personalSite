@@ -7,9 +7,9 @@ function About() {
         <img className="personal-pic" src="/Media/main/personal_pic.jpg" />
         <p className="about-text">
           👋 Hi there, thank you for visiting my site! I'm a data analyst and
-          web developer based out of Tulsa, Oklahoma. I specialize in advanced
-          analytics using SAS, and I am currently on a federal contract
-          identifying fraudulent providers billing Medicare.
+          web developer based out of Tulsa, Oklahoma. I specialize in data
+          analytics using SAS, SQL, and Power BI. I am currently working a
+          federal contract identifying fraudulent providers billing Medicare.
           <br />
           <br />
           🗃️{' '}
