@@ -166,7 +166,7 @@
     "github_link": "https://github.com/pelnik/Deuces-Wild",
     "title": "Deuces Wild",
     "description": [
-      "This is a card game inspired by a trip with friends to Las      Vegas. While there, one theme that kept coming up was one      friend's obsession with Deuces Wild, and by the end of      the trip, everyone had played it. This game is coded in      vanilla Javascript, HTML, and CSS. It is completely modular,      object based, and it tracks your hand history."
+      "For desktop computers only. This was my first web development project, inspired by a trip with friends to Las Vegas. This game is coded in vanilla Javascript, HTML, and CSS with copyright free media. It is completely modular,      object based, and it tracks your hand history."
     ]
   }
 ]
