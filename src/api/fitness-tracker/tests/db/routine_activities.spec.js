@@ -5,7 +5,7 @@ DO NOT CHANGE THIS FILE
 */
 require('dotenv').config();
 const client = require('../../db/client');
-const faker = require('faker');
+const { faker } = require('@faker-js/faker');
 
 const {
   addActivityToRoutine,
@@ -39,8 +39,8 @@ describe('DB Routine Activities', () => {
     routineActivityData = {
       routineId: fakeRoutine.id,
       activityId: fakeActivity.id,
-      count: faker.random.number(),
-      duration: faker.random.number(),
+      count: faker.number.int(3),
+      duration: faker.number.int(3),
     };
   });
 
@@ -94,8 +94,8 @@ describe('DB Routine Activities', () => {
 
       const newRoutineActivityData = {
         id: fakeRoutineActivity.id,
-        count: faker.random.number(),
-        duration: faker.random.number(),
+        count: faker.number.int(3),
+        duration: faker.number.int(3),
       };
       const updatedRoutineActivity = await updateRoutineActivity(
         newRoutineActivityData

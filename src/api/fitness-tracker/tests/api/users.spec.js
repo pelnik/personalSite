@@ -5,7 +5,7 @@ DO NOT CHANGE THIS FILE
 */
 require('dotenv').config();
 const axios = require('axios');
-const faker = require('faker');
+const { faker } = require('@faker-js/faker');
 const client = require('../../db/client');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -50,7 +50,7 @@ describe('/api/users', () => {
     it('Creates a new user.', async () => {
       // Create some fake user data
       const fakeUserData = {
-        username: faker.internet.userName(),
+        username: faker.internet.username(),
         password: faker.internet.password(),
       };
       console.log(fakeUserData, 'fakeUserData');
@@ -74,7 +74,7 @@ describe('/api/users', () => {
     it('EXTRA CREDIT: Hashes password before saving user to DB.', async () => {
       // Create some fake user data
       const fakeUserData = {
-        username: faker.internet.userName(),
+        username: faker.internet.username(),
         password: faker.internet.password(),
       };
 

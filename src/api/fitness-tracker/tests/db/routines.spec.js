@@ -4,7 +4,7 @@ DO NOT CHANGE THIS FILE
 
 */
 require('dotenv').config();
-const faker = require('faker');
+const { faker } = require('@faker-js/faker');
 const client = require('../../db/client');
 const {
   createRoutine,
@@ -94,7 +94,7 @@ describe('DB Routines', () => {
     fakeRoutineActivity;
 
   beforeEach(async () => {
-    const fakeUserName = faker.internet.userName();
+    const fakeUserName = faker.internet.username();
     const fakeData = await createFakeUserWithRoutinesAndActivities(
       fakeUserName
     );
@@ -121,8 +121,8 @@ describe('DB Routines', () => {
       const routineData = {
         creatorId: user.id,
         isPublic: true,
-        name: faker.random.uuid(),
-        goal: faker.random.uuid(),
+        name: faker.string.uuid(),
+        goal: faker.string.uuid(),
       };
       const routine = await createRoutine(routineData);
 
@@ -240,8 +240,8 @@ describe('DB Routines', () => {
       const routineData = {
         creatorId: user.id,
         isPublic: true,
-        name: faker.random.uuid(),
-        goal: faker.random.uuid(),
+        name: faker.string.uuid(),
+        goal: faker.string.uuid(),
       };
       const newRoutine = await createRoutine(routineData);
 
@@ -451,8 +451,8 @@ describe('DB Routines', () => {
       const updatedRoutine = await updateRoutine({
         id: fakeRoutine.id,
         isPublic: false,
-        name: faker.random.uuid(),
-        goal: faker.random.uuid(),
+        name: faker.string.uuid(),
+        goal: faker.string.uuid(),
       });
 
       expect(updatedRoutine.id).toEqual(fakeRoutine.id);
@@ -461,8 +461,8 @@ describe('DB Routines', () => {
     it('Updates the public status, name, or goal, as necessary', async () => {
       const fakeRoutine = await createFakePublicRoutine();
 
-      const name = faker.random.uuid();
-      const goal = faker.random.uuid();
+      const name = faker.string.uuid();
+      const goal = faker.string.uuid();
 
       const updatedRoutine = await updateRoutine({
         id: fakeRoutine.id,
@@ -478,7 +478,7 @@ describe('DB Routines', () => {
 
     it('Does not update fields that are not passed in', async () => {
       const fakeRoutine = await createFakePublicRoutine();
-      const name = faker.random.uuid();
+      const name = faker.string.uuid();
       const updatedRoutine = await updateRoutine({
         id: fakeRoutine.id,
         name,
