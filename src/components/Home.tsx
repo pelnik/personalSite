@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { HomeHeader, HomeContent, HomeFooter } from '.';
 
 function Home() {
-  const portfolioRef = useRef(null);
+  const portfolioRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     document.title =

@@ -1,4 +1,4 @@
-[
+export const portfolio_list = [
   {
     "id": 100,
     "img": [
