@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { About, ProjectWrapper } from '.';
+import { portfolio_list } from './Utilities/portfolio_list';
 
-function HomeContent({ portfolioRef }) {
-  const [projects, setProjects] = useState([]);
-  const [descriptionTracker, setDescriptionTracker] = useState({});
-  const [projectWidth, setProjectWidth] = useState(null);
-  const projectElement = useRef(null);
+type HomeContentProps = {
+  portfolioRef: React.RefObject<HTMLDivElement | null>;
+};
 
-  let firstProjectID = 100;
+type DescriptionTracker = Record<number, boolean[]>;
 
-  function createDescriptionTracker(projects) {
-    const initialTracker = {};
+function HomeContent({ portfolioRef }: HomeContentProps) {
+  function createDescriptionTracker() {
+    const initialTracker: DescriptionTracker = {};
 
-    projects.forEach((project) => {
+    portfolio_list.forEach((project) => {
       initialTracker[project.id] = project.description.map((paragraph, idx) => {
         return idx !== 0 ? false : true;
       });
@@ -21,33 +21,29 @@ function HomeContent({ portfolioRef }) {
     return initialTracker;
   }
 
-  createDescriptionTracker(projects);
+  const [descriptionTracker, setDescriptionTracker] = useState(
+    createDescriptionTracker()
+  );
+  const [projectWidth, setProjectWidth] = useState<number | null>(null);
+  const projectElement = useRef<HTMLDivElement | null>(null);
+
+  let firstProjectID = 100;
 
   function getProjectElementWidth() {
+    if (!projectElement.current)
+      throw new Error('No project element ref found');
+
     let stringWidth = getComputedStyle(projectElement.current).width;
     stringWidth = stringWidth.slice(0, -2);
 
     return Number(stringWidth);
   }
 
-  if (projects.length === 0) {
-    fetch('/data/portfolio.json')
-      .then((response) => {
-        return response.json();
-      })
-      .then((result) => {
-        setDescriptionTracker(createDescriptionTracker(result));
-        setProjects(result);
-      })
-      .catch((error) => {
-        console.error('error fetching portfolio.txt file', error);
-      });
-  } else if (projects.length > 1) {
-    firstProjectID = projects[0].id;
-  }
-
   useEffect(() => {
     function setEventListenerOnResize() {
+      if (!projectElement.current)
+        throw new Error('No project element ref found');
+
       let stringWidth = getComputedStyle(projectElement.current).width;
       stringWidth = stringWidth.slice(0, -2);
 
@@ -62,10 +58,10 @@ function HomeContent({ portfolioRef }) {
   }, [projectElement.current]);
 
   useEffect(() => {
-    if (Object.keys(projects).length !== 0) {
+    if (Object.keys(portfolio_list).length !== 0) {
       setProjectWidth(getProjectElementWidth());
     }
-  }, [projects]);
+  }, [portfolio_list]);
 
   return (
     <div className="home-content-parent">
@@ -75,7 +71,7 @@ function HomeContent({ portfolioRef }) {
         <div ref={portfolioRef} id="portfolio-section-container">
           <h2 className="section-title">Web Projects</h2>
           <div id="project-container">
-            {projects.map((project) => {
+            {portfolio_list.map((project) => {
               return (
                 <ProjectWrapper
                   key={project.id}

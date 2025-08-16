@@ -17,6 +17,10 @@ if (process.env.JEST_ENV === 'fitness') {
     },
     testEnvironment: 'jsdom',
     testPathIgnorePatterns: ['/node_modules/', '/src/api/fitness-tracker/'],
+    transform: {
+      '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: 'tsconfig.json' }],
+    },
+    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   };
 }
 
