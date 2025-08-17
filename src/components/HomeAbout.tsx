@@ -1,6 +1,6 @@
 import React from 'react';
 
-function About() {
+function HomeAbout() {
   return (
     <div id="about-parent">
       <div id="about-pic-flex">
@@ -21,4 +21,4 @@ function About() {
   );
 }
 
-export default About;
+export default HomeAbout;

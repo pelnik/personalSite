@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { About, ProjectWrapper } from '.';
+import { HomeAbout, ProjectWrapper } from '.';
 import { portfolio_list } from './Utilities/portfolio_list';
 
 type HomeContentProps = {
@@ -66,7 +66,7 @@ function HomeContent({ portfolioRef }: HomeContentProps) {
   return (
     <div className="home-content-parent">
       <div className="home-content-flex">
-        <About />
+        <HomeAbout />
         <hr className="main-page-separator" />
         <div ref={portfolioRef} id="portfolio-section-container">
           <h2 className="section-title">Web Projects</h2>
