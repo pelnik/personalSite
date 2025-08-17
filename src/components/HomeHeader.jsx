@@ -2,13 +2,13 @@ import React from 'react';
 import { ButtonSpecial } from '.';
 import { Link } from 'react-router-dom';
 
-function HomeHeader({ portfolioRef }) {
+function HomeHeader() {
   function handlePortfolioClick(evt) {
-    portfolioRef.current.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'center',
-    });
+    // portfolioRef.current.scrollIntoView({
+    //   behavior: 'smooth',
+    //   block: 'start',
+    //   inline: 'center',
+    // });
   }
 
   return (

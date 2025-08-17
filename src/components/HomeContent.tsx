@@ -3,12 +3,12 @@ import { HomeAbout, ProjectWrapper } from '.';
 import { portfolio_list } from './Utilities/portfolio_list';
 
 type HomeContentProps = {
-  portfolioRef: React.RefObject<HTMLDivElement | null>;
+  // portfolioRef: React.RefObject<HTMLDivElement | null>;
 };
 
 type DescriptionTracker = Record<number, boolean[]>;
 
-function HomeContent({ portfolioRef }: HomeContentProps) {
+function HomeContent() {
   function createDescriptionTracker() {
     const initialTracker: DescriptionTracker = {};
 
@@ -68,7 +68,7 @@ function HomeContent({ portfolioRef }: HomeContentProps) {
       <div className="home-content-flex">
         <HomeAbout />
         <hr className="main-page-separator" />
-        <div ref={portfolioRef} id="portfolio-section-container">
+        <div id="portfolio-section-container">
           <h2 className="section-title">Web Projects</h2>
           <div id="project-container">
             {portfolio_list.map((project) => {
