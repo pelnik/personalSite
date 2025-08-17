@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { SiteHeader, HomeContent, SiteFooter } from '..';
+import { SiteHeader, HomeContent, SiteFooter, SiteContentContainer } from '..';
 
 function Home() {
   useEffect(() => {

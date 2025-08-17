@@ -2,6 +2,7 @@ export { default as Main } from './Main';
 export { default as Home } from './Home/Home';
 export { default as SiteHeader } from './SiteHeader';
 export { default as SiteFooter } from './SiteFooter';
+export { default as SiteContentContainer } from './SiteContentContainer';
 export { default as HomeContent } from './Home/HomeContent';
 export { default as HomeAbout } from './Home/HomeAbout';
 export { default as MainAbout } from './MainAbout';

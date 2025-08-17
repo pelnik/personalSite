@@ -11,7 +11,7 @@ function FitnessDoc() {
   return (
     <div className="site-full-window">
       <SiteHeader />
-      <div className="home-content-parent">
+      <div className="site-content-parent">
         <div className="doc-flex">
           <h2 className="section-title">Fitness Tracker API Documentation</h2>
           <p className="doc-text">

@@ -13,7 +13,7 @@ function NotFound() {
   return (
     <div className="site-full-window not-found-full-window">
       <SiteHeader />
-      <div className="home-content-parent" id="not-found-content">
+      <div className="site-content-parent" id="not-found-content">
         <div className="not-found-flex">
           <h2 className="section-title">Page Not Found</h2>
           <div id="not-found-text">

@@ -64,7 +64,7 @@ function HomeContent() {
   }, [portfolio_list]);
 
   return (
-    <div className="home-content-parent">
+    <div className="site-content-parent">
       <div className="home-content-flex">
         <HomeAbout />
         <hr className="main-page-separator" />
