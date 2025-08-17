@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { SiteHeader, HomeContent, SiteFooter, SiteContentContainer } from '..';
+import { HomeContent, SiteContentContainer } from '..';
 
 function Home() {
   useEffect(() => {
@@ -8,11 +8,9 @@ function Home() {
   }, []);
 
   return (
-    <div className="site-full-window">
-      <SiteHeader />
+    <SiteContentContainer>
       <HomeContent />
-      <SiteFooter />
-    </div>
+    </SiteContentContainer>
   );
 }
 

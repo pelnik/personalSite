@@ -64,27 +64,25 @@ function HomeContent() {
   }, [portfolio_list]);
 
   return (
-    <div className="site-content-parent">
-      <div className="home-content-flex">
-        <HomeAbout />
-        <hr className="main-page-separator" />
-        <div id="portfolio-section-container">
-          <h2 className="section-title">Web Projects</h2>
-          <div id="project-container">
-            {portfolio_list.map((project) => {
-              return (
-                <ProjectWrapper
-                  key={project.id}
-                  project={project}
-                  descriptionTracker={descriptionTracker}
-                  firstProjectID={firstProjectID}
-                  projectElement={projectElement}
-                  projectWidth={projectWidth}
-                  setDescriptionTracker={setDescriptionTracker}
-                />
-              );
-            })}
-          </div>
+    <div className="home-content-flex">
+      <HomeAbout />
+      <hr className="main-page-separator" />
+      <div id="portfolio-section-container">
+        <h2 className="section-title">Web Projects</h2>
+        <div id="project-container">
+          {portfolio_list.map((project) => {
+            return (
+              <ProjectWrapper
+                key={project.id}
+                project={project}
+                descriptionTracker={descriptionTracker}
+                firstProjectID={firstProjectID}
+                projectElement={projectElement}
+                projectWidth={projectWidth}
+                setDescriptionTracker={setDescriptionTracker}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

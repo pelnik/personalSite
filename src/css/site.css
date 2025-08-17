@@ -349,16 +349,7 @@
   font-weight: normal;
 }
 
-.site-full-window.not-found-full-window {
-  display: flex;
-  flex-direction: column;
-}
-
-.site-full-window #not-found-content {
-  flex-grow: 1;
-}
-
-.site-full-window #not-found-content a {
+.site-full-window #not-found-text a {
   display: inline-block;
   cursor: pointer;
   text-decoration: underline;
