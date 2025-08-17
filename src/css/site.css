@@ -59,7 +59,7 @@
 .site-full-window #navbar {
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 
   padding: 2% 15%;
@@ -74,9 +74,9 @@
   align-items: center;
 }
 
-.site-full-window #right-navbar {
+/* .site-full-window #right-navbar {
   display: none;
-}
+} */
 
 .site-full-window .navbar-button {
   font-size: 1.5rem;
