@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { HomeFooter, HomeHeader } from '..';
+import { SiteFooter, SiteHeader } from '..';
 
 function NotFound() {
   const navigate = useNavigate();
@@ -12,7 +12,7 @@ function NotFound() {
 
   return (
     <div className="site-full-window not-found-full-window">
-      <HomeHeader />
+      <SiteHeader />
       <div className="home-content-parent" id="not-found-content">
         <div className="not-found-flex">
           <h2 className="section-title">Page Not Found</h2>
@@ -40,7 +40,7 @@ function NotFound() {
           </div>
         </div>
       </div>
-      <HomeFooter />
+      <SiteFooter />
     </div>
   );
 }

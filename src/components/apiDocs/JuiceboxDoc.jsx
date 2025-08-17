@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { HomeHeader, HomeFooter } from '..';
+import { SiteHeader, SiteFooter } from '..';
 
 function JuiceboxDoc() {
   useEffect(() => {
@@ -10,7 +10,7 @@ function JuiceboxDoc() {
 
   return (
     <div className="site-full-window">
-      <HomeHeader />
+      <SiteHeader />
       <div className="home-content-parent">
         <div className="doc-flex">
           <h2 className="section-title">Juicebox API Documentation</h2>
@@ -112,7 +112,7 @@ function JuiceboxDoc() {
           </a>
         </div>
       </div>
-      <HomeFooter />
+      <SiteFooter />
     </div>
   );
 }

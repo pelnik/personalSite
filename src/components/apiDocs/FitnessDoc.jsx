@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { HomeHeader, HomeFooter } from '..';
+import { SiteHeader, SiteFooter } from '..';
 
 function FitnessDoc() {
   useEffect(() => {
@@ -10,7 +10,7 @@ function FitnessDoc() {
 
   return (
     <div className="site-full-window">
-      <HomeHeader />
+      <SiteHeader />
       <div className="home-content-parent">
         <div className="doc-flex">
           <h2 className="section-title">Fitness Tracker API Documentation</h2>
@@ -102,7 +102,7 @@ function FitnessDoc() {
           </a>
         </div>
       </div>
-      <HomeFooter />
+      <SiteFooter />
     </div>
   );
 }

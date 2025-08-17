@@ -1,9 +1,9 @@
 export { default as Main } from './Main';
-export { default as Home } from './Home';
-export { default as HomeHeader } from './HomeHeader';
-export { default as HomeFooter } from './HomeFooter';
-export { default as HomeContent } from './HomeContent';
-export { default as HomeAbout } from './HomeAbout';
+export { default as Home } from './Home/Home';
+export { default as SiteHeader } from './SiteHeader';
+export { default as SiteFooter } from './SiteFooter';
+export { default as HomeContent } from './Home/HomeContent';
+export { default as HomeAbout } from './Home/HomeAbout';
 export { default as MainAbout } from './MainAbout';
 export { default as ProjectWrapper } from './Utilities/ProjectWrapper';
 export { default as ProjectDescription } from './Utilities/ProjectDescription';

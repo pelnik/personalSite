@@ -2,8 +2,8 @@ import React from 'react';
 import { ButtonSpecial } from '.';
 import { Link } from 'react-router-dom';
 
-function HomeHeader() {
-  function handlePortfolioClick(evt) {
+function SiteHeader() {
+  function handlePortfolioClick(/*evt */) {
     // portfolioRef.current.scrollIntoView({
     //   behavior: 'smooth',
     //   block: 'start',
@@ -30,4 +30,4 @@ function HomeHeader() {
   );
 }
 
-export default HomeHeader;
+export default SiteHeader;

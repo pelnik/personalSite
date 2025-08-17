@@ -1,6 +1,6 @@
 import React from 'react';
 
-function HomeFooter() {
+function SiteFooter() {
   return (
     <div id="footer-parent">
       <div id="footer-grid-parent">
@@ -56,4 +56,4 @@ function HomeFooter() {
   );
 }
 
-export default HomeFooter;
+export default SiteFooter;

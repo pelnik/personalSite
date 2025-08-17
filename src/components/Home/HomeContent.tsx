@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { HomeAbout, ProjectWrapper } from '.';
-import { portfolio_list } from './Utilities/portfolio_list';
+import { HomeAbout, ProjectWrapper } from '..';
+import { portfolio_list } from '../Utilities/portfolio_list';
 
 type HomeContentProps = {
   // portfolioRef: React.RefObject<HTMLDivElement | null>;
