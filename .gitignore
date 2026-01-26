@@ -5,7 +5,6 @@
 .env.*.local
 
 # Build outputs
-/build
 node_modules/
 
 # OS files
