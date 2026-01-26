@@ -54,6 +54,7 @@ services:
       db:
         condition: service_healthy
     command: npm run start:express
+    restart: unless-stopped
 
 volumes:
   postgres_data:
