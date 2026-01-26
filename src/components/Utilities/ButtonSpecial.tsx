@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 
-function ButtonSpecial({ className, handleClick, children }) {
+interface ButtonSpecialProps {
+  className?: string;
+  handleClick?: () => void;
+  children: ReactNode;
+}
+
+function ButtonSpecial({
+  className,
+  handleClick,
+  children,
+}: ButtonSpecialProps) {
   const [childButtonClass, setChildButtonClass] = useState('button-special');
   const [parentButtonClass, setParentButtonClass] = useState(
     'button-special-parent '
   );
-
-  //look into passing classes from parent
 
   function handleMouseEnter() {
     setChildButtonClass('button-special-hover');
@@ -23,7 +31,7 @@ function ButtonSpecial({ className, handleClick, children }) {
       className={[parentButtonClass, 'all-button-special'].join(' ')}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={handleClick || null}
+      onClick={handleClick || undefined}
     >
       <button
         className={[childButtonClass, className, 'all-button-special'].join(

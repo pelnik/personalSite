@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { About, ProjectWrapper } from '.';
-import { portfolio_list } from './Utilities/portfolio_list';
+import { HomeAbout, ProjectWrapper } from '..';
+import { portfolio_list } from '../Utilities/portfolio_list';
 
 type HomeContentProps = {
-  portfolioRef: React.RefObject<HTMLDivElement | null>;
+  // portfolioRef: React.RefObject<HTMLDivElement | null>;
 };
 
 type DescriptionTracker = Record<number, boolean[]>;
 
-function HomeContent({ portfolioRef }: HomeContentProps) {
+function HomeContent() {
   function createDescriptionTracker() {
     const initialTracker: DescriptionTracker = {};
 
@@ -64,27 +64,25 @@ function HomeContent({ portfolioRef }: HomeContentProps) {
   }, [portfolio_list]);
 
   return (
-    <div className="home-content-parent">
-      <div className="home-content-flex">
-        <About />
-        <hr className="main-page-separator" />
-        <div ref={portfolioRef} id="portfolio-section-container">
-          <h2 className="section-title">Web Projects</h2>
-          <div id="project-container">
-            {portfolio_list.map((project) => {
-              return (
-                <ProjectWrapper
-                  key={project.id}
-                  project={project}
-                  descriptionTracker={descriptionTracker}
-                  firstProjectID={firstProjectID}
-                  projectElement={projectElement}
-                  projectWidth={projectWidth}
-                  setDescriptionTracker={setDescriptionTracker}
-                />
-              );
-            })}
-          </div>
+    <div className="home-content-flex">
+      <HomeAbout />
+      <hr className="main-page-separator" />
+      <div id="portfolio-section-container">
+        <h2 className="section-title">Web Projects</h2>
+        <div id="project-container">
+          {portfolio_list.map((project) => {
+            return (
+              <ProjectWrapper
+                key={project.id}
+                project={project}
+                descriptionTracker={descriptionTracker}
+                firstProjectID={firstProjectID}
+                projectElement={projectElement}
+                projectWidth={projectWidth}
+                setDescriptionTracker={setDescriptionTracker}
+              />
+            );
+          })}
         </div>
       </div>
     </div>
