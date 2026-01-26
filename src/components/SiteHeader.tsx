@@ -19,12 +19,14 @@ function SiteHeader() {
         </Link>
       </div>
       <div className="subnavbar" id="right-navbar">
-        <ButtonSpecial
-          handleClick={handlePortfolioClick}
-          className="navbar-button"
-        >
-          Portfolio
-        </ButtonSpecial>
+        <span style={{ visibility: 'hidden' }}>
+          <ButtonSpecial
+            handleClick={handlePortfolioClick}
+            className="navbar-button"
+          >
+            Portfolio
+          </ButtonSpecial>
+        </span>
       </div>
     </div>
   );
