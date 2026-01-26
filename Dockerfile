@@ -57,6 +57,7 @@ RUN apk add --no-cache python3 make g++
 COPY package*.json ./
 RUN npm ci --only=production && \
     npm rebuild bcrypt && \
+    npm cache clean --force && \
     apk del python3 make g++
 
 # Copy built assets and server code
