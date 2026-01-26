@@ -30,6 +30,7 @@ coverage/
 # Docker files (don't need to copy themselves)
 Dockerfile
 docker-compose*.yml
+# Docker files (init-db.sql is mounted via docker-compose volume, not copied)
 docker/
 
 # Documentation
