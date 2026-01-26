@@ -1,10 +1,9 @@
-/* 
-
-DO NOT CHANGE THIS FILE
-
-*/
+/**
+ * User API tests using supertest
+ */
 require('dotenv').config();
-const axios = require('axios');
+const request = require('supertest');
+const app = require('../testApp');
 const { faker } = require('@faker-js/faker');
 const client = require('../../db/client');
 const bcrypt = require('bcrypt');
@@ -14,54 +13,44 @@ const { expectNotToBeError } = require('../expectHelpers');
 
 const { JWT_SECRET = 'neverTell' } = process.env;
 
-const { SERVER_ADDRESS = 'http://localhost:', PORT = 3000 } = process.env;
-const API_URL = process.env.API_URL || SERVER_ADDRESS + PORT;
-
 const {
   getPublicRoutinesByUser,
   getAllRoutinesByUser,
   getUserById,
 } = require('../../db');
 
-describe('/api/users', () => {
+describe('/api/fitness/users', () => {
   let token, registeredUser;
   let newUser = { username: 'robert', password: 'bobbylong321' };
   let newUserShortPassword = { username: 'robertShort', password: 'bobby21' };
 
-  describe('POST /api/users/register', () => {
-    let tooShortSuccess, tooShortResponse;
+  describe('POST /api/fitness/users/register', () => {
+    let tooShortResponse;
 
     beforeAll(async () => {
-      const successResponse = await axios.post(
-        `${API_URL}/users/register`,
-        newUser
-      );
-      registeredUser = successResponse.data.user;
-      try {
-        tooShortSuccess = await axios.post(
-          `${API_URL}/users/register`,
-          newUserShortPassword
-        );
-      } catch (err) {
-        tooShortResponse = err.response;
-      }
+      const successResponse = await request(app)
+        .post('/api/fitness/users/register')
+        .send(newUser);
+      registeredUser = successResponse.body.user;
+
+      tooShortResponse = await request(app)
+        .post('/api/fitness/users/register')
+        .send(newUserShortPassword);
     });
 
     it('Creates a new user.', async () => {
-      // Create some fake user data
       const fakeUserData = {
         username: faker.internet.username(),
         password: faker.internet.password(),
       };
       console.log(fakeUserData, 'fakeUserData');
-      const { data } = await axios.post(
-        `${API_URL}/users/register`,
-        fakeUserData
-      );
-      console.log(data, 'data');
-      expectNotToBeError(data);
+      const res = await request(app)
+        .post('/api/fitness/users/register')
+        .send(fakeUserData);
+      console.log(res.body, 'data');
+      expectNotToBeError(res.body);
 
-      expect(data).toMatchObject({
+      expect(res.body).toMatchObject({
         message: expect.any(String),
         token: expect.any(String),
         user: {
@@ -72,22 +61,17 @@ describe('/api/users', () => {
     });
 
     it('EXTRA CREDIT: Hashes password before saving user to DB.', async () => {
-      // Create some fake user data
       const fakeUserData = {
         username: faker.internet.username(),
         password: faker.internet.password(),
       };
 
-      // Create the user through the API
-      const { data } = await axios.post(
-        `${API_URL}/users/register`,
-        fakeUserData
-      );
+      const res = await request(app)
+        .post('/api/fitness/users/register')
+        .send(fakeUserData);
 
-      expectNotToBeError(data);
+      expectNotToBeError(res.body);
 
-      // Grab the user from the DB manually so we can
-      // get the hashed password and check it
       const {
         rows: [user],
       } = await client.query(
@@ -96,44 +80,39 @@ describe('/api/users', () => {
           FROM users
           WHERE id = $1;
         `,
-        [data.user.id]
+        [res.body.user.id]
       );
 
       const hashedPassword = user.password;
 
-      // The original password and the hashedPassword shouldn't be the same
       expect(fakeUserData.password).not.toBe(hashedPassword);
-      // Bcrypt.compare should return true.
       expect(await bcrypt.compare(fakeUserData.password, hashedPassword)).toBe(
         true
       );
     });
 
     it('Throws errors for duplicate username', async () => {
-      let duplicateSuccess, duplicateErrResp;
-      try {
-        duplicateSuccess = await axios.post(
-          `${API_URL}/users/register`,
-          newUser
-        );
-      } catch (err) {
-        duplicateErrResp = err.response;
-      }
-      expect(duplicateSuccess).toBeFalsy();
-      expect(duplicateErrResp.data).toBeTruthy();
+      const res = await request(app)
+        .post('/api/fitness/users/register')
+        .send(newUser);
+
+      expect(res.status).toBe(400);
+      expect(res.body).toBeTruthy();
     });
 
     it('Throws errors for password-too-short.', async () => {
-      expect(tooShortSuccess).toBeFalsy();
-      expect(tooShortResponse.data).toBeTruthy();
+      expect(tooShortResponse.status).toBe(400);
+      expect(tooShortResponse.body).toBeTruthy();
     });
   });
 
-  describe('POST /api/users/login', () => {
+  describe('POST /api/fitness/users/login', () => {
     it('Logs in the user. Requires username and password, and verifies that hashed login password matches the saved hashed password.', async () => {
-      const { data } = await axios.post(`${API_URL}/users/login`, newUser);
-      token = data.token;
-      expect(data.token).toBeTruthy();
+      const res = await request(app)
+        .post('/api/fitness/users/login')
+        .send(newUser);
+      token = res.body.token;
+      expect(res.body.token).toBeTruthy();
     });
     it('Returns a JSON Web Token. Stores the id and username in the token.', async () => {
       const parsedToken = jwt.verify(token, JWT_SECRET);
@@ -142,50 +121,46 @@ describe('/api/users', () => {
     });
   });
 
-  describe('GET /api/users/me', () => {
+  describe('GET /api/fitness/users/me', () => {
     it('sends back users data if valid token is supplied in header', async () => {
-      const { data } = await axios.get(`${API_URL}/users/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await request(app)
+        .get('/api/fitness/users/me')
+        .set('Authorization', `Bearer ${token}`);
 
-      expect(data.username).toBeTruthy();
-      expect(data.username).toBe(registeredUser.username);
+      expect(res.body.username).toBeTruthy();
+      expect(res.body.username).toBe(registeredUser.username);
     });
     it('rejects requests with no valid token', async () => {
-      let noTokenResp, noTokenErrResp;
-      try {
-        noTokenResp = await axios.get(`${API_URL}/users/me`);
-      } catch (err) {
-        noTokenErrResp = err.response;
-      }
-      expect(noTokenResp).toBeFalsy();
-      expect(noTokenErrResp.data).toBeTruthy();
+      const res = await request(app).get('/api/fitness/users/me');
+
+      expect(res.status).toBe(400);
+      expect(res.body).toBeTruthy();
     });
   });
 
-  describe('GET /api/users/:username/routines', () => {
+  describe('GET /api/fitness/users/:username/routines', () => {
     it('Gets a list of public routines for a particular user.', async () => {
       const userId = 2;
       const userWithRoutines = await getUserById(userId);
-      const { data: routines } = await axios.get(
-        `${API_URL}/users/${userWithRoutines.username}/routines`
+      const res = await request(app).get(
+        `/api/fitness/users/${userWithRoutines.username}/routines`
       );
       const routinesFromDB = await getPublicRoutinesByUser(userWithRoutines);
-      expect(routines).toBeTruthy();
-      expect(routines).toEqual(routinesFromDB);
+      expect(res.body).toBeTruthy();
+      expect(res.body).toEqual(routinesFromDB);
     });
 
     it('gets a list of all routines for the logged in user', async () => {
-      const { data } = await axios.get(`${API_URL}/users/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const meRes = await request(app)
+        .get('/api/fitness/users/me')
+        .set('Authorization', `Bearer ${token}`);
 
-      const { data: routines } = await axios.get(
-        `${API_URL}/users/${data.username}/routines`
+      const routinesRes = await request(app).get(
+        `/api/fitness/users/${meRes.body.username}/routines`
       );
-      const routinesFromDB = await getAllRoutinesByUser(data);
-      expect(routines).toBeTruthy();
-      expect(routines).toEqual(routinesFromDB);
+      const routinesFromDB = await getAllRoutinesByUser(meRes.body);
+      expect(routinesRes.body).toBeTruthy();
+      expect(routinesRes.body).toEqual(routinesFromDB);
     });
   });
 });

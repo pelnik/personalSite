@@ -1,0 +1,52 @@
+name: Tests
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create test databases
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE juicebox;"
+          PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE fitness;"
+          PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE scents;"
+
+      - name: Run fitness tests
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/juicebox
+          FITNESS_DATABASE_URL: postgres://postgres:postgres@localhost:5432/fitness
+          SCENTS_DATABASE_URL: postgres://postgres:postgres@localhost:5432/scents
+          JWT_SECRET: test-secret-for-ci
+          API_URL: http://localhost:3000/api/fitness
+        run: npm run test:fitness

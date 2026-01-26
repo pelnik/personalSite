@@ -6,17 +6,15 @@
   "scripts": {
     "build": "react-scripts build",
     "start": "PORT=3001 react-scripts start",
-    "start:dev": "NODE_ENV=development nodemon --delay 1000ms server.js",
-    "start:express": "NODE_ENV=development nodemon server.js",
-    "start:prod": "NODE_ENV=production sudo node server.js",
-    "start:prod:full": "NODE_ENV=production git pull && npm install && react-scripts build && sudo node server.js",
-    "seed:dev": "node ./src/api/juicebox/db/seed.js",
+    "start:dev": "NODE_ENV=development nodemon server.js",
+    "start:prod": "sudo NODE_ENV=production node server.js",
     "seed:juicebox": "node ./src/api/juicebox/db/seed.js",
     "seed:fitness": "node ./src/api/fitness-tracker/db/seed.js",
     "seed:scents": "node ./src/api/scents/db/seed.js",
-    "test": "npm run test:fitness && npm run test:others",
+    "seed:all": "npm run seed:juicebox && npm run seed:fitness && npm run seed:scents",
+    "test": "jest",
     "test:fitness": "JEST_ENV=fitness jest --runInBand",
-    "test:others": "JEST_ENV=others jest"
+    "test:frontend": "jest"
   },
   "repository": {
     "type": "git",
@@ -65,6 +63,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "jsdom": "^26.1.0",
     "nodemon": "^3.1.7",
+    "supertest": "^7.2.2",
     "typescript": "^4.9.5"
   },
   "browserslist": {

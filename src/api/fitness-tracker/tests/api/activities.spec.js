@@ -1,14 +1,9 @@
-/* 
-
-DO NOT CHANGE THIS FILE
-
-*/
-
+/**
+ * Activities API tests using supertest
+ */
 require('dotenv').config();
-
-const axios = require('axios');
-const { SERVER_ADDRESS = 'http://localhost:', PORT = 3000 } = process.env;
-const API_URL = process.env.API_URL || SERVER_ADDRESS + PORT;
+const request = require('supertest');
+const app = require('../testApp');
 
 const {
   addActivityToRoutine,
@@ -19,7 +14,7 @@ const {
   getAllPublicRoutines,
 } = require('../../db');
 
-describe('/api/activities', () => {
+describe('/api/fitness/activities', () => {
   let thisActivityDoesNotExistError;
   let thisActivityAlreadyExists;
   let token;
@@ -58,14 +53,16 @@ describe('/api/activities', () => {
     const newUser = await createUser(userToCreate);
     routineToCreate.creatorId = newUser.id;
 
-    //login as the user to generate a token
-    const { data } = await axios.post(`${API_URL}/users/login`, userToCreate);
-    token = data.token;
+    // login as the user to generate a token
+    const loginRes = await request(app)
+      .post('/api/fitness/users/login')
+      .send(userToCreate);
+    token = loginRes.body.token;
 
-    //creates an activity
+    // creates an activity
     const newActivity = await createActivity(activityToCreate);
 
-    //creates a routine that is attached to the above user
+    // creates a routine that is attached to the above user
     const newRoutine = await createRoutine(routineToCreate);
     routineActivityToCreateAndUpdate.routineId = newRoutine.id;
 
@@ -75,12 +72,13 @@ describe('/api/activities', () => {
     await addActivityToRoutine(routineActivityToCreateAndUpdate);
   });
 
-  describe('GET /api/activities', () => {
+  describe('GET /api/fitness/activities', () => {
     it('Just returns a list of all activities in the database', async () => {
       // Create a fake activity to watch for
       const curls = { name: 'curls', description: '4 sets of 15.' };
       const createdActivity = await createActivity(curls);
-      const { data: activities } = await axios.get(`${API_URL}/activities`);
+      const res = await request(app).get('/api/fitness/activities');
+      const activities = res.body;
       expect(Array.isArray(activities)).toBe(true);
       expect(activities.length).toBeGreaterThan(0);
       expect(activities[0].name).toBeTruthy();
@@ -93,22 +91,22 @@ describe('/api/activities', () => {
     });
   });
 
-  describe('GET /api/activities/:activityId/routines', () => {
+  describe('GET /api/fitness/activities/:activityId/routines', () => {
     beforeAll(async () => {
-      try {
-        await axios.get(`${API_URL}/activities/10000/routines`);
-      } catch (err) {
-        thisActivityDoesNotExistError = err.response.data;
+      const res = await request(app).get('/api/fitness/activities/10000/routines');
+      if (res.status >= 400) {
+        thisActivityDoesNotExistError = res.body;
       }
     });
+
     it('Get a list of all public routines which feature that activity', async () => {
       const [testRoutine] = await getAllPublicRoutines();
       const [testActivity] = testRoutine.activities;
-      const { data: routines } = await axios.get(
-        `${API_URL}/activities/${testActivity.id}/routines`
+      const res = await request(app).get(
+        `/api/fitness/activities/${testActivity.id}/routines`
       );
       const routinesFromDB = await getPublicRoutinesByActivity(testActivity);
-      expect(routines).toEqual(routinesFromDB);
+      expect(res.body).toEqual(routinesFromDB);
     });
 
     it('Should return an error when you ask for an activity that does not exist', async () => {
@@ -119,7 +117,7 @@ describe('/api/activities', () => {
     });
   });
 
-  describe('POST /api/activities', () => {
+  describe('POST /api/fitness/activities', () => {
     const activityToTestDuplicateErrorHandling = {
       name: 'pull ups are very useful',
       description: 'they take time and consistent effort to improve',
@@ -127,27 +125,20 @@ describe('/api/activities', () => {
 
     beforeAll(async () => {
       // this is to create the activity
-      try {
-        await axios.post(
-          `${API_URL}/activities`,
-          activityToTestDuplicateErrorHandling,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      } catch (err) {
-        thisActivityAlreadyExists = err.response.data;
-      }
+      await request(app)
+        .post('/api/fitness/activities')
+        .send(activityToTestDuplicateErrorHandling)
+        .set('Authorization', `Bearer ${token}`);
     });
 
     beforeAll(async () => {
-      // this is to try and create a duplicate activity and to save the error in a variable to be used below in the test
-      try {
-        await axios.post(
-          `${API_URL}/activities`,
-          activityToTestDuplicateErrorHandling,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      } catch (err) {
-        thisActivityAlreadyExists = err.response.data;
+      // this is to try and create a duplicate activity and to save the error
+      const res = await request(app)
+        .post('/api/fitness/activities')
+        .send(activityToTestDuplicateErrorHandling)
+        .set('Authorization', `Bearer ${token}`);
+      if (res.status >= 400) {
+        thisActivityAlreadyExists = res.body;
       }
     });
 
@@ -157,15 +148,13 @@ describe('/api/activities', () => {
         description: 'it is great cardio',
       };
 
-      const { data: respondedActivity } = await axios.post(
-        `${API_URL}/activities`,
-        activityToCreateAndUpdate,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      expect(respondedActivity.name).toEqual(activityToCreateAndUpdate.name);
-      expect(respondedActivity.description).toEqual(
-        activityToCreateAndUpdate.description
-      );
+      const res = await request(app)
+        .post('/api/fitness/activities')
+        .send(activityToCreateAndUpdate)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(res.body.name).toEqual(activityToCreateAndUpdate.name);
+      expect(res.body.description).toEqual(activityToCreateAndUpdate.description);
     });
 
     it('responds with an error when a activity already exists with the same name', async () => {
@@ -176,7 +165,7 @@ describe('/api/activities', () => {
     });
   });
 
-  describe('PATCH /api/activities/:activityId', () => {
+  describe('PATCH /api/fitness/activities/:activityId', () => {
     let createdActivityToBePatched;
     let errorForWhenAnActivityDoesNotExist;
     let dataForActivityThatWillBeUsedToCheckTheErrorHandling;
@@ -184,31 +173,25 @@ describe('/api/activities', () => {
 
     beforeAll(async () => {
       // this is to create the activity that we will then attempt to update
-
-      const { data } = await axios.post(
-        `${API_URL}/activities`,
-        activityToCreateAndThenUpdate,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      createdActivityToBePatched = data;
+      const res = await request(app)
+        .post('/api/fitness/activities')
+        .send(activityToCreateAndThenUpdate)
+        .set('Authorization', `Bearer ${token}`);
+      createdActivityToBePatched = res.body;
     });
 
     beforeAll(async () => {
-      // this attempt to patch an activity that does not exist. This should throw an error which we will hold in a variable and test below
-
+      // this attempt to patch an activity that does not exist
       const activityThatShouldNotExist = {
         name: 'sedentary behavior',
         description: 'moving is good',
       };
-      try {
-        const { data } = await axios.patch(
-          `${API_URL}/activities/${424242424242}`,
-          activityThatShouldNotExist,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        createdActivityToBePatched = data;
-      } catch (err) {
-        errorForWhenAnActivityDoesNotExist = err.response.data;
+      const res = await request(app)
+        .patch('/api/fitness/activities/424242424242')
+        .send(activityThatShouldNotExist)
+        .set('Authorization', `Bearer ${token}`);
+      if (res.status >= 400) {
+        errorForWhenAnActivityDoesNotExist = res.body;
       }
     });
 
@@ -219,31 +202,26 @@ describe('/api/activities', () => {
         description: 'Deceptively challenging',
       };
 
-      const { data } = await axios.post(
-        `${API_URL}/activities`,
-        aNewActivityToUseAsATest,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await request(app)
+        .post('/api/fitness/activities')
+        .send(aNewActivityToUseAsATest)
+        .set('Authorization', `Bearer ${token}`);
 
-      dataForActivityThatWillBeUsedToCheckTheErrorHandling = data;
+      dataForActivityThatWillBeUsedToCheckTheErrorHandling = res.body;
     });
 
     beforeAll(async () => {
-      // this will attempt to patch an activity and change the name to one that already exists. This should throw an error which we will hold in a variable and test below
-
+      // this will attempt to patch an activity and change the name to one that already exists
       const patchData = {
         name: dataForActivityThatWillBeUsedToCheckTheErrorHandling.name,
         description: 'change can be good',
       };
-      try {
-        await axios.patch(
-          `${API_URL}/activities/${createdActivityToBePatched.id}`,
-          patchData,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-      } catch (err) {
-        errorForWhenThePatchAttemptsToChangeTheNameToOneThatExists =
-          err.response.data;
+      const res = await request(app)
+        .patch(`/api/fitness/activities/${createdActivityToBePatched.id}`)
+        .send(patchData)
+        .set('Authorization', `Bearer ${token}`);
+      if (res.status >= 400) {
+        errorForWhenThePatchAttemptsToChangeTheNameToOneThatExists = res.body;
       }
     });
 
@@ -252,15 +230,13 @@ describe('/api/activities', () => {
         name: 'Double Bicep Curls',
         description: 'They hurt EVEN MORE, but you will thank you later',
       };
-      const { data: respondedActivity } = await axios.patch(
-        `${API_URL}/activities/${createdActivityToBePatched.id}`,
-        newActivityData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      expect(respondedActivity.name).toEqual(newActivityData.name);
-      expect(respondedActivity.description).toEqual(
-        newActivityData.description
-      );
+      const res = await request(app)
+        .patch(`/api/fitness/activities/${createdActivityToBePatched.id}`)
+        .send(newActivityData)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(res.body.name).toEqual(newActivityData.name);
+      expect(res.body.description).toEqual(newActivityData.description);
     });
 
     it('returns an error when updating an activity that does not exist', async () => {

@@ -1,0 +1,41 @@
+# Dependencies
+node_modules
+
+# Build output (rebuilt in container)
+build
+
+# Git
+.git
+.gitignore
+
+# Environment and secrets
+.env
+.env.*
+Keys/
+
+# IDE and OS
+.DS_Store
+.vscode
+.idea
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+
+# Docker files (don't need to copy themselves)
+Dockerfile
+docker-compose*.yml
+docker/
+
+# Documentation
+README.md
+*.md
+
+# Misc
+.github/
+oldpublic/

@@ -1,0 +1,68 @@
+# =============================================================================
+# Docker Compose for Production Deployment
+# Usage:
+#   docker compose -f docker-compose.prod.yml up -d --build
+#   docker compose -f docker-compose.prod.yml down
+#   docker compose -f docker-compose.prod.yml logs -f
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL Database (Production)
+  # ---------------------------------------------------------------------------
+  db:
+    image: postgres:16-alpine
+    container_name: personalsite-db-prod
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Database password required}
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Don't expose ports in production - only accessible via internal network
+    networks:
+      - internal
+
+  # ---------------------------------------------------------------------------
+  # Node.js Application (Production)
+  # ---------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      target: production
+    container_name: personalsite-app-prod
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/juicebox
+      FITNESS_DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/fitness
+      SCENTS_DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/scents
+      API_URL: ${API_URL:-https://pelnik.dev/api/fitness}
+      JWT_SECRET: ${JWT_SECRET:?JWT secret required}
+      STRIPE_KEY: ${STRIPE_KEY:-}
+      PROD_STRIPE_KEY: ${PROD_STRIPE_KEY:-}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Mount SSL certificates (required for HTTPS)
+      - ./Keys:/app/Keys:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  postgres_data_prod:

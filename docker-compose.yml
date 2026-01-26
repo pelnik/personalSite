@@ -1,0 +1,59 @@
+# =============================================================================
+# Docker Compose for local development and testing
+# Usage:
+#   docker compose up -d        # Start all services
+#   docker compose down         # Stop all services
+#   docker compose logs -f app  # Follow app logs
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL Database
+  # ---------------------------------------------------------------------------
+  db:
+    image: postgres:16-alpine
+    container_name: personalsite-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # Node.js Application (Development)
+  # ---------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      target: development
+    container_name: personalsite-app
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgres://postgres:postgres@db:5432/juicebox
+      FITNESS_DATABASE_URL: postgres://postgres:postgres@db:5432/fitness
+      SCENTS_DATABASE_URL: postgres://postgres:postgres@db:5432/scents
+      API_URL: http://localhost:3000/api/fitness
+      JWT_SECRET: ${JWT_SECRET:-development-secret}
+      STRIPE_KEY: ${STRIPE_KEY:-}
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    command: npm run start:express
+
+volumes:
+  postgres_data:
