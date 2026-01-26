@@ -20,12 +20,6 @@ if (process.env.NODE_ENV === 'development') {
 const app = express();
 app.use(cors());
 
-const options = {
-  key: fs.readFileSync('Keys/key.pem'),
-  cert: fs.readFileSync('Keys/pelnik_dev.crt'),
-  ca: fs.readFileSync('Keys/pelnik_dev.ca-bundle'),
-};
-
 app.use(morgan('combined'));
 
 app.use('/api', apiRouter);
@@ -42,8 +36,21 @@ app.get('*', (req, res) => {
 });
 
 http.createServer(app).listen(PORT, () => {
-  console.log(`http server listing on ${PORT}`);
+  console.log(`http server listening on ${PORT}`);
 });
-https.createServer(options, app).listen(sshPORT, () => {
-  console.log(`https server listing on ${sshPORT}`);
-});
+
+// Only start HTTPS server in production with SSL certs
+if (process.env.NODE_ENV === 'production') {
+  try {
+    const options = {
+      key: fs.readFileSync('Keys/key.pem'),
+      cert: fs.readFileSync('Keys/pelnik_dev.crt'),
+      ca: fs.readFileSync('Keys/pelnik_dev.ca-bundle'),
+    };
+    https.createServer(options, app).listen(sshPORT, () => {
+      console.log(`https server listening on ${sshPORT}`);
+    });
+  } catch (err) {
+    console.warn('SSL certificates not found, HTTPS server not started');
+  }
+}

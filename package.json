@@ -7,7 +7,7 @@
     "build": "react-scripts build",
     "start": "PORT=3001 react-scripts start",
     "start:dev": "NODE_ENV=development nodemon server.js",
-    "start:prod": "sudo NODE_ENV=production node server.js",
+    "start:prod": "NODE_ENV=production node server.js",
     "seed:juicebox": "node ./src/api/juicebox/db/seed.js",
     "seed:fitness": "node ./src/api/fitness-tracker/db/seed.js",
     "seed:scents": "node ./src/api/scents/db/seed.js",
