@@ -15,7 +15,6 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_PASSWORD: postgres  # Ephemeral test database only
         ports:
           - 5432:5432
         options: >-
