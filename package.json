@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
-    "prod": "npm run build && NODE_ENV=production node server.js",
+    "prod": "NODE_ENV=production node server.js",
     "client:dev": "PORT=3001 react-scripts start",
     "server:dev": "NODE_ENV=development nodemon server.js",
     "build": "react-scripts build",
