@@ -52,14 +52,12 @@ npm run seed:scents
 ### 5. Start development servers
 
 ```bash
-# Terminal 1: Start the Express API server
-npm run start:dev
-
-# Terminal 2: Start the React dev server
-npm run start
+npm run dev
 ```
 
-The React app runs on `http://localhost:3001` and proxies API requests to the Express server on port 3000.
+This starts both the Express API server (port 3000) and React dev server (port 3001) together.
+
+Open `http://localhost:3001` in your browser.
 
 ## Running Tests
 
@@ -107,9 +105,8 @@ docker compose down -v
 
 | Script | Description |
 | ------ | ----------- |
-| `npm run start` | Start React dev server on port 3001 |
-| `npm run start:dev` | Start Express server with nodemon |
-| `npm run start:prod` | Start Express server in production mode |
+| `npm run dev` | Start both React and Express servers for development |
+| `npm run prod` | Build React and start Express in production mode |
 | `npm run build` | Build React app for production |
 | `npm run seed:all` | Seed all databases |
 | `npm run seed:fitness` | Seed fitness database |
