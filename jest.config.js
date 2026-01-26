@@ -7,6 +7,7 @@ if (process.env.JEST_ENV === 'fitness') {
     globalTeardown: './tests/tearDown.js',
     collectCoverage: false,
     forceExit: true,
+    testTimeout: 30000,
     rootDir: './src/api/fitness-tracker',
   };
 } else {

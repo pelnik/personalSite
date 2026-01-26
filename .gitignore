@@ -1,6 +1,15 @@
+# Secrets and certificates
 /Keys
-/oldpublic
-node_modules/
-.DS_Store
 .env
+.env.local
+.env.*.local
+
+# Build outputs
 /build
+node_modules/
+
+# OS files
+.DS_Store
+
+# Legacy
+/oldpublic

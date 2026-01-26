@@ -4,19 +4,18 @@
   "description": "My personal site in React",
   "main": "index.js",
   "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "prod": "npm run build && NODE_ENV=production node server.js",
+    "client:dev": "PORT=3001 react-scripts start",
+    "server:dev": "NODE_ENV=development nodemon server.js",
     "build": "react-scripts build",
-    "start": "PORT=3001 react-scripts start",
-    "start:dev": "NODE_ENV=development nodemon --delay 1000ms server.js",
-    "start:express": "NODE_ENV=development nodemon server.js",
-    "start:prod": "NODE_ENV=production sudo node server.js",
-    "start:prod:full": "NODE_ENV=production git pull && npm install && react-scripts build && sudo node server.js",
-    "seed:dev": "node ./src/api/juicebox/db/seed.js",
     "seed:juicebox": "node ./src/api/juicebox/db/seed.js",
     "seed:fitness": "node ./src/api/fitness-tracker/db/seed.js",
     "seed:scents": "node ./src/api/scents/db/seed.js",
-    "test": "npm run test:fitness && npm run test:others",
+    "seed:all": "npm run seed:juicebox && npm run seed:fitness && npm run seed:scents",
+    "test": "jest",
     "test:fitness": "JEST_ENV=fitness jest --runInBand",
-    "test:others": "JEST_ENV=others jest"
+    "test:frontend": "jest"
   },
   "repository": {
     "type": "git",
@@ -61,10 +60,12 @@
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "babel-jest": "^29.5.0",
+    "concurrently": "^9.2.1",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
     "jsdom": "^26.1.0",
     "nodemon": "^3.1.7",
+    "supertest": "^7.2.2",
     "typescript": "^4.9.5"
   },
   "browserslist": {

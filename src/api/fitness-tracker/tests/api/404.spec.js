@@ -1,35 +1,16 @@
-/* 
-
-DO NOT CHANGE THIS FILE
-
-*/
+/**
+ * 404 error handling tests using supertest
+ */
 require('dotenv').config();
+const request = require('supertest');
+const app = require('../testApp');
 
-const axios = require('axios');
+describe('/api/fitness/unknown', () => {
+  it('should return a 404 for unknown paths', async () => {
+    const res = await request(app).get('/api/fitness/unknown');
 
-const { SERVER_ADDRESS = 'http://localhost:', PORT = 3000 } = process.env;
-const API_URL = process.env.API_URL || SERVER_ADDRESS + PORT;
-
-describe('/api/unknown', () => {
-  let errorMessageFor404Error;
-  let errorNameFor404Error;
-  let errorStatusFor404Error;
-
-  beforeAll(async () => {
-    try {
-      await axios.get(`${API_URL}/unknown`);
-    } catch (err) {
-      // the 404 response returns an object with a message, nae and status properties
-      errorNameFor404Error = err.response.data.name;
-      errorMessageFor404Error = err.response.data.message;
-      errorStatusFor404Error = err.response.status;
-    }
-  });
-
-  it('should return a 404', (done) => {
-    expect(errorStatusFor404Error).toEqual(404);
-    expect(typeof errorNameFor404Error).toEqual('string');
-    expect(typeof errorMessageFor404Error).toEqual('string');
-    done();
+    expect(res.status).toEqual(404);
+    expect(typeof res.body.name).toEqual('string');
+    expect(typeof res.body.message).toEqual('string');
   });
 });

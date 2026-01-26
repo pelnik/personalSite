@@ -1,14 +1,9 @@
-/* 
-
-DO NOT CHANGE THIS FILE
-
-*/
-
+/**
+ * Routines API tests using supertest
+ */
 require('dotenv').config();
-
-const axios = require('axios');
-const { SERVER_ADDRESS = 'http://localhost:', PORT = 3000 } = process.env;
-const API_URL = process.env.API_URL || SERVER_ADDRESS + PORT;
+const request = require('supertest');
+const app = require('../testApp');
 
 const {
   addActivityToRoutine,
@@ -20,7 +15,7 @@ const {
   getAllRoutinesByUser,
 } = require('../../db');
 
-describe('/api/routines', () => {
+describe('/api/fitness/routines', () => {
   let theUserNeedsToBeLoggedInError;
   let token;
 
@@ -54,14 +49,16 @@ describe('/api/routines', () => {
       const newUser = await createUser(userToCreate);
       routineToCreate.creatorId = newUser.id;
 
-      //login as the user to generate a token
-      const { data } = await axios.post(`${API_URL}/users/login`, userToCreate);
-      token = data.token;
+      // login as the user to generate a token
+      const loginRes = await request(app)
+        .post('/api/fitness/users/login')
+        .send(userToCreate);
+      token = loginRes.body.token;
 
-      //creates an activity
+      // creates an activity
       const newActivity = await createActivity(activityToCreate);
 
-      //creates a routine that is attached to the above user
+      // creates a routine that is attached to the above user
       const newRoutine = await createRoutine(routineToCreate);
       routineActivityToCreateAndUpdate.routineId = newRoutine.id;
 
@@ -73,32 +70,32 @@ describe('/api/routines', () => {
       console.log(err);
     }
   });
-  describe('GET /api/routines', () => {
+
+  describe('GET /api/fitness/routines', () => {
     it('Returns a list of public routines, includes the activities with them', async () => {
       const publicRoutinesFromDB = await getAllPublicRoutines();
 
-      const { data: publicRoutinesFromAPI } = await axios.get(
-        `${API_URL}/routines`
-      );
-      expect(publicRoutinesFromAPI).toEqual(publicRoutinesFromDB);
+      const res = await request(app).get('/api/fitness/routines');
+      expect(res.body).toEqual(publicRoutinesFromDB);
     });
   });
 
-  describe('POST /api/routines', () => {
+  describe('POST /api/fitness/routines', () => {
     beforeAll(async () => {
-      try {
-        const newRoutineToCreate = {
-          creatorId: 40000,
-          isPublic: true,
-          name: 'just another workout',
-          goal: 'time to change it up',
-        };
+      const newRoutineToCreate = {
+        creatorId: 40000,
+        isPublic: true,
+        name: 'just another workout',
+        goal: 'time to change it up',
+      };
 
-        await axios.post(`${API_URL}/routines`, newRoutineToCreate, {
-          headers: { Authorization: `Bearer thisIsAFakeToken` },
-        });
-      } catch (err) {
-        theUserNeedsToBeLoggedInError = err.response.data;
+      const res = await request(app)
+        .post('/api/fitness/routines')
+        .send(newRoutineToCreate)
+        .set('Authorization', 'Bearer thisIsAFakeToken');
+
+      if (res.status >= 400) {
+        theUserNeedsToBeLoggedInError = res.body;
       }
     });
 
@@ -110,15 +107,13 @@ describe('/api/routines', () => {
         goal: 'to be flow like a butterfly',
       };
 
-      const { data: respondedRoutine } = await axios.post(
-        `${API_URL}/routines`,
-        newRoutineToCreate,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      expect(respondedRoutine.name).toEqual(newRoutineToCreate.name);
-      expect(respondedRoutine.description).toEqual(
-        newRoutineToCreate.description
-      );
+      const res = await request(app)
+        .post('/api/fitness/routines')
+        .send(newRoutineToCreate)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(res.body.name).toEqual(newRoutineToCreate.name);
+      expect(res.body.description).toEqual(newRoutineToCreate.description);
     });
 
     it('Requires logged in user', async () => {
@@ -129,14 +124,14 @@ describe('/api/routines', () => {
     });
   });
 
-  describe('PATCH /api/routines/:routineId', () => {
+  describe('PATCH /api/fitness/routines/:routineId', () => {
     let newRoutineForTesting;
     let errorForNotBeingAuthorized;
     let errorForTryingToEditARoutineThatIsNotYours;
 
     beforeAll(async () => {
       try {
-        //create a new routine that will be used for testing PATCH
+        // create a new routine that will be used for testing PATCH
         const newRoutineToCreate = {
           creatorId: 40000,
           isPublic: true,
@@ -144,44 +139,38 @@ describe('/api/routines', () => {
           goal: 'to increase our need for speed',
         };
 
-        const { data } = await axios.post(
-          `${API_URL}/routines`,
-          newRoutineToCreate,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const res = await request(app)
+          .post('/api/fitness/routines')
+          .send(newRoutineToCreate)
+          .set('Authorization', `Bearer ${token}`);
 
-        newRoutineForTesting = data;
+        newRoutineForTesting = res.body;
       } catch (err) {
         console.log(err);
       }
     });
 
     beforeAll(async () => {
-      try {
-        const dataForPatchingRoutine = {
-          isPublic: false,
-          name: 'running out of names',
-          goal: 'go faster',
-        };
+      const dataForPatchingRoutine = {
+        isPublic: false,
+        name: 'running out of names',
+        goal: 'go faster',
+      };
 
-        // this generates an error because we are not sending in a token. This error will be used in the below test for patch: "Requires logged in user"
-        await axios.patch(
-          `${API_URL}/routines/${newRoutineForTesting.id}`,
-          dataForPatchingRoutine,
-          {
-            headers: { Authorization: `Bearer thisIsAFakeToken` },
-          }
-        );
-      } catch (err) {
-        errorForNotBeingAuthorized = err.response.data;
+      // this generates an error because we are sending a fake token
+      const res = await request(app)
+        .patch(`/api/fitness/routines/${newRoutineForTesting.id}`)
+        .send(dataForPatchingRoutine)
+        .set('Authorization', 'Bearer thisIsAFakeToken');
+
+      if (res.status >= 400) {
+        errorForNotBeingAuthorized = res.body;
       }
     });
 
     beforeAll(async () => {
       try {
-        //creating a second user
+        // creating a second user
         const secondUserData = {
           username: 'Mal',
           password: 'Serenity',
@@ -189,13 +178,12 @@ describe('/api/routines', () => {
         const secondUser = await createUser(secondUserData);
         let secondUserToken;
 
-        const { data } = await axios.post(
-          `${API_URL}/users/login`,
-          secondUserData
-        );
+        const loginRes = await request(app)
+          .post('/api/fitness/users/login')
+          .send(secondUserData);
 
         // getting the token for the second user
-        secondUserToken = data.token;
+        secondUserToken = loginRes.body.token;
 
         const newRoutineToCreate = {
           creatorId: secondUser.id,
@@ -204,30 +192,30 @@ describe('/api/routines', () => {
           goal: 'to fly a ship',
         };
 
-        newDataForPatchingRoutine = {
+        const newDataForPatchingRoutine = {
           name: 'exercises to help fly a space ship better',
           goal: 'to fly a ship without crashing',
         };
 
         // Create a routine so we can attempt to update it. Using the secondUserToken
-        const { data: respondedRoutine } = await axios.post(
-          `${API_URL}/routines`,
-          newRoutineToCreate,
-          { headers: { Authorization: `Bearer ${secondUserToken}` } }
-        );
+        const createRes = await request(app)
+          .post('/api/fitness/routines')
+          .send(newRoutineToCreate)
+          .set('Authorization', `Bearer ${secondUserToken}`);
 
-        console.log('responded routine', respondedRoutine);
+        console.log('responded routine', createRes.body);
 
-        // Attempt to patch a routine made with the secondUserToken, while passing in the token from the first user we made. This should throw an error which we are attempting to capture in the catch.
-        await axios.patch(
-          `${API_URL}/routines/${respondedRoutine.id}`,
-          newDataForPatchingRoutine,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        // Attempt to patch a routine made with the secondUserToken, while passing in the token from the first user
+        const patchRes = await request(app)
+          .patch(`/api/fitness/routines/${createRes.body.id}`)
+          .send(newDataForPatchingRoutine)
+          .set('Authorization', `Bearer ${token}`);
+
+        if (patchRes.status >= 400) {
+          errorForTryingToEditARoutineThatIsNotYours = patchRes.body;
+        }
       } catch (err) {
-        errorForTryingToEditARoutineThatIsNotYours = err.response.data;
+        console.log(err);
       }
     });
 
@@ -240,11 +228,10 @@ describe('/api/routines', () => {
       };
 
       // Create a routine so we can update it.
-      const { data: respondedRoutine } = await axios.post(
-        `${API_URL}/routines`,
-        newRoutineToCreate,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const createRes = await request(app)
+        .post('/api/fitness/routines')
+        .send(newRoutineToCreate)
+        .set('Authorization', `Bearer ${token}`);
 
       const updateRoutineData = {
         isPublic: false,
@@ -252,13 +239,12 @@ describe('/api/routines', () => {
         goal: 'Until I lose 10 lbs.',
       };
 
-      const { data } = await axios.patch(
-        `${API_URL}/routines/${respondedRoutine.id}`,
-        updateRoutineData,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const patchRes = await request(app)
+        .patch(`/api/fitness/routines/${createRes.body.id}`)
+        .send(updateRoutineData)
+        .set('Authorization', `Bearer ${token}`);
 
-      expect(data).toMatchObject(updateRoutineData);
+      expect(patchRes.body).toMatchObject(updateRoutineData);
     });
 
     it('Requires logged in user', async () => {
@@ -276,12 +262,12 @@ describe('/api/routines', () => {
     });
   });
 
-  describe('DELETE /api/routines/:routineId', () => {
+  describe('DELETE /api/fitness/routines/:routineId', () => {
     let errorForTryingToDeleteARoutineThatIsNotYours;
 
     beforeAll(async () => {
       try {
-        //creating a second user
+        // creating a second user
         const secondUserData = {
           username: 'Jane',
           password: 'Vera',
@@ -289,13 +275,12 @@ describe('/api/routines', () => {
         const secondUser = await createUser(secondUserData);
         let secondUserToken;
 
-        const { data } = await axios.post(
-          `${API_URL}/users/login`,
-          secondUserData
-        );
+        const loginRes = await request(app)
+          .post('/api/fitness/users/login')
+          .send(secondUserData);
 
         // getting the token for the second user
-        secondUserToken = data.token;
+        secondUserToken = loginRes.body.token;
 
         const newRoutineToCreate = {
           creatorId: secondUser.id,
@@ -305,24 +290,26 @@ describe('/api/routines', () => {
         };
 
         // Create a routine so we can attempt to update it. Using the secondUserToken
-        const { data: respondedRoutine } = await axios.post(
-          `${API_URL}/routines`,
-          newRoutineToCreate,
-          { headers: { Authorization: `Bearer ${secondUserToken}` } }
-        );
+        const createRes = await request(app)
+          .post('/api/fitness/routines')
+          .send(newRoutineToCreate)
+          .set('Authorization', `Bearer ${secondUserToken}`);
 
-        // Attempt to delete a routine made with the secondUserToken, while passing in the token from the first user we made. This should throw an error which we are attempting to capture in the catch.
-        await axios.delete(`${API_URL}/routines/${respondedRoutine.id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        // Attempt to delete a routine made with the secondUserToken, while passing in the token from the first user
+        const deleteRes = await request(app)
+          .delete(`/api/fitness/routines/${createRes.body.id}`)
+          .set('Authorization', `Bearer ${token}`);
+
+        if (deleteRes.status >= 400) {
+          errorForTryingToDeleteARoutineThatIsNotYours = deleteRes.body;
+        }
       } catch (err) {
-        errorForTryingToDeleteARoutineThatIsNotYours = err.response.data;
+        console.log(err);
       }
     });
 
     it('Hard deletes a routine. Makes sure to delete all the routineActivities whose routine is the one being deleted.', async () => {
       // Create a routine so we can delete it
-
       const newRoutineToCreateToBeDeleted = {
         creatorId: 0,
         isPublic: true,
@@ -330,21 +317,19 @@ describe('/api/routines', () => {
         goal: 'to learn to dance',
       };
 
-      const { data: respondedRoutine } = await axios.post(
-        `${API_URL}/routines`,
-        newRoutineToCreateToBeDeleted,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const createRes = await request(app)
+        .post('/api/fitness/routines')
+        .send(newRoutineToCreateToBeDeleted)
+        .set('Authorization', `Bearer ${token}`);
 
-      const { data: deletedRoutine } = await axios.delete(
-        `${API_URL}/routines/${respondedRoutine.id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const deleteRes = await request(app)
+        .delete(`/api/fitness/routines/${createRes.body.id}`)
+        .set('Authorization', `Bearer ${token}`);
 
-      const shouldBeDeleted = await getRoutineById(deletedRoutine.id);
-      expect(deletedRoutine.id).toBe(respondedRoutine.id);
-      expect(deletedRoutine.name).toBe(respondedRoutine.name);
-      expect(deletedRoutine.goal).toBe(respondedRoutine.goal);
+      const shouldBeDeleted = await getRoutineById(deleteRes.body.id);
+      expect(deleteRes.body.id).toBe(createRes.body.id);
+      expect(deleteRes.body.name).toBe(createRes.body.name);
+      expect(deleteRes.body.goal).toBe(createRes.body.goal);
       expect(shouldBeDeleted).toBeFalsy();
     });
 
@@ -356,7 +341,7 @@ describe('/api/routines', () => {
     });
   });
 
-  describe('POST /api/routines/:routineId/activities', () => {
+  describe('POST /api/fitness/routines/:routineId/activities', () => {
     let routineActivityThatWeCreated;
     let firstUserRoutine;
     let errorForTryingToAddAnActivityToARoutineThatIsNotYours;
@@ -374,48 +359,41 @@ describe('/api/routines', () => {
         };
 
         // create an activity in the database
-        const { data: newlyCreatedActivity } = await axios.post(
-          `${API_URL}/activities`,
-          newActivityToCreate,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const activityRes = await request(app)
+          .post('/api/fitness/activities')
+          .send(newActivityToCreate)
+          .set('Authorization', `Bearer ${token}`);
 
         // create a routine activity
         const routineActivityToAddToARoutine = {
           routineId: firstUserRoutine.id,
-          activityId: newlyCreatedActivity.id,
+          activityId: activityRes.body.id,
           count: 200,
           duration: 3000,
         };
 
         // add the routine activity to the database
+        const raRes = await request(app)
+          .post(`/api/fitness/routines/${firstUserRoutine.id}/activities`)
+          .send(routineActivityToAddToARoutine)
+          .set('Authorization', `Bearer ${token}`);
 
-        const { data: respondedRoutineActivity } = await axios.post(
-          `${API_URL}/routines/${firstUserRoutine.id}/activities`,
-          routineActivityToAddToARoutine,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        routineActivityThatWeCreated = respondedRoutineActivity;
+        routineActivityThatWeCreated = raRes.body;
       } catch (err) {
         console.log(err);
       }
     });
 
     beforeAll(async () => {
-      // using the routine activity that we added to our user in the above before all.  We will attempt to add the same routine activity again, which should throw an error.  We will capture this error and test it below.
+      // using the routine activity that we added to our user in the above before all.
+      // We will attempt to add the same routine activity again, which should throw an error.
+      const res = await request(app)
+        .post(`/api/fitness/routines/${firstUserRoutine.id}/activities`)
+        .send(routineActivityThatWeCreated)
+        .set('Authorization', `Bearer ${token}`);
 
-      try {
-        const { data } = await axios.post(
-          `${API_URL}/routines/${firstUserRoutine.id}/activities`,
-          routineActivityThatWeCreated,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        console.log(data);
-      } catch (err) {
-        errorForTryingToAddAnActivityToARoutineThatIsNotYours =
-          err.response.data;
+      if (res.status >= 400) {
+        errorForTryingToAddAnActivityToARoutineThatIsNotYours = res.body;
       }
     });
 
@@ -428,28 +406,24 @@ describe('/api/routines', () => {
         description: 'be one with the ice',
       };
 
-      const { data: newlyCreatedActivity } = await axios.post(
-        `${API_URL}/activities`,
-        newActivityToCreate,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const activityRes = await request(app)
+        .post('/api/fitness/activities')
+        .send(newActivityToCreate)
+        .set('Authorization', `Bearer ${token}`);
 
       const routineActivityToAddToARoutine = {
         routineId: firstUserRoutine.id,
-        activityId: newlyCreatedActivity.id,
+        activityId: activityRes.body.id,
         count: 20,
         duration: 300,
       };
 
-      const { data: respondedRoutineActivity } = await axios.post(
-        `${API_URL}/routines/${firstUserRoutine.id}/activities`,
-        routineActivityToAddToARoutine,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const raRes = await request(app)
+        .post(`/api/fitness/routines/${firstUserRoutine.id}/activities`)
+        .send(routineActivityToAddToARoutine)
+        .set('Authorization', `Bearer ${token}`);
 
-      expect(respondedRoutineActivity).toMatchObject(
-        routineActivityToAddToARoutine
-      );
+      expect(raRes.body).toMatchObject(routineActivityToAddToARoutine);
     });
 
     it('Prevents duplication on (routineId, activityId) pair.', async () => {
