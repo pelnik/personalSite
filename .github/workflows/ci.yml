@@ -1,9 +1,9 @@
-name: Tests
+name: CI/CD
+
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
   push:
     branches: [main]
+  pull_request:
 
 jobs:
   test:
@@ -26,14 +26,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
       - name: Create test databases
         run: |
@@ -41,7 +39,7 @@ jobs:
           PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE fitness;"
           PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE scents;"
 
-      - name: Run fitness tests
+      - name: Run tests
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/juicebox
           FITNESS_DATABASE_URL: postgres://postgres:postgres@localhost:5432/fitness
@@ -49,3 +47,39 @@ jobs:
           JWT_SECRET: test-secret-for-ci
           API_URL: http://localhost:3000/api/fitness
         run: npm run test:fitness
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Copy build to EC2
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+          rsync -avz --delete \
+            -e "ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no" \
+            build/ \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PROJECT_PATH }}/build/
+          rm /tmp/deploy_key
+
+      - name: Pull source & restart server
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+          ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
+            "cd ${{ secrets.EC2_PROJECT_PATH }} && git pull origin main && pm2 restart personalsite"
+          rm /tmp/deploy_key
