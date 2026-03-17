@@ -6,6 +6,7 @@
 
 # Build outputs
 node_modules/
+/build
 
 # OS files
 .DS_Store
