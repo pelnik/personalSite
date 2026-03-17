@@ -78,6 +78,12 @@ describe('/api/fitness/routines', () => {
       const res = await request(app).get('/api/fitness/routines');
       expect(res.body).toEqual(publicRoutinesFromDB);
     });
+
+    it('returns an array, not an error object', async () => {
+      const res = await request(app).get('/api/fitness/routines');
+      expect(res.status).toBe(200);
+      expect(Array.isArray(res.body)).toBe(true);
+    });
   });
 
   describe('POST /api/fitness/routines', () => {

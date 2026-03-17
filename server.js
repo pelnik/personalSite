@@ -8,6 +8,7 @@ const path = require('path');
 const morgan = require('morgan');
 const cors = require('cors');
 const apiRouter = require('./src/api');
+const { ensureDbInitialized } = require('./src/api/fitness-tracker/db/seedData');
 
 let PORT = 80;
 let sshPORT = 443;
@@ -35,7 +36,19 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve('build', 'index.html'));
 });
 
-http.createServer(app).listen(PORT, () => {
+if (process.env.NODE_ENV === 'development') {
+  ensureDbInitialized();
+}
+
+const server = http.createServer(app);
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Run "lsof -ti :${PORT} | xargs kill" to free it.`);
+    process.exit(1);
+  }
+  throw err;
+});
+server.listen(PORT, () => {
   console.log(`http server listening on ${PORT}`);
 });
 

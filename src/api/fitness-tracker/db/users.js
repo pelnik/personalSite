@@ -26,7 +26,7 @@ async function createUser({ username, password }) {
 
     return user;
   } catch (error) {
-    console.error('error creating user');
+    console.error('error creating user', error);
     throw error;
   }
 }
@@ -47,7 +47,7 @@ async function getUserByUsernameWithPassword(userName) {
 
     return user;
   } catch (error) {
-    console.error('error getting user by username');
+    console.error('error getting user by username', error);
     throw error;
   }
 }
@@ -70,7 +70,7 @@ async function getUser({ username, password }) {
 
     return null;
   } catch (error) {
-    console.error('error getting user');
+    console.error('error getting user', error);
     throw error;
   }
 }
@@ -89,7 +89,7 @@ async function getUserById(userId) {
 
     return user;
   } catch (error) {
-    console.error(`error getting user by id`);
+    console.error('error getting user by id', error);
     throw error;
   }
 }

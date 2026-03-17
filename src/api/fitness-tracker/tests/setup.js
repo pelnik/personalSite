@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { rebuildDB } = require('../db/seedData');
 
 const setup = async () => {

@@ -21,7 +21,7 @@ async function dropTables() {
 
     console.log('Finished dropping tables!');
   } catch (error) {
-    console.error('Error dropping tables!');
+    console.error('Error dropping tables!', error);
     throw error;
   }
 }
@@ -67,7 +67,7 @@ async function createTables() {
      `);
     console.log('Finished building table');
   } catch (error) {
-    console.error('Error creating tables');
+    console.error('Error creating tables', error);
     throw error;
   }
 }
@@ -248,6 +248,65 @@ async function rebuildDB() {
   }
 }
 
+async function createTablesIfNotExist() {
+  try {
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL
+      );
+    `);
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS activities (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) UNIQUE NOT NULL,
+        description TEXT NOT NULL
+      );
+    `);
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS routines (
+        id SERIAL PRIMARY KEY,
+        "creatorId" INTEGER REFERENCES users(id),
+        "isPublic" BOOLEAN DEFAULT false,
+        name VARCHAR(255) UNIQUE NOT NULL,
+        goal TEXT NOT NULL
+      );
+    `);
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS routine_activities (
+        id SERIAL PRIMARY KEY,
+        "routineId" INTEGER REFERENCES routines(id),
+        "activityId" INTEGER REFERENCES activities(id),
+        duration INTEGER,
+        count INTEGER,
+        UNIQUE("routineId","activityId")
+      );
+    `);
+  } catch (error) {
+    console.error('Error creating tables if not exist', error);
+    throw error;
+  }
+}
+
+async function ensureDbInitialized() {
+  try {
+    await createTablesIfNotExist();
+    const { rows } = await client.query('SELECT COUNT(*) FROM users');
+    if (parseInt(rows[0].count) === 0) {
+      console.log('Fitness DB is empty, seeding initial data...');
+      await createInitialUsers();
+      await createInitialActivities();
+      await createInitialRoutines();
+      await createInitialRoutineActivities();
+      console.log('Fitness DB seeding complete.');
+    }
+  } catch (error) {
+    console.error('Fitness DB auto-init failed:', error.message);
+  }
+}
+
 module.exports = {
   rebuildDB,
+  ensureDbInitialized,
 };

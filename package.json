@@ -4,6 +4,7 @@
   "description": "My personal site in React",
   "main": "index.js",
   "scripts": {
+    "predev": "lsof -ti :3000,:3001 | xargs kill -9 2>/dev/null; true",
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
     "prod": "NODE_ENV=production node server.js",
     "client:dev": "PORT=3001 react-scripts start",

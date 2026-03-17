@@ -3,6 +3,7 @@ const fitnessRouter = express.Router();
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const { getUserById } = require('../db');
+const client = require('../db/client');
 const { JWT_SECRET } = process.env;
 
 // Send docs for base path
@@ -38,9 +39,13 @@ fitnessRouter.use(async (req, res, next) => {
 
 // GET /api/health
 fitnessRouter.get('/health', async (req, res, next) => {
-  res.send({
-    message: 'All is well',
-  });
+  try {
+    await client.query('SELECT 1');
+    res.send({ message: 'All is well', db: 'ok' });
+  } catch (error) {
+    console.error('Health check DB error', error);
+    res.status(503).send({ message: 'Database unavailable', db: 'error', error: error.message });
+  }
 });
 
 // ROUTER: /api/users
@@ -68,7 +73,8 @@ fitnessRouter.use('*', (req, res, next) => {
 });
 
 fitnessRouter.use((error, req, res, next) => {
-  res.status(400);
+  const status = error.status || 400;
+  res.status(status);
   res.send({
     name: error.name,
     message: error.message,

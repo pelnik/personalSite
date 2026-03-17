@@ -24,7 +24,7 @@ async function createRoutine({ creatorId, isPublic, name, goal }) {
 
     return routine;
   } catch (error) {
-    console.error('error creating routine');
+    console.error('error creating routine', error);
     throw error;
   }
 }
@@ -45,7 +45,7 @@ async function getAllRoutines() {
 
     return attachedRows;
   } catch (error) {
-    console.error('error getting all routines');
+    console.error('error getting all routines', error);
     throw error;
   }
 }
@@ -66,7 +66,7 @@ async function getAllPublicRoutines() {
 
     return await attachActivitiesToRoutines(rows);
   } catch (error) {
-    console.error('error getting all public routines');
+    console.error('error getting all public routines', error);
     throw error;
   }
 }
@@ -101,7 +101,7 @@ async function getRoutinesWithoutActivities() {
 
     return rows;
   } catch (error) {
-    console.error('error getting routines without activities');
+    console.error('error getting routines without activities', error);
     throw error;
   }
 }
@@ -121,7 +121,7 @@ async function getAllRoutinesByUser({ username }) {
 
     return await attachActivitiesToRoutines(rows);
   } catch (error) {
-    console.error('error getting all routines by user');
+    console.error('error getting all routines by user', error);
     throw error;
   }
 }
@@ -139,7 +139,7 @@ async function getPublicRoutinesByUser({ username }) {
 
     return await attachActivitiesToRoutines(rows);
   } catch (error) {
-    console.error('error getting public routines by user');
+    console.error('error getting public routines by user', error);
     throw error;
   }
 }
@@ -160,7 +160,7 @@ async function getPublicRoutinesByActivity({ id }) {
     const attachedRows = await attachActivitiesToRoutines(rows);
     return attachedRows;
   } catch (error) {
-    console.error('error getting public routines by activity');
+    console.error('error getting public routines by activity', error);
     throw error;
   }
 }
@@ -190,7 +190,7 @@ async function updateRoutine(fields = {}) {
 
     return routine;
   } catch (error) {
-    console.error('error updating routine');
+    console.error('error updating routine', error);
     throw error;
   }
 }
@@ -210,7 +210,7 @@ async function destroyRoutine(id) {
       
     `);
   } catch (error) {
-    console.error('error deleting routine');
+    console.error('error deleting routine', error);
     throw error;
   }
 }

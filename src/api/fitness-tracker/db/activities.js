@@ -22,7 +22,7 @@ async function createActivity({ name, description }) {
 
     return activity;
   } catch (error) {
-    console.error('error creating activity');
+    console.error('error creating activity', error);
     throw error;
   }
 }
@@ -39,7 +39,7 @@ async function getAllActivities() {
 
     return rows;
   } catch (error) {
-    console.error('error getting all activities');
+    console.error('error getting all activities', error);
     throw error;
   }
 }
@@ -61,7 +61,7 @@ async function getActivityByName(name) {
 
     return activities;
   } catch (error) {
-    console.error('error getting activity by name');
+    console.error('error getting activity by name', error);
     throw error;
   }
 }
@@ -82,7 +82,7 @@ async function getActivityById(id) {
 
     return activities;
   } catch (error) {
-    console.error('error getting activity by id');
+    console.error('error getting activity by id', error);
     throw error;
   }
 }
@@ -112,7 +112,7 @@ async function updateActivity(fields = {}) {
 
     return activities;
   } catch (error) {
-    console.error('error updating activities');
+    console.error('error updating activities', error);
     throw error;
   }
 }
