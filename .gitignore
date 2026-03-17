@@ -13,3 +13,5 @@ node_modules/
 
 # Legacy
 /oldpublic
+
+pr_info.md
