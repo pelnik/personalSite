@@ -20,7 +20,13 @@ test.describe('Express server', () => {
   });
 
   test('static assets are served from build/', async ({ request }) => {
-    for (const path of ['/favicon.ico', '/Media/main/personal_pic.jpg', '/legacyJS/snakeGame.js']) {
+    for (const path of [
+      '/favicon.ico',
+      '/favicon.svg',
+      '/apple-touch-icon.png',
+      '/Media/main/personal_pic.jpg',
+      '/legacyJS/snakeGame.js',
+    ]) {
       const response = await request.get(path);
       expect(response.status(), path).toBe(200);
     }
