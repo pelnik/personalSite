@@ -1,10 +1,8 @@
 import { saveToLocalStorage } from '../utils/localStorage';
 
-// const BASE_URL = 'https://pelnik.dev/api/juicebox';
-const BASE_URL =
-  process.env.NODE_ENV === 'production'
-    ? 'https://pelnik.dev/api/juicebox'
-    : 'http://localhost:3000/api/juicebox';
+// Same-origin: Express serves the API in production, and Vite proxies /api
+// to Express in development.
+const BASE_URL = '/api/juicebox';
 
 export async function login(username, password) {
   try {

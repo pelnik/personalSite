@@ -35,10 +35,14 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - run: npm ci
+
+      # Vite doesn't type-check when it builds (CRA did), so check here.
+      - name: Type check
+        run: npm run typecheck
 
       - name: Create test databases
         run: |
