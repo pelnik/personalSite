@@ -181,7 +181,7 @@ See `DEPLOYMENT.md` for full setup details.
 │   ├── ci.yml                 # CI/CD — test + deploy pipeline
 │   ├── claude-pr-review.yml   # Automated Claude review on PRs
 │   ├── claude-issue-fix.yml   # Claude fix attempt on issues labeled claude-fix
-│   └── cert-expiry.yml        # Weekly check; opens an issue if the SSL cert has < 21 days left
+│   └── cert-expiry.yml        # Weekly check; opens an issue if the SSL cert has < 1/4 of its lifetime (max 21 days) left
 ├── DEPLOYMENT.md              # Deployment setup guide
 └── docker-compose.yml         # Local dev database
 ```
