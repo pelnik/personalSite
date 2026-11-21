@@ -241,4 +241,8 @@ This applies when asked to address review comments on a PR, either once or on a 
 
 ## Claude Instructions
 
+- Keep each PR to one straightforward change: one bug fix, one feature, or one config change. Small PRs are easier to review, revert and test.
+  - If a request covers several things, split it into several PRs, each on its own branch from `main`.
+  - When PRs depend on each other, say so in each description and give the merge order. Otherwise note that they're independent.
+  - Problems found along the way that aren't part of the change get logged as an issue (see Issue Tracking), not added to the current PR.
 - For each new feature update, maintain working markdown file pr_info.md, an ignored file in the repo, with information about the goal of the feature, design decisions made, reasons for each design, considerations for deployment to site, and any other relevant information for yourself and for me. This will ultimately be used in the PR description.
