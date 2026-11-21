@@ -49,13 +49,15 @@ services:
       - "3001:3001"
     volumes:
       - .:/app
+      # node_modules stays in an anonymous volume, which survives container
+      # recreation. After a dependency change (e.g. coming from the old Node 20
+      # image), recreate it: docker compose up --build -V
       - /app/node_modules
     depends_on:
       db:
         condition: service_healthy
-    # Express (nodemon) and Vite, as in npm run dev. Vite listens on 0.0.0.0
-    # so the host can reach it. Open http://localhost:3001.
-    command: npx concurrently "npm run server:dev" "npm run client:dev -- --host 0.0.0.0"
+    # Runs the image's development CMD: Express (nodemon) and Vite, as in
+    # npm run dev, with Vite on 0.0.0.0. Open http://localhost:3001.
     restart: unless-stopped
 
 volumes:
