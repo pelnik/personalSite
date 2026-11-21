@@ -116,7 +116,7 @@ Compare two heap snapshots taken a few hours apart:
    - Select the second, switch the view to **Comparison** against the first, and sort by **Size Delta**.
    - Whatever grew the most is the leak. Expand it to see what keeps it alive (**Retainers**).
 
-**Taking a snapshot needs roughly as much free memory again as the heap uses.** On this instance, take them while the heap is still well below the 192 MB cap.
+**Taking a snapshot needs roughly as much free memory again as the heap uses,** and PM2 restarts the app if RSS passes 300 MB (`max_memory_restart`), which would cut the snapshot off and clear the leaked state. Check `pm2 describe personalsite` first: only take one if memory + heapUsed stays well under 300 MB (in practice, heapUsed under about 80 MB). If it's higher, skip the snapshot, or temporarily raise `max_memory_restart` in `ecosystem.config.js` and run `pm2 delete personalsite && pm2 start ecosystem.config.js` first.
 
 ## Rollback
 
