@@ -38,7 +38,7 @@ Each module follows the same internal structure:
 module-name/
   api/         # Express route handlers
   db/          # PostgreSQL query functions
-  tests/       # Jest + supertest tests (fitness only)
+  tests/       # Jest + supertest tests
 ```
 
 ### Databases
@@ -84,14 +84,32 @@ npm run seed:all            # seed all three databases
 
 ## Testing
 
+All tests need local Postgres (`docker compose up db -d`).
+
 ```bash
-npm run test:fitness        # API integration tests (requires Postgres running)
-npm run test:frontend       # Jest/jsdom frontend tests
+npm test                     # all API tests (same as npm run test:api)
+npm run test:fitness         # fitness API tests only
+npm run test:e2e             # build, then all Playwright tests including screenshots
+npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
 ```
 
-The Jest config (`jest.config.js`) switches behavior based on `JEST_ENV`:
-- `JEST_ENV=fitness` → runs fitness API tests against a real database with setup/teardown
-- Default → runs frontend tests in jsdom with CSS/asset mocking
+**API tests (Jest + supertest).** `jest.config.js` has one project per API module: `fitness`, `juicebox`, `scents` and `core` (the `/api` router and admin). Select one with `--selectProjects`. Each project's `tests/setup.js` rebuilds its database. Tests mount the real `/api` router (`tests/support/apiApp.js`), so error shapes and status codes match production.
+
+**End-to-end tests (Playwright, `tests/e2e/`).** They run against `build/` served by the real `server.js` on port 3100, after reseeding juicebox and fitness. The fixture in `tests/e2e/fixtures.ts`:
+
+- blocks analytics
+- forwards hardcoded `https://pelnik.dev/api/...` calls to the local server
+- mocks the third-party Stranger's Things API
+- fails a test on any console error or failed request (use `allowErrors` for expected ones)
+
+Screenshot baselines (`tests/e2e/__screenshots__/`) are macOS-specific and run locally only. Update them with `--update-snapshots` only when a visual change is intended.
+
+**Safety:**
+
+- Test setup refuses to drop tables unless the database host is local (`tests/support/assertLocalDatabase.js`).
+- `stripe` is stubbed in test files, and `STRIPE_KEY` is forced to a dummy value (`tests/support/testEnv.js`). The scents seed archives every product in whatever Stripe account it's given.
+
+**Known bugs.** Tests named `KNOWN BUG: …` pin current buggy behavior on purpose. When fixing one, update that test in the same change.
 
 Tests run automatically in GitHub Actions on every PR and push to `main` via `.github/workflows/ci.yml`.
 
@@ -100,8 +118,9 @@ Tests run automatically in GitHub Actions on every PR and push to `main` via `.g
 ## Deployment
 
 Handled entirely by `.github/workflows/ci.yml`. On merge to `main`:
-1. `test` job runs the fitness API test suite
-2. `deploy` job (only if tests pass) builds React on GitHub's runner, rsyncs `build/` to EC2, then SSHes in to `git pull` and restart PM2
+
+1. `test` job runs all API tests, builds React on GitHub's runner, runs the functional e2e tests against that build, and uploads `build/` as an artifact
+2. `deploy` job (only if tests pass) downloads that same `build/`, rsyncs it to EC2, then SSHes in to `git pull` and restart PM2
 
 Required GitHub secrets: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, `EC2_PROJECT_PATH`.
 

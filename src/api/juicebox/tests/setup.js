@@ -6,7 +6,9 @@ const setup = async () => {
   assertLocalDatabase('DATABASE_URL');
 
   const { rebuildDB } = require('../db/seed');
+  const { client } = require('../db');
   await rebuildDB();
+  await client.end();
 };
 
 module.exports = setup;

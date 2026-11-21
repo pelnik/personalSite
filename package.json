@@ -14,7 +14,7 @@
     "seed:fitness": "node ./src/api/fitness-tracker/db/seed.js",
     "seed:scents": "node ./src/api/scents/db/seed.js",
     "seed:all": "npm run seed:juicebox && npm run seed:fitness && npm run seed:scents",
-    "test": "jest --runInBand",
+    "test": "npm run test:api",
     "test:fitness": "jest --selectProjects fitness --runInBand",
     "test:api": "jest --runInBand",
     "test:e2e": "npm run build && playwright test",

@@ -59,6 +59,15 @@ jobs:
       - name: Run end-to-end tests
         run: npm run test:e2e:functional
 
+      # Deploy ships this exact bundle, the one the e2e tests just checked.
+      - name: Upload build
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: build/
+          retention-days: 1
+
       - name: Upload Playwright traces
         if: failure()
         uses: actions/upload-artifact@v4
@@ -73,16 +82,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - name: Download tested build
+        uses: actions/download-artifact@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-
-      - run: npm ci
-
-      - run: npm run build
+          name: build
+          path: build/
 
       - name: Copy build to EC2
         run: |

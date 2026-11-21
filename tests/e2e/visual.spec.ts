@@ -52,7 +52,14 @@ async function waitUntilSettled(page: Page) {
     await Promise.all(
       Array.from(document.images, (img) => {
         img.loading = 'eager';
-        return img.complete ? null : new Promise((done) => img.addEventListener('load', done, { once: true }));
+        // Resolve on error too, so a broken image fails through the error
+        // fixture with its URL instead of hanging until the timeout.
+        return img.complete
+          ? null
+          : new Promise((done) => {
+              img.addEventListener('load', done, { once: true });
+              img.addEventListener('error', done, { once: true });
+            });
       })
     );
   });

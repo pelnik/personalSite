@@ -7,6 +7,13 @@ const assertLocalDatabase = require('../../../../tests/support/assertLocalDataba
 const setup = async () => {
   assertLocalDatabase('SCENTS_DATABASE_URL');
 
+  // Global setup runs outside Jest's module registry, so moduleNameMapper
+  // doesn't apply: requiring the seed loads the real stripe package. Nothing
+  // here calls Stripe, and this check makes sure a real key can't be present.
+  if (process.env.STRIPE_KEY !== 'sk_test_stub') {
+    throw new Error('STRIPE_KEY must be the test stub key during scents test setup');
+  }
+
   const client = require('../db/client');
   const { dropTables, createTables } = require('../db/seed');
   const { createUser, createCategory } = require('../db');

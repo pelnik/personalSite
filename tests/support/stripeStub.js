@@ -1,5 +1,6 @@
-// Stand-in for the `stripe` package in scents tests (wired up through
+// Stand-in for the `stripe` package inside API test files (wired up through
 // moduleNameMapper in jest.config.js), so no test ever reaches Stripe.
+// Global setup files don't go through moduleNameMapper; see testEnv.js.
 let counter = 0;
 const nextId = (prefix) => `${prefix}_test_${++counter}`;
 
