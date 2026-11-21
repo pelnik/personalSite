@@ -46,7 +46,7 @@ function MainAbout() {
       <div className="home-content-flex">
         <div id="about-pic-flex">
           <img
-            className="about-page-pic"
+            className="personal-pic about-page-pic"
             src="/Media/main/Professional pic.jpg"
             alt="Personal picture"
           />
