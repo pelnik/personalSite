@@ -1,13 +1,13 @@
 # CLAUDE.md — personalSite
 
-Matt Pelnik's portfolio site: a React SPA plus several portfolio REST APIs, all served by one Express app. It runs on an EC2 instance under PM2. GitHub Actions tests every PR and deploys merges to `main`.
+Matt Pelnik's personal site, with information about him: a React SPA plus the REST APIs behind a few earlier projects, which stay on the site as live demos. One Express app serves it all. It runs on an EC2 instance under PM2. GitHub Actions tests every PR and deploys merges to `main`.
 
 Where things are (the code is the source of truth for the details):
 
 - `app.js` builds the Express app: it mounts `/api`, serves `build/`, answers 404 for any other path with a file extension, then sends `build/index.html` for every other path. **New routes must be registered before that fallback**, or the SPA swallows them. `server.js` only listens on the ports and shuts down gracefully; tests load `app.js` directly.
 - `src/api/<module>/{api,db,tests}`: one module per API, mounted in `src/api/index.js`. Modules: `fitness-tracker` (`/api/fitness`), `juicebox` and `scents` (the backend for the Netlify storefront). Database pools are only created through `src/api/createPool.js`. Each has its own Postgres database: `FITNESS_DATABASE_URL`, `DATABASE_URL` (juicebox) and `SCENTS_DATABASE_URL`.
 - The frontend is built with Vite (`vite.config.mts`). `index.html` at the project root loads `src/index.tsx`, and `public/` is copied to `build/` as-is.
-- `src/components/` holds the site's pages. `src/fullReactProjects/` holds three embedded portfolio demo apps (fitness, juicebox, stranger).
+- `src/components/` holds the site's pages. `src/fullReactProjects/` holds the three demo apps from earlier projects (fitness, juicebox, stranger).
 
 ---
 
@@ -47,6 +47,18 @@ npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
   - Test setup refuses to drop tables unless the database host is local.
   - Stripe is stubbed and given a dummy key. The scents seed archives every product in whatever Stripe account it's given.
 - **Known bugs:** tests named `KNOWN BUG: …` pin current buggy behavior on purpose. When fixing one, update that test in the same change.
+
+**Before pushing** a branch or opening a PR, with local Postgres running (`docker compose up db -d`), run:
+
+```bash
+npm run typecheck
+npm test
+npm run test:e2e              # on macOS: functional + screenshot tests
+npm run test:e2e:functional   # elsewhere: screenshot baselines are macOS-only (run npm run build first)
+```
+
+- **Screenshots only run locally:** CI runs the first two and the functional e2e tests, but not the screenshot comparisons. So a branch that skipped `npm run test:e2e` on a Mac can pass CI and still change how the site looks. Say so in the PR if you couldn't run the screenshots.
+- **Updating baselines:** if a screenshot changes on purpose, update them with `--update-snapshots` and look at the new images before committing them. Never commit screenshot files that aren't `-darwin`.
 
 ---
 
