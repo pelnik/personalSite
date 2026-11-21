@@ -19,6 +19,15 @@ app.get('/scents', (req, res) => {
   res.redirect('https://makes-scents-store.netlify.app/');
 });
 
+// Let's Encrypt HTTP-01 challenges, written by `certbot --webroot`. Served from outside
+// build/, because the deploy's `rsync --delete` replaces build/. Unknown tokens get a 404
+// instead of the SPA fallback.
+const acmeWebroot = process.env.ACME_WEBROOT || '/var/www/certbot';
+app.use(
+  '/.well-known/acme-challenge',
+  express.static(path.join(acmeWebroot, '.well-known', 'acme-challenge'), { fallthrough: false })
+);
+
 app.use(express.static('build'));
 
 // A file that isn't in build/ (e.g. an old /assets chunk after a deploy) is a

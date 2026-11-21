@@ -40,6 +40,20 @@ test.describe('Express server', () => {
     }
   });
 
+  test("Let's Encrypt challenge tokens are served from the ACME webroot", async ({ request }) => {
+    const response = await request.get('/.well-known/acme-challenge/e2e-token');
+
+    expect(response.status()).toBe(200);
+    expect(await response.text()).toBe('e2e-token.key-authorization\n');
+  });
+
+  test('unknown challenge tokens 404 instead of falling back to the SPA', async ({ request }) => {
+    const response = await request.get('/.well-known/acme-challenge/missing');
+
+    expect(response.status()).toBe(404);
+    expect(await response.text()).not.toContain('<div id="app"></div>');
+  });
+
   test('API routes are not swallowed by the SPA fallback', async ({ request }) => {
     const response = await request.get('/api/fitness/health');
 
