@@ -21,7 +21,7 @@ The site is deployed on an EC2 instance (Ubuntu, managed with PM2) and uses GitH
 
 ### Frontend
 
-React 19 SPA with TypeScript. Entry point is `src/index.tsx`. Components live in `src/components/`, organized by feature. There are also three full embedded React applications in `src/fullReactProjects/` (FitnessTrackerFrontEnd, juicebox, stranger) that are portfolio demos.
+React 19 SPA with TypeScript, built with Vite (`vite.config.mts`). `index.html` at the project root loads `src/index.tsx`. Files in `public/` are copied to `build/` as-is. Components live in `src/components/`, organized by feature. There are also three full embedded React applications in `src/fullReactProjects/` (FitnessTrackerFrontEnd, juicebox, stranger) that are portfolio demos.
 
 ### Backend APIs
 
@@ -59,10 +59,13 @@ All database clients use `pg.Pool` with SSL in production and a 30-second idle t
 ## Development
 
 ```bash
-npm run dev        # Express (port 3000) + React dev server (port 3001) concurrently
+npm run dev        # Express (port 3000) + Vite dev server (port 3001) concurrently
 npm run build      # Compile React app to /build (do NOT run on EC2)
+npm run typecheck  # tsc --noEmit (Vite doesn't type-check; CI runs this)
 npm run prod       # Start production server (serves /build on port 80)
 ```
+
+Open the site at http://localhost:3001 in development. Vite proxies `/api` requests to Express, so the frontend always calls its APIs with same-origin paths (`/api/fitness`, `/api/juicebox`). Never hardcode a host.
 
 **Never run `npm run build` on the EC2 server** — it doesn't have enough memory. Builds happen in GitHub Actions.
 
@@ -146,9 +149,9 @@ See `DEPLOYMENT.md` for full setup details.
 ### Frontend (TypeScript/React)
 
 - Functional components with hooks throughout — no class components
-- Components are `.tsx`, some older utilities are `.jsx`
+- Components are `.tsx`, some older utilities are `.jsx`. Any file containing JSX must use a `.jsx`/`.tsx` extension (Vite requires it)
 - `useEffect` for side effects (including `document.title` updates per page)
-- Barrel exports via `index.js` files — import from parent directory, not individual files
+- Barrel exports via `index.js` files — import from parent directory, not individual files. Exception: pages lazy-loaded with `React.lazy` in `src/components/Main.tsx` import their module directly, so they get their own chunk
 - Strict TypeScript enabled; JS files are allowed but not type-checked
 
 ### General
