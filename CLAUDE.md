@@ -71,6 +71,7 @@ npm run test:e2e:functional   # elsewhere: screenshot baselines are macOS-only (
 - On merge to `main`, the `deploy` job rsyncs that tested `build/` to EC2, then SSHes in to `git pull`, run `npm ci --omit=dev`, and start PM2 fresh from `ecosystem.config.js` (process `personalsite`; heap cap, heap snapshots, memory restart limit). A health check on `/api/health` fails the job if the server doesn't come back.
 - Secrets: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, `EC2_PROJECT_PATH`.
 - Server setup, one-time steps, checking memory (heap snapshots, `npm run metrics:report`) and rollback: `DEPLOYMENT.md`.
+- **The server's Node version comes from `.nvmrc`.** The deploy's `nvm use` picks it, and `interpreter` in `ecosystem.config.js` makes PM2 run the app on that binary. Changing it needs manual steps on the server first (install, port capability, `nvm alias default`, `pm2 update`; see `DEPLOYMENT.md`), or the next deploy fails at `nvm use` and restores the previous commit.
 
 SSL:
 

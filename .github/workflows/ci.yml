@@ -35,7 +35,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          # Same version the server runs, so a .nvmrc bump is tested here first.
+          node-version-file: .nvmrc
           cache: 'npm'
 
       - run: npm ci
@@ -102,16 +103,18 @@ jobs:
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PROJECT_PATH }}/build/
           rm /tmp/deploy_key
 
-      # The SSH session doesn't load nvm, so Node's bin directory goes on PATH
-      # for npm and pm2. npm ci installs only production dependencies (the
-      # frontend is already built), so the server always runs with exactly
-      # the dependencies in package-lock.json.
+      # The SSH session doesn't load nvm, so it's sourced here, and `nvm use`
+      # picks the version in .nvmrc (see DEPLOYMENT.md for upgrading Node).
+      # npm ci installs only production dependencies (the frontend is already
+      # built), so the server always runs with exactly the dependencies in
+      # package-lock.json.
       #
-      # npm ci empties node_modules before installing. If it fails partway,
-      # the source goes back to the previous commit and its dependencies are
-      # reinstalled, so the running server can still restart; then the job
-      # fails. (build/ has already been replaced by then: rerun the deploy or
-      # revert once the cause is fixed.)
+      # If nvm use fails (that Node isn't installed on the server) or npm ci
+      # fails partway (it empties node_modules first), the source goes back
+      # to the previous commit and its dependencies are reinstalled, so the
+      # running server can still restart; then the job fails. (build/ has
+      # already been replaced by then: rerun the deploy or revert once the
+      # cause is fixed.)
       #
       # The app is deleted and started again from ecosystem.config.js, rather
       # than restarted, because pm2 restart doesn't apply changed node_args or
@@ -123,12 +126,14 @@ jobs:
           ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no \
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
             "set -e
-             export PATH=/home/ubuntu/.nvm/versions/node/v22.11.0/bin:\$PATH
+             export NVM_DIR=\$HOME/.nvm
+             . \$NVM_DIR/nvm.sh --no-use
              cd ${{ secrets.EC2_PROJECT_PATH }}
              PREVIOUS=\$(git rev-parse HEAD)
              git pull origin main
-             if ! npm ci --omit=dev; then
+             if ! nvm use || ! npm ci --omit=dev; then
                git reset --hard \$PREVIOUS
+               nvm use || true
                npm ci --omit=dev || true
                exit 1
              fi
