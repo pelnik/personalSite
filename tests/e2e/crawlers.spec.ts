@@ -28,10 +28,12 @@ test.describe('crawler files', () => {
       const response = await request.get(path, { maxRedirects: 0 });
       expect(response.status(), url).toBe(200);
 
-      // The server answers 200 for any path; only the app knows a page is missing.
+      // The server answers 200 for any path; only the app knows a page is
+      // missing. Wait for the app to render first: toHaveCount(0) doesn't
+      // wait, so on the empty shell it would pass before React renders.
       await page.goto(path);
-      await expect(page.getByRole('heading', { name: 'Page Not Found' }), url).toHaveCount(0);
       await expect(page.locator('.site-full-window'), url).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Page Not Found' }), url).toHaveCount(0);
     }
   });
 
