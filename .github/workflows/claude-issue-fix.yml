@@ -33,7 +33,7 @@ jobs:
             REPO: ${{ github.repository }}
             ISSUE NUMBER: ${{ github.event.issue.number }}
 
-            Fix the bug described in this issue. Read the issue and its comments first, and follow claude.md.
+            Fix the bug described in this issue. Read the issue and its comments first, and follow CLAUDE.md.
 
             This run has a small, fixed budget. Stay well inside it:
             1. Triage before editing anything: find the cause and estimate the size of the fix.
