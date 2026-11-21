@@ -1211,4 +1211,8 @@ async function rebuildDB() {
   }
 }
 
-rebuildDB();
+if (require.main === module) {
+  rebuildDB();
+}
+
+module.exports = { dropTables, createTables };

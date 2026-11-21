@@ -225,4 +225,8 @@ async function testDB() {
   }
 }
 
-rebuildDB().then(testDB).catch(console.error);
+if (require.main === module) {
+  rebuildDB().then(testDB).catch(console.error);
+}
+
+module.exports = { rebuildDB };
