@@ -9,7 +9,7 @@
     "prod": "NODE_ENV=production node server.js",
     "client:dev": "vite",
     "server:dev": "NODE_ENV=development nodemon server.js",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender.mjs",
     "seed:juicebox": "node ./src/api/juicebox/db/seed.js",
     "seed:fitness": "node ./src/api/fitness-tracker/db/seed.js",
     "seed:scents": "node ./src/api/scents/db/seed.js",

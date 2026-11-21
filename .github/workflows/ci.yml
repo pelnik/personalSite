@@ -54,11 +54,12 @@ jobs:
       - name: Run API tests
         run: npm run test:api
 
-      - name: Build frontend
-        run: npm run build
-
+      # Before the build: it prerenders pages in Chromium.
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
+
+      - name: Build frontend
+        run: npm run build
 
       # Screenshot comparisons are local-only (baselines are macOS-specific).
       - name: Run end-to-end tests

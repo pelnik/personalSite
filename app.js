@@ -3,6 +3,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const fs = require('fs');
 const path = require('path');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -28,7 +29,9 @@ app.use(
   express.static(path.join(acmeWebroot, '.well-known', 'acme-challenge'), { fallthrough: false })
 );
 
-app.use(express.static('build'));
+// No redirect from /about to /about/ when build/about/ is a folder (it holds a
+// prerendered page): the fallback below serves /about itself.
+app.use(express.static('build', { redirect: false }));
 
 // A file that isn't in build/ (e.g. an old /assets chunk after a deploy) is a
 // 404. Serving index.html for it would hand the browser HTML where it asked
@@ -40,9 +43,21 @@ app.use((req, res, next) => {
   next();
 });
 
-// Every other path is a page of the single-page app.
+// Pages prerendered at build time (scripts/prerender.mjs), route -> file in
+// build/. Missing until the first build, e.g. in the API tests.
+let prerenderedPages = {};
+try {
+  prerenderedPages = JSON.parse(fs.readFileSync(path.resolve('build', 'prerendered.json'), 'utf8'));
+} catch {
+  // Not built yet: every page gets the app shell.
+}
+
+// Every other path is a page of the single-page app: its prerendered HTML if
+// it has one, otherwise the empty app shell.
 app.get('/{*splat}', (req, res) => {
-  res.sendFile(path.resolve('build', 'index.html'));
+  const route = req.path.replace(/\/+$/, '') || '/';
+  const file = Object.hasOwn(prerenderedPages, route) ? prerenderedPages[route] : 'spa.html';
+  res.sendFile(path.resolve('build', file));
 });
 
 module.exports = app;
