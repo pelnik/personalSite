@@ -6,12 +6,9 @@
 # -----------------------------------------------------------------------------
 # Base stage: Common setup for all stages
 # -----------------------------------------------------------------------------
-FROM node:20-alpine AS base
+FROM node:24-alpine AS base
 
 WORKDIR /app
-
-# Install dependencies needed for bcrypt native compilation
-RUN apk add --no-cache python3 make g++
 
 # -----------------------------------------------------------------------------
 # Dependencies stage: Install node modules
@@ -29,10 +26,11 @@ FROM base AS development
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Development ports (Express: 3000, React: 3001)
+# Development ports (Express: 3000, Vite: 3001)
 EXPOSE 3000 3001
 
-CMD ["npm", "run", "start:express"]
+# Vite must listen on all interfaces to be reachable from outside the container.
+CMD ["npx", "concurrently", "npm run server:dev", "npm run client:dev -- --host 0.0.0.0"]
 
 # -----------------------------------------------------------------------------
 # Build stage: Build the React frontend
@@ -47,22 +45,18 @@ RUN npm run build
 # -----------------------------------------------------------------------------
 # Production stage: Minimal image for production deployment
 # -----------------------------------------------------------------------------
-FROM node:20-alpine AS production
+FROM node:24-alpine AS production
 
 WORKDIR /app
 
-# Install only production dependencies and bcrypt build tools
-RUN apk add --no-cache python3 make g++
-
+# Only what the server needs at runtime. Every server dependency is pure JS,
+# so there's nothing to compile.
 COPY package*.json ./
-RUN npm ci --only=production && \
-    npm rebuild bcrypt && \
-    npm cache clean --force && \
-    apk del python3 make g++
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Copy built assets and server code
 COPY --from=builder /app/build ./build
-COPY server.js ./
+COPY app.js server.js ./
 COPY src/api ./src/api
 
 # Production ports (HTTP: 80, HTTPS: 443)
