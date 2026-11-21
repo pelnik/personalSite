@@ -15,7 +15,7 @@ Everything runs from `.github/workflows/ci.yml` on a merge to `main`:
 2. **`deploy` job** (only if `test` passed):
    1. Downloads that same `build/` and rsyncs it to the server.
    2. Over SSH:
-      - `git pull origin main`
+      - loads nvm, `git pull origin main`, then `nvm use` (the version in `.nvmrc`). If that version isn't installed on the server, the deploy stops here and the running server isn't touched.
       - `npm ci --omit=dev`: production dependencies only, because the frontend is already built
       - `pm2 delete personalsite`, then `pm2 start ecosystem.config.js` and `pm2 save`. The app is started fresh from the file so changed Node flags and limits apply; `pm2 restart` wouldn't pick them up.
       - `curl http://localhost/api/health`, retried for about 30 seconds. If the server doesn't come back healthy, the job fails.
@@ -27,7 +27,7 @@ GitHub secrets the deploy needs: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, `EC2_PRO
 ## The server
 
 - **Instance:** an EC2 nano running Ubuntu, with 512 MB of RAM.
-- **Node:** installed with nvm under `ubuntu`. Currently 22.11; the deploy puts `/home/ubuntu/.nvm/versions/node/v22.11.0/bin` on `PATH`, because SSH sessions don't load nvm.
+- **Node:** installed with nvm under `ubuntu`. The version is in `.nvmrc` (24); the deploy sources nvm and runs `nvm use`, because SSH sessions don't load nvm on their own. See [Upgrading Node](#upgrading-node).
 - **Process manager:** PM2, running as `ubuntu`, configured by `ecosystem.config.js`:
   - heap capped at 192 MB
   - heap snapshots on `SIGUSR2`
@@ -36,7 +36,7 @@ GitHub secrets the deploy needs: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, `EC2_PRO
   - timestamped logs
 - **Ports:** `server.js` serves HTTP on 80, and HTTPS on 443 with the certificates in `Keys/` (not in git; see [Certificates](#certificates)).
   - Binding ports below 1024 as a non-root user needs a capability on the `node` binary. Check with `getcap $(which node)`.
-  - **After installing a new Node version, re-grant it** with `sudo setcap 'cap_net_bind_service=+ep' $(readlink -f $(which node))`, or the server can't bind 80 or 443.
+  - **Each new Node version needs this granted again** (see [Upgrading Node](#upgrading-node)), or the server can't bind 80 or 443.
 - **`.env` in the project folder:**
   - `DATABASE_URL`, `FITNESS_DATABASE_URL`, `SCENTS_DATABASE_URL`
   - `JWT_SECRET`
@@ -75,6 +75,36 @@ Run these once on the server, as `ubuntu`, with nvm loaded (`source ~/.nvm/nvm.s
    ```
 
 5. **Optional: `ADMIN_TOKEN`** in `.env`, to use `/api/metrics`. Generate one with `openssl rand -hex 32`.
+
+## Upgrading Node
+
+Do this on the server **before** merging a change to `.nvmrc`. The deploy only runs `nvm use`; it never installs Node, because a new Node binary also needs its port capability granted by hand. Run as `ubuntu`, replacing `24` with the new version:
+
+```bash
+source ~/.nvm/nvm.sh
+nvm install 24
+nvm use 24
+npm install -g pm2           # global packages are per Node version
+
+# Let the new binary bind ports 80 and 443 as ubuntu
+sudo setcap 'cap_net_bind_service=+ep' "$(readlink -f "$(nvm which 24)")"
+
+# PM2's daemon runs apps on the Node it was started with. Restart it under
+# the new one; it brings the saved processes back.
+pm2 update
+pm2 describe personalsite | grep -i "node.js version"   # should show the new version
+curl -s localhost/api/health
+
+# Point the boot script at the new Node: run unstartup and startup,
+# run the sudo command each one prints, then save.
+pm2 unstartup
+pm2 startup
+pm2 save
+```
+
+Then merge the `.nvmrc` change. Deploys run `nvm use`, which now finds the new version. The certbot renewal hook (#23) already picks the newest nvm `pm2`, so it needs no change.
+
+**To roll back:** run `nvm use <old version> && pm2 update`, revert `.nvmrc`, and redo the `pm2 unstartup` and `pm2 startup` steps.
 
 ## Checking memory
 

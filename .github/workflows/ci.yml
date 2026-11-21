@@ -102,8 +102,11 @@ jobs:
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PROJECT_PATH }}/build/
           rm /tmp/deploy_key
 
-      # The SSH session doesn't load nvm, so Node's bin directory goes on PATH
-      # for npm and pm2. npm ci installs only production dependencies (the
+      # The SSH session doesn't load nvm, so it's sourced here, and `nvm use`
+      # picks the version in .nvmrc. If that version isn't installed on the
+      # server, nvm use fails and the deploy stops before touching the running
+      # server; see DEPLOYMENT.md for upgrading Node. npm ci installs only
+      # production dependencies (the
       # frontend is already built), so the server always runs with exactly
       # the dependencies in package-lock.json.
       #
@@ -117,9 +120,11 @@ jobs:
           ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no \
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
             "set -e
-             export PATH=/home/ubuntu/.nvm/versions/node/v22.11.0/bin:\$PATH
+             export NVM_DIR=\$HOME/.nvm
+             . \$NVM_DIR/nvm.sh --no-use
              cd ${{ secrets.EC2_PROJECT_PATH }}
              git pull origin main
+             nvm use
              npm ci --omit=dev
              pm2 delete personalsite 2>/dev/null || true
              pm2 start ecosystem.config.js

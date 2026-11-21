@@ -68,5 +68,8 @@
   },
   "overrides": {
     "@babel/plugin-transform-runtime": "^7.29.0"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }
