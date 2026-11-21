@@ -20,7 +20,8 @@ type Shot = {
 
 const SHOTS: Shot[] = [
   { name: 'home', path: '/', heading: 'Web Projects' },
-  { name: 'about', path: '/about' },
+  { name: 'about', path: '/about', heading: 'Links' },
+  { name: 'about-stats', path: '/about/stats', heading: 'Stats' },
   { name: 'not-found', path: '/no-such-page', heading: 'Page Not Found' },
   {
     name: 'snake',

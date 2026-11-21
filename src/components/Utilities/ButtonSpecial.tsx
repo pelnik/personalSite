@@ -1,14 +1,18 @@
 import React, { useState, ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 
 interface ButtonSpecialProps {
   className?: string;
   handleClick?: () => void;
+  // Renders a link instead of a button, so the destination is a real href.
+  to?: string;
   children: ReactNode;
 }
 
 function ButtonSpecial({
   className,
   handleClick,
+  to,
   children,
 }: ButtonSpecialProps) {
   const [childButtonClass, setChildButtonClass] = useState('button-special');
@@ -26,6 +30,10 @@ function ButtonSpecial({
     setParentButtonClass('button-special-parent');
   }
 
+  const childClassName = [childButtonClass, className, 'all-button-special'].join(
+    ' '
+  );
+
   return (
     <div
       className={[parentButtonClass, 'all-button-special'].join(' ')}
@@ -33,13 +41,13 @@ function ButtonSpecial({
       onMouseLeave={handleMouseLeave}
       onClick={handleClick || undefined}
     >
-      <button
-        className={[childButtonClass, className, 'all-button-special'].join(
-          ' '
-        )}
-      >
-        {children}
-      </button>
+      {to ? (
+        <Link to={to} className={childClassName}>
+          {children}
+        </Link>
+      ) : (
+        <button className={childClassName}>{children}</button>
+      )}
     </div>
   );
 }

@@ -6,6 +6,7 @@ export { default as SiteContentContainer } from './SiteContentContainer';
 export { default as HomeContent } from './Home/HomeContent';
 export { default as HomeAbout } from './Home/HomeAbout';
 export { default as MainAbout } from './MainAbout';
+export { default as AboutStats } from './AboutStats';
 export { default as ProjectWrapper } from './Utilities/ProjectWrapper';
 export { default as ProjectDescription } from './Utilities/ProjectDescription';
 export { default as ProjectImages } from './Utilities/ProjectImages';

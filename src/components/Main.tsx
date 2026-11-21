@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { Home, NotFound, MainAbout } from '.';
+import { Home, NotFound, MainAbout, AboutStats } from '.';
 import '../css/site.css';
 
 // Loaded on demand, so the homepage doesn't download the demo apps (and the
@@ -19,7 +19,9 @@ function Main() {
       <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<MainAbout />} />
+          <Route path="/about" element={<MainAbout />}>
+            <Route path="stats" element={<AboutStats />} />
+          </Route>
           <Route path="/portfolio" element={<Home />} />
           <Route path="/snake" element={<Snake />} />
           <Route path="/stranger/*" element={<StrangerMain />} />
