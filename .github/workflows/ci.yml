@@ -106,6 +106,10 @@ jobs:
       # for npm and pm2. npm ci installs only production dependencies (the
       # frontend is already built), so the server always runs with exactly
       # the dependencies in package-lock.json.
+      #
+      # The app is deleted and started again from ecosystem.config.js, rather
+      # than restarted, because pm2 restart doesn't apply changed node_args or
+      # limits from the file. The downtime is the same as a restart.
       - name: Pull source, install dependencies & restart server
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > /tmp/deploy_key
@@ -117,6 +121,8 @@ jobs:
              cd ${{ secrets.EC2_PROJECT_PATH }}
              git pull origin main
              npm ci --omit=dev
-             pm2 restart personalsite
-             curl -fsS --retry 10 --retry-delay 3 --retry-connrefused http://localhost/api/fitness/health"
+             pm2 delete personalsite 2>/dev/null || true
+             pm2 start ecosystem.config.js
+             pm2 save
+             curl -fsS --retry 10 --retry-delay 3 --retry-connrefused http://localhost/api/health"
           rm /tmp/deploy_key
