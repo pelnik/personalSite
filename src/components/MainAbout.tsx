@@ -27,6 +27,37 @@ const ABOUT_LINKS: AboutLink[] = [
   },
 ];
 
+// Structured data (schema.org JSON-LD) that search engines and AI tools read
+// directly. Keep it in step with the intro below, the stats, and
+// public/llms.txt.
+const PERSON_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Matthew Pelnik',
+  alternateName: 'Matt Pelnik',
+  url: 'https://pelnik.dev/about',
+  image: 'https://pelnik.dev/Media/main/Professional%20pic.jpg',
+  jobTitle: 'Data Analyst',
+  description:
+    'Data Analyst in the Tulsa area, working for a contractor for CMS (Medicare) creating proactive models to find provider fraud, mostly in Databricks with Python and Spark.',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Tulsa',
+    addressRegion: 'OK',
+    addressCountry: 'US',
+  },
+  knowsAbout: ['Databricks', 'Python', 'Spark', 'Fraud detection'],
+  hasCredential: {
+    '@type': 'EducationalOccupationalCredential',
+    credentialCategory: 'degree',
+    name: 'Chemical Engineering degree',
+  },
+  sameAs: ABOUT_LINKS.map((link) => link.href),
+};
+
+// `<` escaped so the JSON can't close the script tag.
+const PERSON_SCHEMA_JSON = JSON.stringify(PERSON_SCHEMA).replace(/</g, '\\u003c');
+
 const ABOUT_TITLE =
   'About - Matthew Pelnik, Data Analyst, Databricks and Spark';
 const STATS_TITLE =
@@ -43,6 +74,10 @@ function MainAbout() {
 
   return (
     <SiteContentContainer>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: PERSON_SCHEMA_JSON }}
+      />
       <div className="home-content-flex">
         <div id="about-pic-flex">
           <img

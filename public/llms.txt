@@ -1,0 +1,22 @@
+# Matthew Pelnik
+
+> Matthew Pelnik is a Data Analyst in the Tulsa, Oklahoma area. He works for a contractor for CMS (Medicare), creating proactive models to find provider fraud. Most of his work is in Databricks, using Python and Spark.
+
+Outside of work, he plays tennis and kickball in local leagues.
+
+## Stats
+
+- College Degree: Chemical Engineering
+- College GPA: 3.76
+- ACT: 34
+
+## Pages
+
+- [About](https://pelnik.dev/about): background and links
+- [Stats](https://pelnik.dev/about/stats): education and achievements
+- [Home](https://pelnik.dev/): personal site and past web projects
+
+## Profiles
+
+- [GitHub](https://github.com/pelnik)
+- [LinkedIn](https://www.linkedin.com/in/mpelnik/)
