@@ -10,12 +10,6 @@ const {
 } = require('../db');
 const { requireUser, requireActiveUser } = require('./utils');
 
-usersRouter.use((req, res, next) => {
-  console.log('A request is being made to /users');
-
-  next();
-});
-
 usersRouter.get('/', async (req, res) => {
   const users = await getAllUsers();
 
@@ -28,7 +22,7 @@ usersRouter.post('/login', async (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    next({
+    return next({
       name: 'MissingCredentialsError',
       message: 'Please supply both a username and password',
     });
@@ -64,7 +58,7 @@ usersRouter.post('/register', async (req, res, next) => {
     const _user = await getUserByUsername(username);
 
     if (_user) {
-      next({
+      return next({
         name: 'UserExistsError',
         message: 'A user by that username already exists',
       });
@@ -102,9 +96,16 @@ usersRouter.delete(
   requireUser,
   requireActiveUser,
   async (req, res, next) => {
-    const { userId } = req.params;
+    const userId = Number(req.params.userId);
 
     try {
+      if (!Number.isInteger(userId)) {
+        return next({
+          name: 'UserNotFound',
+          message: "User doesn't exist.",
+        });
+      }
+
       if (req.user === undefined) {
         next({
           name: 'InvalidUserLoginDelete',

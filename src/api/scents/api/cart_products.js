@@ -66,7 +66,7 @@ cartProductsRouter.delete(
 );
 
 // Update quantity of cart
-cartProductsRouter.patch('/:cart_product_id', async (req, res, next) => {
+cartProductsRouter.patch('/:cart_product_id', requireUser, async (req, res, next) => {
   try {
     const user_id = req.user.id;
     const { quantity } = req.body;
@@ -116,7 +116,7 @@ cartProductsRouter.patch('/:cart_product_id', async (req, res, next) => {
 });
 
 // Add new item to cart
-cartProductsRouter.post('/:product_id', async (req, res, next) => {
+cartProductsRouter.post('/:product_id', requireUser, async (req, res, next) => {
   try {
     const user_id = req.user.id;
     let { quantity } = req.body;

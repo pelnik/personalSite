@@ -90,15 +90,20 @@ describe('/api/scents/products', () => {
         inventory: 9,
       });
 
-      // KNOWN BUG: missing fields are written as NULL, so a partial update
-      // fails the NOT NULL constraints. Clients must send every field.
+      // #32: missing fields used to be written as NULL, so this failed.
       const partial = await api()
         .patch(`/api/scents/products/${id}`)
         .set(auth(token))
         .send({ inventory: 1 });
 
-      expect(partial.status).toBe(400);
-      expect(partial.body.name).toBe('error');
+      expect(partial.status).toBe(200);
+      expect(partial.body.product).toMatchObject({
+        id,
+        name: 'Test Candle',
+        description: 'Updated description',
+        price: '$13.00',
+        inventory: 1,
+      });
 
       const deleted = await api().delete(`/api/scents/products/${id}`).set(auth(token));
 

@@ -26,6 +26,20 @@ test.describe('Express server', () => {
     }
   });
 
+  test('missing files are a 404, not the SPA page (#36)', async ({ request }) => {
+    for (const path of [
+      '/assets/JuiceboxMain-old-deploy.js',
+      '/assets/index-old-deploy.css',
+      '/Media/main/no-such-image.png',
+      '/favicon-missing.ico',
+    ]) {
+      const response = await request.get(path);
+
+      expect(response.status(), path).toBe(404);
+      expect(await response.text(), path).not.toContain('<div id="app"></div>');
+    }
+  });
+
   test("Let's Encrypt challenge tokens are served from the ACME webroot", async ({ request }) => {
     const response = await request.get('/.well-known/acme-challenge/e2e-token');
 

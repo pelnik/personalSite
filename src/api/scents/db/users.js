@@ -1,5 +1,5 @@
 const client = require('./client');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const { createNewCart } = require('./carts');
 
@@ -41,18 +41,21 @@ async function createUser({ username, password, name, email, is_admin }) {
   }
 }
 
+// Returns the user without its password, or undefined when the username
+// doesn't exist or the password is wrong (the caller can't tell which).
 async function getUser({ username, password }) {
   const user = await getUserByUsername(username);
-  const hashedPassword = user.password;
-
-  const isValid = await bcrypt.compare(password, hashedPassword);
-
-  if (isValid) {
-    delete user.password;
-    return user;
-  } else {
-    throw new Error("Passwords don't match");
+  if (!user) {
+    return;
   }
+
+  const isValid = await bcrypt.compare(password, user.password);
+  if (!isValid) {
+    return;
+  }
+
+  delete user.password;
+  return user;
 }
 
 async function getAllUsers() {
@@ -146,10 +149,10 @@ async function updateUser({ id, ...fields }) {
       `
         UPDATE users
         SET ${setString}
-        WHERE id=${id}
-        RETURNING *;
+        WHERE id=$${Object.keys(fields).length + 1}
+        RETURNING id, username, name, email, is_admin, is_active;
         `,
-      Object.values(fields)
+      [...Object.values(fields), id]
     );
 
     return user;

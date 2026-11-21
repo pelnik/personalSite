@@ -25,6 +25,11 @@ fitnessRouter.use(async (req, res, next) => {
       if (id) {
         req.user = await getUserById(id);
         next();
+      } else {
+        next({
+          name: 'InvalidTokenError',
+          message: 'Authorization token has no user id',
+        });
       }
     } catch ({ message, name }) {
       next({ message, name });
@@ -64,7 +69,7 @@ fitnessRouter.use('/routines', routinesRouter);
 const routineActivitiesRouter = require('./routineActivities');
 fitnessRouter.use('/routine_activities', routineActivitiesRouter);
 
-fitnessRouter.use('*', (req, res, next) => {
+fitnessRouter.use((req, res, next) => {
   res.status(404);
   res.send({
     name: 'FitnessPathDoesNotExist',

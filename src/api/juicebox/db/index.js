@@ -1,30 +1,8 @@
 require('dotenv').config();
 
-const { Pool } = require('pg');
+const { createPool } = require('../../createPool');
 
-const { DATABASE_URL } = process.env;
-console.log('DATABASE_URL', DATABASE_URL);
-
-let client = new Pool({
-  connectionString: DATABASE_URL,
-  ssl:
-    process.env.NODE_ENV === 'production'
-      ? { rejectUnauthorized: false }
-      : undefined,
-  idleTimeoutMillis: 30000,
-});
-
-client.on('error', (e) => {
-  console.error('Database error at juicebox', e.stack);
-  client = new Pool({
-    connectionString: DATABASE_URL,
-    ssl:
-      process.env.NODE_ENV === 'production'
-        ? { rejectUnauthorized: false }
-        : undefined,
-    idleTimeoutMillis: 30000,
-  });
-});
+const client = createPool('juicebox', process.env.DATABASE_URL);
 
 async function getAllUsers() {
   const { rows } = await client.query(
@@ -57,7 +35,6 @@ async function createUser({ username, password, name, location }) {
 }
 
 async function updateUser(id, fields = {}) {
-  console.log('fields', fields);
   const setString = Object.keys(fields)
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(', ');
@@ -73,10 +50,10 @@ async function updateUser(id, fields = {}) {
       `
       UPDATE users
       SET ${setString}
-      WHERE id =${id}
+      WHERE id=$${Object.keys(fields).length + 1}
       RETURNING *;
     `,
-      Object.values(fields)
+      [...Object.values(fields), id]
     );
 
     return user;
@@ -120,10 +97,10 @@ async function updatePost(postId, fields = {}) {
         `
         UPDATE posts
         SET ${setString}
-        WHERE id=${postId}
+        WHERE id=$${Object.keys(fields).length + 1}
         RETURNING *;
       `,
-        Object.values(fields)
+        [...Object.values(fields), postId]
       );
     }
 
@@ -132,16 +109,14 @@ async function updatePost(postId, fields = {}) {
     }
 
     const tagList = await createTags(tags);
-    const tagListIdString = tagList.map((tag) => `${tag.id}`).join(', ');
 
     await client.query(
       `
       DELETE FROM post_tags
-      WHERE "tagId"
-      NOT IN (${tagListIdString})
+      WHERE "tagId" <> ALL($2::int[])
       AND "postId"=$1
     `,
-      [postId]
+      [postId, tagList.map((tag) => tag.id)]
     );
 
     await addTagsToPost(postId, tagList);
@@ -154,9 +129,6 @@ async function updatePost(postId, fields = {}) {
 
 async function getAllPosts() {
   try {
-    console.log('getAllPosts client', client);
-    console.log('getAllPosts database URL', DATABASE_URL);
-
     const { rows: postIds } = await client.query(
       `SELECT id
       FROM posts;
@@ -177,7 +149,6 @@ async function getAllTags() {
   try {
     const tags = await client.query(`
     SELECT * From tags`);
-    console.log(tags);
     return tags.rows;
   } catch (error) {
     throw error;
@@ -186,11 +157,14 @@ async function getAllTags() {
 
 async function getPostsByUser(userId) {
   try {
-    const { rows: postIds } = await client.query(`
+    const { rows: postIds } = await client.query(
+      `
       SELECT id
       FROM posts
-      WHERE "authorId"=${userId};
-    `);
+      WHERE "authorId"=$1;
+    `,
+      [userId]
+    );
 
     const posts = await Promise.all(
       postIds.map((post) => getPostById(post.id))
@@ -204,10 +178,13 @@ async function getPostsByUser(userId) {
 
 async function getUserById(userId) {
   try {
-    const userResult = await client.query(`
+    const userResult = await client.query(
+      `
       SELECT * FROM users
-      WHERE id=${userId};
-    `);
+      WHERE id=$1;
+    `,
+      [userId]
+    );
 
     const user = userResult.rows[0];
 

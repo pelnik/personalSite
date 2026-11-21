@@ -1,8 +1,6 @@
-const { getUserById } = require('../db');
-
 function requireUser(req, res, next) {
   if (!req.user) {
-    next({
+    return next({
       name: 'MissingUserError',
       message: 'You must be logged in to perform this action',
     });
@@ -13,7 +11,7 @@ function requireUser(req, res, next) {
 
 function requireActiveUser(req, res, next) {
   if (!req.user.active) {
-    next({
+    return next({
       name: 'NonactiveUserError',
       message: 'User must be active to perform this action',
     });

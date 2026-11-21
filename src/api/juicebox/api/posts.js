@@ -4,13 +4,6 @@ const postRouter = express.Router();
 const { getAllPosts, createPost, updatePost, getPostById } = require('../db');
 const { requireUser, requireActiveUser } = require('./utils');
 
-postRouter.use((req, res, next) => {
-  console.log('A request is being made to /posts');
-  console.log('req.body', req.body);
-
-  next();
-});
-
 postRouter.post('/', requireUser, requireActiveUser, async (req, res, next) => {
   const { title, content, tags = '' } = req.body;
   const tagArr = tags.trim().split(/\s+/);
@@ -48,7 +41,6 @@ postRouter.get('/', async (req, res, next) => {
   try {
     const allPosts = await getAllPosts();
 
-    console.log(allPosts);
     const posts = allPosts.filter((post) => {
       post.isAuthor = false;
 
@@ -70,7 +62,7 @@ postRouter.get('/', async (req, res, next) => {
       posts,
     });
   } catch (error) {
-    console.error('Error on get all posts', error);
+    next(error);
   }
 });
 

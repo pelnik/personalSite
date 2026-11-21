@@ -123,6 +123,18 @@ describe('/api/juicebox/users', () => {
       expect(res.body.name).toBe('InvalidUserDelete');
     });
 
+    it('treats the user id as data, not SQL (#28)', async () => {
+      const user = await registerUser();
+
+      const res = await api()
+        .delete(`/api/juicebox/users/${encodeURIComponent('0 OR 1=1')}`)
+        .set(auth(user.token));
+
+      // Injected, this matched a real user ("Cannot delete another user.").
+      expect(res.status).toBe(400);
+      expect(res.body.name).toBe('UserNotFound');
+    });
+
     it('requires a logged-in user', async () => {
       const user = await registerUser();
 

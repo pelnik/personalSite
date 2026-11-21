@@ -127,17 +127,17 @@ describe('/api/scents/cart_products', () => {
     expect(res.body.name).toBe('InvalidProductId');
   });
 
-  // KNOWN BUG: POST and PATCH skip requireUser, so a logged-out request
-  // crashes on req.user.id instead of returning MissingUserError.
-  it('KNOWN BUG: logged-out add-to-cart fails with a TypeError', async () => {
+  // #27: POST and PATCH used to skip requireUser and crash on req.user.id.
+  it('requires a logged-in user to add or update cart items', async () => {
     const { jasmine } = await productIds();
 
-    const res = await api()
-      .post(`/api/scents/cart_products/${jasmine}`)
-      .send({ quantity: 1 });
+    const add = await api().post(`/api/scents/cart_products/${jasmine}`).send({ quantity: 1 });
+    const update = await api().patch('/api/scents/cart_products/1').send({ quantity: 2 });
 
-    expect(res.status).toBe(400);
-    expect(res.body.name).toBe('TypeError');
+    expect(add.status).toBe(400);
+    expect(add.body.name).toBe('MissingUserError');
+    expect(update.status).toBe(400);
+    expect(update.body.name).toBe('MissingUserError');
   });
 });
 
@@ -253,12 +253,13 @@ describe('scents Authorization header handling', () => {
     expect(res.body.name).toBe('AuthorizationHeaderError');
   });
 
-  // KNOWN BUG (fixed in Phase 2): a valid token without an `id` hangs.
-  it('KNOWN BUG: hangs on a valid token with no id', async () => {
+  // #25: this used to hang, because next() was never called.
+  it('rejects a valid token that has no user id', async () => {
     const token = jwt.sign({ username: 'nobody' }, process.env.JWT_SECRET);
 
-    await expect(
-      api().get('/api/scents/products').set(auth(token)).timeout(1000)
-    ).rejects.toMatchObject({ timeout: 1000 });
+    const res = await api().get('/api/scents/products').set(auth(token)).timeout(2000);
+
+    expect(res.status).toBe(400);
+    expect(res.body.name).toBe('InvalidTokenError');
   });
 });

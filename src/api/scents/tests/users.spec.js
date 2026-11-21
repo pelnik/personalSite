@@ -65,22 +65,30 @@ describe('/api/scents/users', () => {
       expect(res.body.user).not.toHaveProperty('password');
     });
 
+    // #33: these used to answer {name: 'Error'} and {name: 'TypeError'}.
+    // Both now get the same error, so login doesn't reveal which usernames exist.
     it('rejects a wrong password', async () => {
       const res = await api()
         .post('/api/scents/users/login')
         .send({ username: 'glamgal', password: 'wrong' });
 
       expect(res.status).toBe(400);
-      expect(res.body).toEqual({ name: 'Error', message: "Passwords don't match" });
+      expect(res.body).toEqual({
+        name: 'IncorrectCredentialsError',
+        message: 'Username or password is incorrect',
+      });
     });
 
-    it('rejects an unknown username', async () => {
+    it('rejects an unknown username the same way', async () => {
       const res = await api()
         .post('/api/scents/users/login')
         .send({ username: 'nobody-at-all', password: 'whatever' });
 
       expect(res.status).toBe(400);
-      expect(res.body.name).toBe('TypeError');
+      expect(res.body).toEqual({
+        name: 'IncorrectCredentialsError',
+        message: 'Username or password is incorrect',
+      });
     });
 
     it('rejects a deactivated user', async () => {
@@ -153,6 +161,8 @@ describe('/api/scents/users', () => {
 
       expect(res.status).toBe(200);
       expect(res.body).toMatchObject({ id: user.id, email });
+      // The response used to include the bcrypt password hash.
+      expect(res.body).not.toHaveProperty('password');
     });
 
     it("refuses to update someone else's account", async () => {
@@ -192,6 +202,22 @@ describe('/api/scents/users', () => {
 
       expect(res.status).toBe(200);
       expect(res.body).toMatchObject({ id: user.id, is_admin: true });
+    });
+
+    it('treats the user id as data, not SQL (#28)', async () => {
+      const victim = await registerUser();
+
+      const res = await api()
+        .patch(`/api/scents/users/admin/${encodeURIComponent('0 OR 1=1')}`)
+        .set(auth(await adminToken()))
+        .send({ is_active: false });
+
+      // Injected, this deactivated every user.
+      expect(res.status).toBe(400);
+      const login = await api()
+        .post('/api/scents/users/login')
+        .send({ username: victim.username, password: victim.password });
+      expect(login.body.success).toBe(true);
     });
 
     it('refuses a non-admin', async () => {

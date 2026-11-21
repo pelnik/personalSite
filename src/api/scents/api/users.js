@@ -21,12 +21,12 @@ usersRouter.post("/register", async (req, res, next) => {
     const _email = await getUserByEmail(email);
 
     if (_user) {
-      next({
+      return next({
         name: "UserExistsError",
         message: "A user by that username already exists",
       });
     } else if (_email) {
-      next({
+      return next({
         name: "EmailExistsError",
         message: "A user by that email already exists",
       });
@@ -65,7 +65,7 @@ usersRouter.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    next({
+    return next({
       name: "MissingCredentialsError",
       message: "Please supply both a username and password",
     });

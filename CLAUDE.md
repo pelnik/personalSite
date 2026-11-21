@@ -4,8 +4,8 @@ Matt Pelnik's portfolio site: a React SPA plus several portfolio REST APIs, all 
 
 Where things are (the code is the source of truth for the details):
 
-- `server.js` mounts `/api`, serves `build/`, then sends `build/index.html` for every other path. **New routes must be registered before that fallback**, or the SPA swallows them.
-- `src/api/<module>/{api,db,tests}`: one module per API, mounted in `src/api/index.js`. Modules: `fitness-tracker` (`/api/fitness`), `juicebox`, `scents` (the backend for the Netlify storefront) and `admin`. Each has its own Postgres database: `FITNESS_DATABASE_URL`, `DATABASE_URL` (juicebox) and `SCENTS_DATABASE_URL`.
+- `app.js` builds the Express app: it mounts `/api`, serves `build/`, answers 404 for any other path with a file extension, then sends `build/index.html` for every other path. **New routes must be registered before that fallback**, or the SPA swallows them. `server.js` only listens on the ports and shuts down gracefully; tests load `app.js` directly.
+- `src/api/<module>/{api,db,tests}`: one module per API, mounted in `src/api/index.js`. Modules: `fitness-tracker` (`/api/fitness`), `juicebox` and `scents` (the backend for the Netlify storefront). Database pools are only created through `src/api/createPool.js`. Each has its own Postgres database: `FITNESS_DATABASE_URL`, `DATABASE_URL` (juicebox) and `SCENTS_DATABASE_URL`.
 - The frontend is built with Vite (`vite.config.mts`). `index.html` at the project root loads `src/index.tsx`, and `public/` is copied to `build/` as-is.
 - `src/components/` holds the site's pages. `src/fullReactProjects/` holds three embedded portfolio demo apps (fitness, juicebox, stranger).
 
@@ -41,7 +41,7 @@ npm run test:e2e             # build, then all Playwright tests including screen
 npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
 ```
 
-- **API tests** are Jest projects: `fitness`, `juicebox`, `scents`, and `core` (the `/api` router and admin). Pick one with `--selectProjects`. Each project rebuilds its database. Tests mount the real `/api` router, so status codes and error shapes match production.
+- **API tests** are Jest projects: `fitness`, `juicebox`, `scents`, and `core` (the `/api` router and shared helpers). Pick one with `--selectProjects`. Each project rebuilds its database. Tests mount the real `/api` router, so status codes and error shapes match production.
 - **E2E tests** run Playwright against `build/`, served by the real `server.js` on port 3100. The shared fixture fails a test on any console error or failed request; pass `allowErrors` for expected ones. Screenshot baselines are macOS-only and run locally. Update them with `--update-snapshots` only for intended visual changes.
 - **Safety:**
   - Test setup refuses to drop tables unless the database host is local.
@@ -55,13 +55,13 @@ npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
 `.github/workflows/ci.yml` handles it:
 
 - On every PR, the `test` job runs the API tests, builds, and runs the functional e2e tests. Merging requires it to pass; an admin can override this from the PR in an emergency.
-- On merge to `main`, the `deploy` job rsyncs that tested `build/` to EC2, then SSHes in to `git pull` and restart PM2 (process `personalsite`).
+- On merge to `main`, the `deploy` job rsyncs that tested `build/` to EC2, then SSHes in to `git pull`, run `npm ci --omit=dev`, and restart PM2 (process `personalsite`). A health check fails the job if the server doesn't come back.
 - Secrets: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, `EC2_PROJECT_PATH`.
 
 SSL:
 
 - `server.js` reads certs from `Keys/`.
-- It serves certbot's HTTP challenges from `ACME_WEBROOT` (default `/var/www/certbot`). That folder is outside `build/` because the deploy's `rsync --delete` replaces `build/`.
+- `app.js` serves certbot's HTTP challenges from `ACME_WEBROOT` (default `/var/www/certbot`). That folder is outside `build/` because the deploy's `rsync --delete` replaces `build/`.
 - `cert-expiry.yml` checks the cert weekly.
 
 ---
@@ -76,6 +76,7 @@ SSL:
 - To read a single row: `const { rows: [item] } = await client.query(...)`.
 - Each module exports its DB functions from a barrel file, `db/index.js`.
 - camelCase for JS names, snake_case for DB columns.
+- `dependencies` is only for what the server needs at runtime, because EC2 installs with `npm ci --omit=dev`. Frontend packages go in `devDependencies`. Prefer pure-JS server packages (e.g. `bcryptjs`); the 512 MB instance can't be relied on to compile native addons.
 
 ### Frontend (TypeScript/React)
 

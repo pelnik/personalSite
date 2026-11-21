@@ -6,7 +6,7 @@ const request = require('supertest');
 const app = require('../testApp');
 const { faker } = require('@faker-js/faker');
 const client = require('../../db/client');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const { expectNotToBeError } = require('../expectHelpers');

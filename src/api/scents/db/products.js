@@ -121,14 +121,18 @@ async function getProductByName(name) {
   }
 }
 
-// update product detail except for id and return updated product
-async function updateProduct({ id, ...fields }) {
+// update product detail except for id and return updated product.
+// Fields that are undefined are left unchanged.
+async function updateProduct({ id, ...allFields }) {
+  const fields = Object.fromEntries(
+    Object.entries(allFields).filter(([, value]) => value !== undefined)
+  );
   const setString = Object.keys(fields)
     .map((key, index) => `"${key}" = $${index + 1}`)
     .join(', ');
 
   if (setString.length === 0) {
-    return;
+    return getProductById(id);
   }
 
   try {
@@ -138,10 +142,10 @@ async function updateProduct({ id, ...fields }) {
       `
       UPDATE products
       SET ${setString}
-      WHERE id=${id}
+      WHERE id=$${Object.keys(fields).length + 1}
       RETURNING *;
       `,
-      Object.values(fields)
+      [...Object.values(fields), id]
     );
 
     return product;
@@ -154,15 +158,8 @@ async function updateProduct({ id, ...fields }) {
 // remove a product by its id
 async function destroyProduct(id) {
   try {
-    await client.query(
-      `
-      DELETE FROM cart_products
-      WHERE product_id = ${id};
-
-      DELETE FROM products
-      WHERE id = ${id};
-      `
-    );
+    await client.query('DELETE FROM cart_products WHERE product_id = $1;', [id]);
+    await client.query('DELETE FROM products WHERE id = $1;', [id]);
   } catch (error) {
     console.error('error deleting product', error);
     throw error;
