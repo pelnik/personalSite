@@ -48,13 +48,17 @@ npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
   - Stripe is stubbed and given a dummy key. The scents seed archives every product in whatever Stripe account it's given.
 - **Known bugs:** tests named `KNOWN BUG: …` pin current buggy behavior on purpose. When fixing one, update that test in the same change.
 
-**Before pushing** a branch or opening a PR, run:
+**Before pushing** a branch or opening a PR, with local Postgres running (`docker compose up db -d`), run:
 
 ```bash
 npm run typecheck
 npm test
 npm run test:e2e              # on macOS: functional + screenshot tests
-npm run test:e2e:functional   # elsewhere: screenshot baselines are macOS-only
+npm run test:e2e:functional   # elsewhere: screenshot baselines are macOS-only (run npm run build first)
+```
+
+- **Screenshots only run locally:** CI runs the first two and the functional e2e tests, but not the screenshot comparisons. So a branch that skipped `npm run test:e2e` on a Mac can pass CI and still change how the site looks. Say so in the PR if you couldn't run the screenshots.
+- **Updating baselines:** if a screenshot changes on purpose, update them with `--update-snapshots` and look at the new images before committing them. Never commit screenshot files that aren't `-darwin`.
 
 ---
 
