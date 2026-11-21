@@ -2,7 +2,7 @@ import { test, expect } from './fixtures';
 
 // The demo apps load as separate chunks. After a deploy, a tab still running
 // the previous version asks for chunk files that no longer exist, and Express
-// answers with index.html. The app should reload itself onto the new version
+// answers 404 (#36). The app should reload itself onto the new version
 // instead of showing a blank page.
 test('recovers when a page chunk is missing after a deploy', async ({ page, allowErrors }) => {
   // Errors from the old page's failed import, logged just before it reloads.
@@ -12,8 +12,8 @@ test('recovers when a page chunk is missing after a deploy', async ({ page, allo
   const errorsAfterReload: string[] = [];
 
   // Until the page reloads, every request for the chunk gets what Express
-  // sends today for a file that isn't in build/: index.html. (Vite requests
-  // each chunk twice, once to preload it and once to import it.)
+  // sends for a file that isn't in build/: a 404. (Vite requests each chunk
+  // twice, once to preload it and once to import it.)
   // Two cutoffs:
   // - Chunks stop failing once the reload's document is *requested*, which is
   //   before the new page asks for any chunk. (Client-side navigation makes
@@ -36,7 +36,7 @@ test('recovers when a page chunk is missing after a deploy', async ({ page, allo
   await page.route(/\/assets\/JuiceboxMain-[^/]+\.js$/, (route) => {
     if (documents > 1) return route.continue();
     staleResponses++;
-    return route.fulfill({ status: 200, contentType: 'text/html', body: '<!doctype html>' });
+    return route.fulfill({ status: 404, contentType: 'text/html', body: 'Not found' });
   });
 
   await page.goto('/');

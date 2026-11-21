@@ -69,7 +69,7 @@ fitnessRouter.use('/routines', routinesRouter);
 const routineActivitiesRouter = require('./routineActivities');
 fitnessRouter.use('/routine_activities', routineActivitiesRouter);
 
-fitnessRouter.use('*', (req, res, next) => {
+fitnessRouter.use((req, res, next) => {
   res.status(404);
   res.send({
     name: 'FitnessPathDoesNotExist',

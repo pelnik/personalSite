@@ -6,11 +6,17 @@ const scentsRouter = require('./scents/api');
 const apiRouter = express.Router();
 
 apiRouter.use(express.json());
+// Express 5 leaves req.body undefined when there's no JSON body; the route
+// handlers expect an object, as in Express 4.
+apiRouter.use((req, res, next) => {
+  req.body ??= {};
+  next();
+});
 apiRouter.use('/juicebox', jbRouter);
 apiRouter.use('/fitness', fitnessRouter);
 apiRouter.use('/scents', scentsRouter);
 
-apiRouter.use('*', (req, res, next) => {
+apiRouter.use((req, res, next) => {
   res.send({
     name: 'InvalidAPIPath',
     message: 'API path sent is invalid',
