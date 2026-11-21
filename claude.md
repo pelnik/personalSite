@@ -149,7 +149,7 @@ See `DEPLOYMENT.md` for full setup details.
 - Functional components with hooks throughout — no class components
 - Components are `.tsx`, some older utilities are `.jsx`. Any file containing JSX must use a `.jsx`/`.tsx` extension (Vite requires it)
 - `useEffect` for side effects (including `document.title` updates per page)
-- Barrel exports via `index.js` files — import from parent directory, not individual files
+- Barrel exports via `index.js` files — import from parent directory, not individual files. Exception: pages lazy-loaded with `React.lazy` in `src/components/Main.tsx` import their module directly, so they get their own chunk
 - Strict TypeScript enabled; JS files are allowed but not type-checked
 
 ### General
