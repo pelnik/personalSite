@@ -25,6 +25,11 @@ fitnessRouter.use(async (req, res, next) => {
       if (id) {
         req.user = await getUserById(id);
         next();
+      } else {
+        next({
+          name: 'InvalidTokenError',
+          message: 'Authorization token has no user id',
+        });
       }
     } catch ({ message, name }) {
       next({ message, name });

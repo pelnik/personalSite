@@ -22,7 +22,7 @@ usersRouter.post('/login', async (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    next({
+    return next({
       name: 'MissingCredentialsError',
       message: 'Please supply both a username and password',
     });
@@ -58,7 +58,7 @@ usersRouter.post('/register', async (req, res, next) => {
     const _user = await getUserByUsername(username);
 
     if (_user) {
-      next({
+      return next({
         name: 'UserExistsError',
         message: 'A user by that username already exists',
       });

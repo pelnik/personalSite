@@ -19,13 +19,16 @@ describe('juicebox Authorization header handling', () => {
     expect(res.body.name).toBe('JsonWebTokenError');
   });
 
-  // KNOWN BUG (fixed in Phase 2): a valid token without an `id` never calls
-  // next(), so the request hangs until the client gives up.
-  it('KNOWN BUG: hangs on a valid token with no id', async () => {
+  // #25: this used to hang, because next() was never called.
+  it('rejects a valid token that has no user id', async () => {
     const token = jwt.sign({ username: 'nobody' }, process.env.JWT_SECRET);
 
-    await expect(
-      api().get('/api/juicebox/posts').set(auth(token)).timeout(1000)
-    ).rejects.toMatchObject({ timeout: 1000 });
+    const res = await api().get('/api/juicebox/posts').set(auth(token)).timeout(2000);
+
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({
+      name: 'InvalidTokenError',
+      message: 'Authorization token has no user id',
+    });
   });
 });

@@ -37,7 +37,7 @@ tagsRouter.get('/', async (req, res, next) => {
       tags,
     });
   } catch (error) {
-    console.log(error, 'error in tags');
+    next(error);
   }
 });
 

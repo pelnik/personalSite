@@ -62,7 +62,7 @@ postRouter.get('/', async (req, res, next) => {
       posts,
     });
   } catch (error) {
-    console.error('Error on get all posts', error);
+    next(error);
   }
 });
 
