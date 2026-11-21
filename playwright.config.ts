@@ -49,7 +49,13 @@ export default defineConfig({
     url: `http://localhost:${PORT}/api/fitness/health`,
     reuseExistingServer: false,
     timeout: 60_000,
-    env: { NODE_ENV: 'development', HTTP_PORT: String(PORT) },
+    env: {
+      NODE_ENV: 'development',
+      HTTP_PORT: String(PORT),
+      // The scents API creates its Stripe client at startup and throws without
+      // a key. A dummy key also keeps a real one from .env out of e2e runs.
+      STRIPE_KEY: 'sk_test_e2e_dummy',
+    },
     stdout: 'ignore',
     stderr: 'pipe',
   },
