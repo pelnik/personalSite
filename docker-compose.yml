@@ -53,7 +53,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: npm run start:express
+    # Express (nodemon) and Vite, as in npm run dev. Vite listens on 0.0.0.0
+    # so the host can reach it. Open http://localhost:3001.
+    command: npx concurrently "npm run server:dev" "npm run client:dev -- --host 0.0.0.0"
     restart: unless-stopped
 
 volumes:
