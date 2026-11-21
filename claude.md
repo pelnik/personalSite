@@ -157,10 +157,48 @@ See `DEPLOYMENT.md` for full setup details.
 ├── public/                    # Static assets (pre-build)
 ├── Keys/                      # SSL certificates (gitignored)
 ├── .github/workflows/
-│   └── ci.yml                 # CI/CD — test + deploy pipeline
+│   ├── ci.yml                 # CI/CD — test + deploy pipeline
+│   ├── claude-pr-review.yml   # Automated Claude review on PRs
+│   └── claude-issue-fix.yml   # Claude fix attempt on issues labeled claude-fix
 ├── DEPLOYMENT.md              # Deployment setup guide
 └── docker-compose.yml         # Local dev database
 ```
 
+## Issue Tracking
+
+Bugs are tracked as GitHub Issues on `pelnik/personalSite`, labeled `bug`. Non-bug improvements use `enhancement`.
+
+### Logging bugs
+
+- When you find a bug outside the scope of the current task, log it as an issue instead of fixing it inline or only mentioning it in chat.
+- Search for duplicates first: `gh issue list --state all --search "<keywords>"`. If one exists, add a comment to it instead.
+- Create with `gh issue create --label bug --title "..." --body "..."`. The body should include:
+  - what happens vs. what should happen
+  - steps to reproduce (route, request, or test command)
+  - the relevant files and line numbers
+  - severity: does it affect the live site, a demo app, or only dev/tests?
+- Don't log speculative or cosmetic findings as bugs.
+
+### Linking issues to PRs
+
+- Before pushing a branch or opening a PR, check open issues (`gh issue list --state open`) for any the change fixes or touches.
+- Reference them in the PR description and in `pr_info.md`:
+  - `Fixes #N` for issues the PR fully resolves (GitHub closes them on merge)
+  - `Refs #N` for related or partially addressed issues
+- Commits that fix a specific issue reference it in the message, e.g. `fix: hang on JWT without id (#12)`.
+- When reviewing a PR (including the automated Claude PR review), read each linked issue with `gh issue view N` and confirm the change actually addresses it. Flag a PR that claims to fix an issue it doesn't, or that fixes a known open issue without linking it.
+
+### Automated fixes (`claude-fix` label)
+
+`.github/workflows/claude-issue-fix.yml` runs Claude on an issue when the repo owner adds the `claude-fix` label. Nothing runs on new issues by default, so each run is a deliberate choice.
+
+- Claude triages first. It only writes a fix if the fix is small and self-contained. Otherwise it comments with the cause and a proposed plan, then stops.
+- It pushes a `claude/issue-N-...` branch and comments a pre-filled "Create PR" link. You open the PR, so CI and the Claude review run as normal. Claude never merges.
+- Cost limits: Sonnet, `--max-turns 20`, a 20-minute job timeout, and one run per issue at a time. Set a monthly spend limit on the `ANTHROPIC_API_KEY` in the Anthropic Console as a backstop.
+- Only label issues that are clearly described and worth an automated attempt. For anything larger, fix it in a normal session.
+
+The PR review (`claude-pr-review.yml`) runs once when a non-draft PR opens or is marked ready, not on every push. Comment `@claude` on the PR to re-run it.
+
 ## Claude Instructions
+
 - For each new feature update, maintain working markdown file pr_info.md, an ignored file in the repo, with information about the goal of the feature, design decisions made, reasons for each design, considerations for deployment to site, and any other relevant information for yourself and for me. This will ultimately be used in the PR description.

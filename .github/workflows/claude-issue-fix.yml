@@ -1,0 +1,62 @@
+name: Claude Issue Fix
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  fix:
+    # Opt-in per issue: only runs when the repo owner applies the claude-fix label
+    if: github.event.label.name == 'claude-fix' && github.event.sender.login == github.repository_owner
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: claude-issue-${{ github.event.issue.number }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      # Claude pushes a branch and comments a pre-filled "Create PR" link; it never opens or merges a PR itself
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          label_trigger: claude-fix
+          track_progress: true
+          branch_name_template: "{{prefix}}issue-{{entityNumber}}-{{description}}"
+          prompt: |
+            REPO: ${{ github.repository }}
+            ISSUE NUMBER: ${{ github.event.issue.number }}
+
+            Fix the bug described in this issue. Read the issue and its comments first, and follow claude.md.
+
+            This run has a small, fixed budget. Stay well inside it:
+            1. Triage before editing anything: find the cause and estimate the size of the fix.
+            2. Only implement the fix if it is small and self-contained: a few files, roughly
+               under 100 changed lines, no new dependencies, no database schema changes, no
+               changes to deployment (.github/workflows, server ports, PM2), and no design
+               decision the issue leaves open.
+            3. Otherwise, do NOT write code. Comment with the likely cause (files and lines), a
+               proposed fix, its rough size, and what decision is needed. Then stop.
+            4. If you can't locate the bug after a focused look, or it isn't actually a bug
+               (works as intended, duplicate, needs more info), say so with what you checked,
+               and stop. Don't keep searching.
+
+            When you do fix it:
+            - Keep the change minimal. Mention unrelated problems in your comment; don't fix them.
+            - Add or update a test for the bug when the existing test setup makes that practical.
+              You can't run the tests here (no database); CI runs them on the PR. Don't install
+              dependencies.
+            - Commit message references the issue: `fix: <summary> (#${{ github.event.issue.number }})`.
+            - The PR body in your "Create PR" link must include `Fixes #${{ github.event.issue.number }}`.
+
+          claude_args: |
+            --model claude-sonnet-5-5
+            --max-turns 20
+            --allowedTools "Bash(gh issue view:*),Bash(gh issue list:*),Bash(git diff:*),Bash(git status:*),Bash(git log:*)"
+            --disallowedTools "WebSearch,WebFetch"
