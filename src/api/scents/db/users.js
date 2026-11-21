@@ -1,5 +1,5 @@
 const client = require('./client');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const { createNewCart } = require('./carts');
 

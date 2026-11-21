@@ -122,7 +122,7 @@ Tests run automatically in GitHub Actions on every PR and push to `main` via `.g
 Handled entirely by `.github/workflows/ci.yml`. On merge to `main`:
 
 1. `test` job runs all API tests, builds React on GitHub's runner, runs the functional e2e tests against that build, and uploads `build/` as an artifact
-2. `deploy` job (only if tests pass) downloads that same `build/`, rsyncs it to EC2, then SSHes in to `git pull` and restart PM2
+2. `deploy` job (only if tests pass) downloads that same `build/` and rsyncs it to EC2. It then SSHes in to `git pull`, run `npm ci --omit=dev` (production dependencies only), and restart PM2. A health check (`/api/fitness/health`) fails the job if the server doesn't come back
 
 Required GitHub secrets: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, `EC2_PROJECT_PATH`.
 
@@ -150,6 +150,11 @@ See `DEPLOYMENT.md` for full setup details.
 - `useEffect` for side effects (including `document.title` updates per page)
 - Barrel exports via `index.js` files — import from parent directory, not individual files. Exception: pages lazy-loaded with `React.lazy` in `src/components/Main.tsx` import their module directly, so they get their own chunk
 - Strict TypeScript enabled; JS files are allowed but not type-checked
+
+### Dependencies
+
+- `dependencies` holds only what `server.js` needs at runtime, because EC2 installs with `npm ci --omit=dev`. Frontend packages (React, MUI, anything only Vite bundles) go in `devDependencies`, since the frontend is built in CI.
+- Prefer pure-JS packages for the server (e.g. `bcryptjs`, not `bcrypt`). The EC2 nano instance has 512 MB of RAM and may not cope with compiling native addons.
 
 ### General
 

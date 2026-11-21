@@ -1,6 +1,6 @@
 const client = require('./client');
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // Work on this file FIRST
 

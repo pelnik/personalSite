@@ -102,11 +102,21 @@ jobs:
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:${{ secrets.EC2_PROJECT_PATH }}/build/
           rm /tmp/deploy_key
 
-      - name: Pull source & restart server
+      # The SSH session doesn't load nvm, so Node's bin directory goes on PATH
+      # for npm and pm2. npm ci installs only production dependencies (the
+      # frontend is already built), so the server always runs with exactly
+      # the dependencies in package-lock.json.
+      - name: Pull source, install dependencies & restart server
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > /tmp/deploy_key
           chmod 600 /tmp/deploy_key
           ssh -i /tmp/deploy_key -o StrictHostKeyChecking=no \
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
-            "cd ${{ secrets.EC2_PROJECT_PATH }} && git pull origin main && /home/ubuntu/.nvm/versions/node/v22.11.0/bin/pm2 restart personalsite"
+            "set -e
+             export PATH=/home/ubuntu/.nvm/versions/node/v22.11.0/bin:\$PATH
+             cd ${{ secrets.EC2_PROJECT_PATH }}
+             git pull origin main
+             npm ci --omit=dev
+             pm2 restart personalsite
+             curl -fsS --retry 10 --retry-delay 3 --retry-connrefused http://localhost/api/fitness/health"
           rm /tmp/deploy_key

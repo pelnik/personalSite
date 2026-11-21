@@ -5,7 +5,7 @@ DO NOT CHANGE THIS FILE
 */
 
 require('dotenv').config();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const client = require('../../db/client');
 
 const {
