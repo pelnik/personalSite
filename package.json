@@ -19,7 +19,8 @@
     "test:api": "jest --runInBand",
     "test:e2e": "npm run build && playwright test",
     "test:e2e:functional": "playwright test --project=functional",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "metrics:report": "node scripts/memory-report.js"
   },
   "repository": {
     "type": "git",

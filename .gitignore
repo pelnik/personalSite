@@ -18,3 +18,6 @@ pr_info.md
 # Playwright
 /test-results
 /playwright-report
+
+# Heap snapshots (see DEPLOYMENT.md)
+*.heapsnapshot
