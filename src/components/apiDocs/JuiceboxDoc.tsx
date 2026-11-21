@@ -5,7 +5,7 @@ import { SiteContentContainer } from '..';
 function JuiceboxDoc() {
   useEffect(() => {
     document.title = `JuiceBox API Documentation -
-      Matthew Pelnik, Data Analyst and Web Developer - SAS, SQL, Matt Pelnik`;
+      Matthew Pelnik, Data Analyst, Databricks and Spark`;
   }, []);
 
   return (

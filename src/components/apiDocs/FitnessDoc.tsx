@@ -5,7 +5,7 @@ import { SiteContentContainer } from '..';
 function FitnessDoc() {
   useEffect(() => {
     document.title = `Fitness Tracker API Documentation -
-      Matthew Pelnik, Data Analyst and Web Developer - SAS, SQL, Matt Pelnik`;
+      Matthew Pelnik, Data Analyst, Databricks and Spark`;
   }, []);
 
   return (

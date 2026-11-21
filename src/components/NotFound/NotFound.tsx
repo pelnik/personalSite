@@ -7,7 +7,7 @@ function NotFound() {
 
   useEffect(() => {
     document.title =
-      'Oh no 404! - No Page Found - Matthew Pelnik, Data Analyst and Web Developer - SAS, SQL, Matt Pelnik';
+      'Oh no 404! - No Page Found - Matthew Pelnik, Data Analyst, Databricks and Spark';
   }, []);
 
   return (

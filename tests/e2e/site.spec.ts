@@ -19,7 +19,8 @@ test.describe('main site', () => {
 
       await expect(page).toHaveTitle(/^Homepage - Matthew Pelnik/);
       await expect(page.getByRole('link', { name: 'Matthew Pelnik' })).toBeVisible();
-      await expect(page.getByText('I’m Matt, a Business Intelligence Analyst')).toBeVisible();
+      await expect(page.locator('img.personal-pic')).toBeVisible();
+      await expect(page.locator('.about-text')).toBeVisible();
       await expect(page.getByRole('heading', { name: 'Web Projects' })).toBeVisible();
 
       const hrefs = await page
