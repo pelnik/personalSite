@@ -23,6 +23,8 @@ test.describe('prerendered pages', () => {
     expect(metaDescription(html)).toBeTruthy();
     expect(html).toContain('class="about-text"');
     expect(html).toContain('id="project-container"');
+    // Slide widths measured in the prerender's desktop browser are dropped.
+    expect(html).not.toMatch(/class="individual-(image|description)"[^>]*style="[^"]*width/);
   });
 
   for (const path of ['/about', '/about/']) {

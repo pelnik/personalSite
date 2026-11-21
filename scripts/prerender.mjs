@@ -98,10 +98,18 @@ async function capture(browser, baseUrl, route) {
   );
 
   await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
-  const result = await page.evaluate(() => ({
-    title: document.title.trim(),
-    appHtml: document.getElementById('app')?.innerHTML ?? '',
-  }));
+  const result = await page.evaluate(() => {
+    // The home page's project slides get pixel widths measured at this
+    // browser's (desktop) size. Drop them: on a phone they'd overflow until
+    // React renders, and React's first render has no width either.
+    document
+      .querySelectorAll('.individual-image, .individual-description')
+      .forEach((element) => element.style.removeProperty('width'));
+    return {
+      title: document.title.trim(),
+      appHtml: document.getElementById('app')?.innerHTML ?? '',
+    };
+  });
   await page.close();
 
   if (errors.length) {
