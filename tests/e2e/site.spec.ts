@@ -39,11 +39,48 @@ test.describe('main site', () => {
     });
   }
 
-  test('/about shows the intro', async ({ page }) => {
+  test('/about shows the photo and the links', async ({ page }) => {
     await page.goto('/about');
 
-    await expect(page.getByText('I’m Matt, a Business Intelligence Analyst')).toBeVisible();
-    await expect(page.locator('img.personal-pic')).toBeVisible();
+    await expect(page).toHaveTitle(/^About - Matthew Pelnik/);
+    await expect(page.locator('img.about-page-pic')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Links' })).toBeVisible();
+    await expect(page.locator('.about-link-card').first()).toBeVisible();
+  });
+
+  test('the header About button opens /about', async ({ page }) => {
+    await page.goto('/');
+
+    await page.getByRole('link', { name: 'About', exact: true }).click();
+
+    await expect(page).toHaveURL('/about');
+    await expect(page.getByRole('heading', { name: 'Links' })).toBeVisible();
+  });
+
+  test('Stats opens an overlay at /about/stats, and the X closes it', async ({ page }) => {
+    await page.goto('/about');
+
+    await page.getByRole('link', { name: 'Stats' }).click();
+    await expect(page).toHaveURL('/about/stats');
+    await expect(page).toHaveTitle(/^Stats - Matthew Pelnik/);
+    await expect(page.getByRole('dialog', { name: 'Stats' })).toBeVisible();
+
+    await page.getByRole('link', { name: 'Close stats' }).click();
+    await expect(page).toHaveURL('/about');
+    await expect(page).toHaveTitle(/^About - Matthew Pelnik/);
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+  });
+
+  test('/about/stats loads directly over the About page, and Escape closes it', async ({ page }) => {
+    await page.goto('/about/stats');
+
+    await expect(page).toHaveTitle(/^Stats - Matthew Pelnik/);
+    await expect(page.getByRole('dialog', { name: 'Stats' })).toBeVisible();
+    await expect(page.locator('img.about-page-pic')).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(page).toHaveURL('/about');
+    await expect(page.getByRole('dialog')).toHaveCount(0);
   });
 
   test('an unknown path shows the 404 page', async ({ page }) => {
