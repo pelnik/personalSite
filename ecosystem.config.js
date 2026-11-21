@@ -5,6 +5,10 @@ module.exports = {
     {
       name: 'personalsite',
       script: 'server.js',
+      // Run the app on the Node binary that loaded this file: the one the
+      // deploy's `nvm use` picked from .nvmrc. Without this, PM2 runs it on
+      // the Node its daemon was started with, which can be an older version.
+      interpreter: process.execPath,
       node_args: [
         // The instance has 512 MB of RAM. Without a cap, V8 lets the heap
         // grow toward a limit based on total memory before it collects

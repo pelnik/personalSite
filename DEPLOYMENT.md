@@ -84,13 +84,15 @@ Do this on the server **before** merging a change to `.nvmrc`. The deploy only r
 source ~/.nvm/nvm.sh
 nvm install 24
 nvm use 24
+nvm alias default 24         # new shells (manual pm2 commands, pm2 startup) use it too
 npm install -g pm2           # global packages are per Node version
 
 # Let the new binary bind ports 80 and 443 as ubuntu
 sudo setcap 'cap_net_bind_service=+ep' "$(readlink -f "$(nvm which 24)")"
 
-# PM2's daemon runs apps on the Node it was started with. Restart it under
-# the new one; it brings the saved processes back.
+# Restart PM2's daemon under the new Node; it brings the saved processes
+# back. (The app itself runs on the Node that ran `pm2 start`, set by
+# `interpreter` in ecosystem.config.js, so it follows .nvmrc on each deploy.)
 pm2 update
 pm2 describe personalsite | grep -i "node.js version"   # should show the new version
 curl -s localhost/api/health
@@ -104,7 +106,7 @@ pm2 save
 
 Then merge the `.nvmrc` change. Deploys run `nvm use`, which now finds the new version. The certbot renewal hook (#23) already picks the newest nvm `pm2`, so it needs no change.
 
-**To roll back:** run `nvm use <old version> && pm2 update`, revert `.nvmrc`, and redo the `pm2 unstartup` and `pm2 startup` steps.
+**To roll back:** run `nvm use <old version> && nvm alias default <old version> && pm2 update`, revert `.nvmrc`, and redo the `pm2 unstartup` and `pm2 startup` steps.
 
 ## Checking memory
 
@@ -146,7 +148,7 @@ Compare two heap snapshots taken a few hours apart:
    - Select the second, switch the view to **Comparison** against the first, and sort by **Size Delta**.
    - Whatever grew the most is the leak. Expand it to see what keeps it alive (**Retainers**).
 
-**Taking a snapshot needs roughly as much free memory again as the heap uses.** On this instance, take them while the heap is still well below the 192 MB cap.
+**Taking a snapshot needs roughly as much free memory again as the heap uses,** and PM2 restarts the app if RSS passes 300 MB (`max_memory_restart`), which would cut the snapshot off and clear the leaked state. Check `pm2 describe personalsite` first: only take one if memory + heapUsed stays well under 300 MB (in practice, heapUsed under about 80 MB). If it's higher, skip the snapshot, or temporarily raise `max_memory_restart` in `ecosystem.config.js` and run `pm2 delete personalsite && pm2 start ecosystem.config.js` first.
 
 ## Rollback
 

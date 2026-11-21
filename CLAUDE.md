@@ -5,7 +5,8 @@ Matt Pelnik's portfolio site: a React SPA plus several portfolio REST APIs, all 
 Where things are (the code is the source of truth for the details):
 
 - `app.js` builds the Express app: it mounts `/api`, serves `build/`, answers 404 for any other path with a file extension, then sends `build/index.html` for every other path. **New routes must be registered before that fallback**, or the SPA swallows them. `server.js` only listens on the ports and shuts down gracefully; tests load `app.js` directly.
-- `src/api/<module>/{api,db,tests}`: one module per API, mounted in `src/api/index.js`. Modules: `fitness-tracker` (`/api/fitness`), `juicebox` and `scents` (the backend for the Netlify storefront). Database pools are only created through `src/api/createPool.js`. `src/api/health.js` serves `GET /api/health` (every database; 503 if one is down) and `GET /api/metrics` (memory snapshot; 404 unless `ADMIN_TOKEN` is set). `server.js` logs the same snapshot as one JSON line every 5 minutes; `npm run metrics:report <log>` summarizes them. Each has its own Postgres database: `FITNESS_DATABASE_URL`, `DATABASE_URL` (juicebox) and `SCENTS_DATABASE_URL`.
+- `src/api/<module>/{api,db,tests}`: one module per API, mounted in `src/api/index.js`. Modules: `fitness-tracker` (`/api/fitness`), `juicebox` and `scents` (the backend for the Netlify storefront). Each has its own Postgres database: `FITNESS_DATABASE_URL`, `DATABASE_URL` (juicebox) and `SCENTS_DATABASE_URL`. Database pools are only created through `src/api/createPool.js`.
+- `src/api/health.js` serves `GET /api/health` (every database; 503 if one is down) and `GET /api/metrics` (memory snapshot; 404 unless `ADMIN_TOKEN` is set). `server.js` logs the same snapshot as one JSON line every 5 minutes, and `npm run metrics:report <log>` summarizes them.
 - The frontend is built with Vite (`vite.config.mts`). `index.html` at the project root loads `src/index.tsx`, and `public/` is copied to `build/` as-is.
 - `src/components/` holds the site's pages. `src/fullReactProjects/` holds three embedded portfolio demo apps (fitness, juicebox, stranger).
 
@@ -58,7 +59,7 @@ npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
 - On merge to `main`, the `deploy` job rsyncs that tested `build/` to EC2, then SSHes in to `git pull`, run `npm ci --omit=dev`, and start PM2 fresh from `ecosystem.config.js` (process `personalsite`; heap cap, heap snapshots, memory restart limit). A health check on `/api/health` fails the job if the server doesn't come back.
 - Secrets: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, `EC2_PROJECT_PATH`.
 - Server setup, one-time steps, checking memory (heap snapshots, `npm run metrics:report`) and rollback: `DEPLOYMENT.md`.
-- **The server's Node version comes from `.nvmrc`** (`nvm use` in the deploy). Changing it needs manual steps on the server first (install, port capability, `pm2 update`; see `DEPLOYMENT.md`), or the next deploy stops at `nvm use`.
+- **The server's Node version comes from `.nvmrc`.** The deploy's `nvm use` picks it, and `interpreter` in `ecosystem.config.js` makes PM2 run the app on that binary. Changing it needs manual steps on the server first (install, port capability, `nvm alias default`, `pm2 update`; see `DEPLOYMENT.md`), or the next deploy fails at `nvm use` and restores the previous commit.
 
 SSL:
 

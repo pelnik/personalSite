@@ -5,6 +5,18 @@ const { snapshot } = require('./metrics');
 
 const healthRouter = express.Router();
 
+// Pools have no connection timeout, so a database host that stops answering
+// (rather than refusing connections) would leave the check waiting for the
+// OS TCP timeout. Give each check its own deadline so the endpoint always
+// answers, and says which database is down.
+const CHECK_TIMEOUT_MS = 3000;
+
+function timeout(ms) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => reject(new Error(`timed out after ${ms}ms`)), ms).unref();
+  });
+}
+
 // GET /api/health: one check for the whole site, for uptime monitoring and
 // the post-deploy check. 503 if any database is unreachable.
 healthRouter.get('/health', async (req, res) => {
@@ -13,7 +25,7 @@ healthRouter.get('/health', async (req, res) => {
   await Promise.all(
     [...pools].map(async ([name, pool]) => {
       try {
-        await pool.query('SELECT 1');
+        await Promise.race([pool.query('SELECT 1'), timeout(CHECK_TIMEOUT_MS)]);
         databases[name] = 'ok';
       } catch (error) {
         console.error(`Health check: ${name} database unreachable:`, error.message);
