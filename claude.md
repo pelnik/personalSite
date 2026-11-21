@@ -1,92 +1,34 @@
 # CLAUDE.md — personalSite
 
-## Project Overview
+Matt Pelnik's portfolio site: a React SPA plus several portfolio REST APIs, all served by one Express app. It runs on an EC2 instance under PM2. GitHub Actions tests every PR and deploys merges to `main`.
 
-This is Matt Pelnik's personal portfolio site and full-stack application showcase. It is a React + Express monorepo: the Express server serves the compiled React frontend as static files and also exposes several REST APIs for portfolio projects.
+Where things are (the code is the source of truth for the details):
 
-The site is deployed on an EC2 instance (Ubuntu, managed with PM2) and uses GitHub Actions for CI/CD — tests run on every PR, and merges to `main` automatically build the React app on GitHub's servers and deploy it to EC2 via rsync + SSH.
-
----
-
-## Architecture
-
-### Server
-
-`server.js` at the project root is the Express entry point. It:
-- Serves `build/` as static files (the compiled React app)
-- Mounts all API routes under `/api`
-- Falls back to `build/index.html` for all other routes (SPA behavior)
-- Runs HTTP on port 80 (dev: 3000) and HTTPS on port 443 (dev: 3443) when SSL certs are present in `Keys/`
-- Serves Let's Encrypt challenge files at `/.well-known/acme-challenge/` from `ACME_WEBROOT` (default `/var/www/certbot`), outside `build/` so deploys don't wipe them
-
-### Frontend
-
-React 19 SPA with TypeScript. Entry point is `src/index.tsx`. Components live in `src/components/`, organized by feature. There are also three full embedded React applications in `src/fullReactProjects/` (FitnessTrackerFrontEnd, juicebox, stranger) that are portfolio demos.
-
-### Backend APIs
-
-Four API modules under `src/api/`, each mounted at its own path:
-
-| Path | Module | Description |
-|---|---|---|
-| `/api/fitness` | `fitness-tracker` | Full fitness tracking REST API with auth |
-| `/api/juicebox` | `juicebox` | Social post/tag platform API |
-| `/api/scents` | `scents` | E-commerce API (redirects to Netlify storefront) |
-| `/api/admin` | `admin` | Admin utilities |
-
-Each module follows the same internal structure:
-```
-module-name/
-  api/         # Express route handlers
-  db/          # PostgreSQL query functions
-  tests/       # Jest + supertest tests
-```
-
-### Databases
-
-Three separate PostgreSQL databases, each with its own connection pool:
-
-| Database | Env Var | Module |
-|---|---|---|
-| `juicebox` | `DATABASE_URL` | juicebox API |
-| `fitness` | `FITNESS_DATABASE_URL` | fitness-tracker API |
-| `scents` | `SCENTS_DATABASE_URL` | scents API |
-
-All database clients use `pg.Pool` with SSL in production and a 30-second idle timeout. Each client module reconnects on error.
+- `server.js` mounts `/api`, serves `build/`, then sends `build/index.html` for every other path. **New routes must be registered before that fallback**, or the SPA swallows them.
+- `src/api/<module>/{api,db,tests}`: one module per API, mounted in `src/api/index.js`. Modules: `fitness-tracker` (`/api/fitness`), `juicebox`, `scents` (the backend for the Netlify storefront) and `admin`. Each has its own Postgres database: `FITNESS_DATABASE_URL`, `DATABASE_URL` (juicebox) and `SCENTS_DATABASE_URL`.
+- `src/components/` holds the site's pages. `src/fullReactProjects/` holds three embedded portfolio demo apps (fitness, juicebox, stranger).
 
 ---
 
 ## Development
 
 ```bash
-npm run dev        # Express (port 3000) + React dev server (port 3001) concurrently
-npm run build      # Compile React app to /build (do NOT run on EC2)
-npm run prod       # Start production server (serves /build on port 80)
+docker compose up db -d   # local Postgres
+npm run seed:all          # seed all three databases
+npm run dev               # Express on 3000 + React dev server on 3001
+npm run build             # compile the frontend to build/
+npm run prod              # production server: port 80, plus 443 when Keys/ has certs
 ```
 
-**Never run `npm run build` on the EC2 server** — it doesn't have enough memory. Builds happen in GitHub Actions.
+Copy `.env.example` to `.env`. `JWT_SECRET` is shared by juicebox and fitness auth. `STRIPE_KEY` is only needed for scents payments.
 
-### Environment Variables
-
-Copy `.env.example` to `.env` and fill in values. Key vars:
-- `DATABASE_URL`, `FITNESS_DATABASE_URL`, `SCENTS_DATABASE_URL` — PostgreSQL connection strings
-- `JWT_SECRET` — used by juicebox and fitness-tracker auth
-- `STRIPE_KEY`, `PROD_STRIPE_KEY` — optional, for scents payments
-- `API_URL` — base URL for the fitness API
-- `ACME_WEBROOT` — optional; the certbot webroot (default `/var/www/certbot`)
-
-### Database Setup (local)
-
-```bash
-docker compose up db -d     # start Postgres
-npm run seed:all            # seed all three databases
-```
+**Never run `npm run build` on the EC2 server.** It doesn't have enough memory. Builds happen in GitHub Actions.
 
 ---
 
 ## Testing
 
-All tests need local Postgres (`docker compose up db -d`).
+All tests need local Postgres.
 
 ```bash
 npm test                     # all API tests (same as npm run test:api)
@@ -95,40 +37,28 @@ npm run test:e2e             # build, then all Playwright tests including screen
 npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
 ```
 
-**API tests (Jest + supertest).** `jest.config.js` has one project per API module: `fitness`, `juicebox`, `scents` and `core` (the `/api` router and admin). Select one with `--selectProjects`. Each project's `tests/setup.js` rebuilds its database. Tests mount the real `/api` router (`tests/support/apiApp.js`), so error shapes and status codes match production.
-
-**End-to-end tests (Playwright, `tests/e2e/`).** They run against `build/` served by the real `server.js` on port 3100, after reseeding juicebox and fitness. The fixture in `tests/e2e/fixtures.ts`:
-
-- blocks analytics
-- forwards hardcoded `https://pelnik.dev/api/...` calls to the local server
-- mocks the third-party Stranger's Things API
-- fails a test on any console error or failed request (use `allowErrors` for expected ones)
-
-Screenshot baselines (`tests/e2e/__screenshots__/`) are macOS-specific and run locally only. Update them with `--update-snapshots` only when a visual change is intended.
-
-**Safety:**
-
-- Test setup refuses to drop tables unless the database host is local (`tests/support/assertLocalDatabase.js`).
-- `stripe` is stubbed in test files, and `STRIPE_KEY` is forced to a dummy value (`tests/support/testEnv.js`). The scents seed archives every product in whatever Stripe account it's given.
-
-**Known bugs.** Tests named `KNOWN BUG: …` pin current buggy behavior on purpose. When fixing one, update that test in the same change.
-
-Tests run automatically in GitHub Actions on every PR and push to `main` via `.github/workflows/ci.yml`.
+- **API tests** are Jest projects: `fitness`, `juicebox`, `scents`, and `core` (the `/api` router and admin). Pick one with `--selectProjects`. Each project rebuilds its database. Tests mount the real `/api` router, so status codes and error shapes match production.
+- **E2E tests** run Playwright against `build/`, served by the real `server.js` on port 3100. The shared fixture fails a test on any console error or failed request; pass `allowErrors` for expected ones. Screenshot baselines are macOS-only and run locally. Update them with `--update-snapshots` only for intended visual changes.
+- **Safety:**
+  - Test setup refuses to drop tables unless the database host is local.
+  - Stripe is stubbed and given a dummy key. The scents seed archives every product in whatever Stripe account it's given.
+- **Known bugs:** tests named `KNOWN BUG: …` pin current buggy behavior on purpose. When fixing one, update that test in the same change.
 
 ---
 
 ## Deployment
 
-Handled entirely by `.github/workflows/ci.yml`. On merge to `main`:
+`.github/workflows/ci.yml` handles it:
 
-1. `test` job runs all API tests, builds React on GitHub's runner, runs the functional e2e tests against that build, and uploads `build/` as an artifact
-2. `deploy` job (only if tests pass) downloads that same `build/`, rsyncs it to EC2, then SSHes in to `git pull` and restart PM2
+- On every PR, the `test` job runs the API tests, builds, and runs the functional e2e tests. Merging requires it to pass; an admin can override this from the PR in an emergency.
+- On merge to `main`, the `deploy` job rsyncs that tested `build/` to EC2, then SSHes in to `git pull` and restart PM2 (process `personalsite`).
+- Secrets: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, `EC2_PROJECT_PATH`.
 
-Required GitHub secrets: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, `EC2_PROJECT_PATH`.
+SSL:
 
-The EC2 server runs the Node process under PM2 (`pm2 start "npm run prod" --name personalsite`). PM2 binary path: `/home/ubuntu/.nvm/versions/node/v22.11.0/bin/pm2`.
-
-See `DEPLOYMENT.md` for full setup details.
+- `server.js` reads certs from `Keys/`.
+- It serves certbot's HTTP challenges from `ACME_WEBROOT` (default `/var/www/certbot`). That folder is outside `build/` because the deploy's `rsync --delete` replaces `build/`.
+- `cert-expiry.yml` checks the cert weekly.
 
 ---
 
@@ -136,55 +66,21 @@ See `DEPLOYMENT.md` for full setup details.
 
 ### Backend (JavaScript)
 
-- All route handlers use `async/await` — no `.then()` chains anywhere
-- Errors follow a consistent `{ name, message }` shape and are forwarded via `next(error)`, never thrown directly to the client
-- Database queries use parameterized SQL (`$1`, `$2`) throughout
-- The common pattern for extracting a single row: `const { rows: [item] } = await client.query(...)`
-- DB functions are exported from a barrel `db/index.js` per module
-- camelCase for JS variables and functions, snake_case for DB column names
+- Route handlers use `async/await`. No `.then()` chains, anywhere in the repo.
+- Errors have the shape `{ name, message }` and are passed on with `next(error)`, never thrown directly to the client.
+- SQL is always parameterized (`$1`, `$2`).
+- To read a single row: `const { rows: [item] } = await client.query(...)`.
+- Each module exports its DB functions from a barrel file, `db/index.js`.
+- camelCase for JS names, snake_case for DB columns.
 
 ### Frontend (TypeScript/React)
 
-- Functional components with hooks throughout — no class components
-- Components are `.tsx`, some older utilities are `.jsx`
-- `useEffect` for side effects (including `document.title` updates per page)
-- Barrel exports via `index.js` files — import from parent directory, not individual files
-- Strict TypeScript enabled; JS files are allowed but not type-checked
-
-### General
-
-- No `.then()` chains — always async/await
-- Environment-aware behavior (dev vs production) via `process.env.NODE_ENV`
-
----
-
-## Project Structure Quick Reference
-
-```
-/
-├── server.js                  # Express entry point
-├── src/
-│   ├── index.tsx              # React entry point
-│   ├── api/
-│   │   ├── index.js           # API router — mounts all sub-routers
-│   │   ├── fitness-tracker/   # Fitness API + tests
-│   │   ├── juicebox/          # Social post API
-│   │   ├── scents/            # E-commerce API
-│   │   └── admin/             # Admin utilities
-│   ├── components/            # React components (TypeScript)
-│   ├── fullReactProjects/     # Portfolio demo apps
-│   ├── css/                   # Global stylesheets
-│   └── types/                 # TypeScript type declarations
-├── public/                    # Static assets (pre-build)
-├── Keys/                      # SSL certificates (gitignored); certbot's deploy hook copies renewed certs here
-├── .github/workflows/
-│   ├── ci.yml                 # CI/CD — test + deploy pipeline
-│   ├── claude-pr-review.yml   # Automated Claude review on PRs
-│   ├── claude-issue-fix.yml   # Claude fix attempt on issues labeled claude-fix
-│   └── cert-expiry.yml        # Weekly check; opens an issue if the SSL cert has < 1/4 of its lifetime (max 21 days) left
-├── DEPLOYMENT.md              # Deployment setup guide
-└── docker-compose.yml         # Local dev database
-```
+- Functional components with hooks; no class components.
+- Components are `.tsx`. Some older utilities are `.jsx`.
+- Side effects go in `useEffect`, including the per-page `document.title` update.
+- Import from a folder's `index.js` barrel file, not from individual files.
+- TypeScript runs in strict mode. JS files are allowed but not type-checked.
+- Dev vs. production behavior is switched with `process.env.NODE_ENV`.
 
 ## Issue Tracking
 
