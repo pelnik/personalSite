@@ -140,8 +140,6 @@ async function createInitialPosts() {
 
 async function rebuildDB() {
   try {
-    client.connect();
-
     await dropTables();
     await createTables();
     await createInitialUsers();
@@ -225,4 +223,8 @@ async function testDB() {
   }
 }
 
-rebuildDB().then(testDB).catch(console.error);
+if (require.main === module) {
+  rebuildDB().then(testDB).catch(console.error);
+}
+
+module.exports = { rebuildDB };

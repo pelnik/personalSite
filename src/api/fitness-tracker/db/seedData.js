@@ -9,6 +9,16 @@ const {
 const { addActivityToRoutine } = require('./routine_activities');
 const client = require('./client');
 
+// One insert at a time, so ids follow array order on every seed (the
+// routines below refer to users and activities by id).
+async function createInOrder(items, create) {
+  const created = [];
+  for (const item of items) {
+    created.push(await create(item));
+  }
+  return created;
+}
+
 async function dropTables() {
   console.log('Dropping All Tables...');
   try {
@@ -86,7 +96,7 @@ async function createInitialUsers() {
       { username: 'sandra', password: 'sandra123' },
       { username: 'glamgal', password: 'glamgal123' },
     ];
-    const users = await Promise.all(usersToCreate.map(createUser));
+    const users = await createInOrder(usersToCreate, createUser);
   } catch (error) {
     console.error('Error creating users!');
     throw error;
@@ -115,9 +125,7 @@ async function createInitialActivities() {
       { name: 'treadmill', description: 'running' },
       { name: 'stairs', description: 'climb those stairs' },
     ];
-    const activities = await Promise.all(
-      activitiesToCreate.map(createActivity)
-    );
+    const activities = await createInOrder(activitiesToCreate, createActivity);
 
     console.log('activities created:');
     console.log(activities);
@@ -158,9 +166,7 @@ async function createInitialRoutines() {
       goal: 'Running, stairs. Stuff that gets your heart pumping!',
     },
   ];
-  const routines = await Promise.all(
-    routinesToCreate.map((routine) => createRoutine(routine))
-  );
+  const routines = await createInOrder(routinesToCreate, createRoutine);
   console.log('Routines Created: ', routines);
   console.log('Finished creating routines.');
 }
@@ -227,8 +233,9 @@ async function createInitialRoutineActivities() {
       duration: 15,
     },
   ];
-  const routineActivities = await Promise.all(
-    routineActivitiesToCreate.map(addActivityToRoutine)
+  const routineActivities = await createInOrder(
+    routineActivitiesToCreate,
+    addActivityToRoutine
   );
   console.log('routine_activities created: ', routineActivities);
   console.log('Finished creating routine_activities!');

@@ -1,0 +1,40 @@
+{
+  "success": true,
+  "error": null,
+  "data": {
+    "posts": [
+      {
+        "location": "Tulsa, OK",
+        "willDeliver": true,
+        "messages": [],
+        "active": true,
+        "_id": "e2e-post-1",
+        "author": { "_id": "e2e-author-1", "username": "e2e-seller" },
+        "cohort": "e2e-cohort",
+        "title": "Gently used canoe",
+        "description": "Paddles included. Minor scratches on the hull.",
+        "price": "$350",
+        "createdAt": "2024-03-01T12:00:00.000Z",
+        "updatedAt": "2024-03-01T12:00:00.000Z",
+        "__v": 0,
+        "isAuthor": false
+      },
+      {
+        "location": "[On Request]",
+        "willDeliver": false,
+        "messages": [],
+        "active": true,
+        "_id": "e2e-post-2",
+        "author": { "_id": "e2e-author-2", "username": "e2e-collector" },
+        "cohort": "e2e-cohort",
+        "title": "Vintage record player",
+        "description": "Works great, needs a new needle.",
+        "price": "$80",
+        "createdAt": "2024-03-02T12:00:00.000Z",
+        "updatedAt": "2024-03-02T12:00:00.000Z",
+        "__v": 0,
+        "isAuthor": false
+      }
+    ]
+  }
+}
