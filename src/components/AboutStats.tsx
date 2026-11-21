@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+// Also listed in public/llms.txt: update both.
 const STATS: string[] = [
   'College Degree: Chemical Engineering',
   'College GPA: 3.76',
