@@ -203,14 +203,22 @@ The PR review (`claude-pr-review.yml`) runs once when a non-draft PR opens or is
 
 This applies when asked to address review comments on a PR, either once or on a `/loop`.
 
-- Read every unresolved comment: `gh pr view N --comments` for the conversation, and `gh api repos/pelnik/personalSite/pulls/N/comments` for inline comments.
+- Read the comments to handle:
+  - Conversation comments: `gh pr view N --comments`. Skip any you've already replied to.
+  - Inline threads: the REST comments endpoint can't tell resolved from unresolved, so use GraphQL and only handle unresolved threads that don't already have your reply:
+
+    ```bash
+    gh api graphql -F n=N --jq '.data.repository.pullRequest.reviewThreads.nodes[] | select(.isResolved|not)' -f query='
+      query($n:Int!){repository(owner:"pelnik",name:"personalSite"){pullRequest(number:$n){
+        reviewThreads(first:100){nodes{isResolved path line comments(first:20){nodes{databaseId author{login} body}}}}}}}'
+    ```
 - Triage each comment before changing anything:
   - **Fix** clear correctness, security, or data-loss problems.
   - **Decline** style, naming, or optional suggestions. Reply with a short reason and don't change code, unless the change is trivially right and in scope.
   - **Leave for Matt** anything that's a judgment call: design, scope, or a behavior change. List these in the summary.
-- Reply on each thread with what happened: fixed in `<sha>`, declined and why, or left for Matt.
+- Reply on each thread with what happened: fixed in `<sha>`, declined and why, or left for Matt. For inline threads, reply to the thread's first comment: `gh api repos/pelnik/personalSite/pulls/N/comments/<databaseId>/replies -f body='...'`.
 - One pass per review: fix, push once, post a summary comment, then stop. On a `/loop`, end the loop when a check finds no new comments, or after 3 rounds, whichever comes first.
-- **Never write `@claude` in a PR comment, review reply, or PR description.** A local session posts as the repo owner, so `@claude` would re-trigger the automated review and start a review/fix loop. Call it "the Claude review" instead.
+- **Never write `@claude` in a PR comment, review reply, or PR description, in any capitalization, even inside backticks.** The review workflow matches it as a case-insensitive substring of the raw comment, so `@Claude` or `` `@claude` `` also fires. A local session posts as the repo owner, so this would re-trigger the automated review and start a review/fix loop. Call it "the Claude review" instead.
 
 ## Claude Instructions
 
