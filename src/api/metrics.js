@@ -49,6 +49,8 @@ function snapshot() {
 
 // Logs one JSON line per interval, easy to pull out of the PM2 logs:
 //   grep '"type":"metrics"' ~/.pm2/logs/personalsite-out.log
+// Each line's delay percentiles cover that interval. With logging off
+// (METRICS_INTERVAL_MS=0), /api/metrics reports them since startup instead.
 function startMetricsLog(intervalMs) {
   const timer = setInterval(() => {
     console.log(JSON.stringify({ type: 'metrics', time: new Date().toISOString(), ...snapshot() }));

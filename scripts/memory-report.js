@@ -18,45 +18,51 @@ if (files.length === 0) {
   process.exit(1);
 }
 
-const periods = new Map();
-let previousUptime = null;
-
+// Read every file first and sort by time: log globs list the current file
+// before the rotated, older ones, and restarts are detected by uptime going
+// backwards, which only works in time order.
+const entries = [];
 for (const file of files) {
   for (const line of fs.readFileSync(file, 'utf8').split('\n')) {
     // PM2 prefixes lines with a timestamp (time: true), so find the JSON.
     const start = line.indexOf('{"type":"metrics"');
     if (start === -1) continue;
 
-    let entry;
     try {
-      entry = JSON.parse(line.slice(start));
+      entries.push(JSON.parse(line.slice(start)));
     } catch {
       continue;
     }
-
-    const key = entry.time.slice(0, daily ? 10 : 13).replace('T', ' ');
-    const period = periods.get(key) ?? {
-      heapFloor: Infinity,
-      heapPeak: 0,
-      rssPeak: 0,
-      p99Peak: 0,
-      samples: 0,
-      restarts: 0,
-    };
-
-    period.heapFloor = Math.min(period.heapFloor, entry.memoryMB.heapUsed);
-    period.heapPeak = Math.max(period.heapPeak, entry.memoryMB.heapUsed);
-    period.rssPeak = Math.max(period.rssPeak, entry.memoryMB.rss);
-    period.p99Peak = Math.max(period.p99Peak, entry.eventLoopDelayMs.p99);
-    period.samples += 1;
-    // Uptime going backwards means the process restarted.
-    if (previousUptime !== null && entry.uptimeSeconds < previousUptime) {
-      period.restarts += 1;
-    }
-    previousUptime = entry.uptimeSeconds;
-
-    periods.set(key, period);
   }
+}
+entries.sort((a, b) => a.time.localeCompare(b.time));
+
+const periods = new Map();
+let previousUptime = null;
+
+for (const entry of entries) {
+  const key = entry.time.slice(0, daily ? 10 : 13).replace('T', ' ');
+  const period = periods.get(key) ?? {
+    heapFloor: Infinity,
+    heapPeak: 0,
+    rssPeak: 0,
+    p99Peak: 0,
+    samples: 0,
+    restarts: 0,
+  };
+
+  period.heapFloor = Math.min(period.heapFloor, entry.memoryMB.heapUsed);
+  period.heapPeak = Math.max(period.heapPeak, entry.memoryMB.heapUsed);
+  period.rssPeak = Math.max(period.rssPeak, entry.memoryMB.rss);
+  period.p99Peak = Math.max(period.p99Peak, entry.eventLoopDelayMs.p99);
+  period.samples += 1;
+  // Uptime going backwards means the process restarted.
+  if (previousUptime !== null && entry.uptimeSeconds < previousUptime) {
+    period.restarts += 1;
+  }
+  previousUptime = entry.uptimeSeconds;
+
+  periods.set(key, period);
 }
 
 if (periods.size === 0) {

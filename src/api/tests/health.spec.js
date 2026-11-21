@@ -31,10 +31,34 @@ describe('GET /api/health', () => {
   });
 });
 
+describe('GET /api/health with an unresponsive database', () => {
+  it('answers 503 within the check timeout instead of hanging', async () => {
+    const scents = pools.get('scents');
+    // A query that never settles, like a host that stopped responding.
+    const query = jest.spyOn(scents, 'query').mockReturnValueOnce(new Promise(() => {}));
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    const started = Date.now();
+    const res = await request(app).get('/api/health').timeout(8000);
+
+    expect(Date.now() - started).toBeLessThan(5000);
+    expect(res.status).toBe(503);
+    expect(res.body.databases).toEqual({ juicebox: 'ok', fitness: 'ok', scents: 'error' });
+    expect(consoleError).toHaveBeenCalledWith(
+      'Health check: scents database unreachable:',
+      'timed out after 3000ms'
+    );
+    query.mockRestore();
+    consoleError.mockRestore();
+  });
+});
+
 describe('GET /api/metrics', () => {
   const original = process.env.ADMIN_TOKEN;
   afterEach(() => {
-    process.env.ADMIN_TOKEN = original;
+    // Assigning undefined would store the string "undefined".
+    if (original === undefined) delete process.env.ADMIN_TOKEN;
+    else process.env.ADMIN_TOKEN = original;
   });
 
   it('is disabled unless ADMIN_TOKEN is set', async () => {

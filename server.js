@@ -37,7 +37,11 @@ const servers = [server];
 // One JSON line of memory and pool stats every 5 minutes (METRICS_INTERVAL_MS
 // to change, 0 to turn off). See DEPLOYMENT.md for reading them.
 const metricsIntervalMs = Number(process.env.METRICS_INTERVAL_MS || 5 * 60 * 1000);
-if (metricsIntervalMs > 0) {
+if (!Number.isFinite(metricsIntervalMs)) {
+  console.warn(
+    `METRICS_INTERVAL_MS=${process.env.METRICS_INTERVAL_MS} isn't a number of milliseconds; metrics logging is off`
+  );
+} else if (metricsIntervalMs > 0) {
   startMetricsLog(metricsIntervalMs);
 }
 
