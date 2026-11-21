@@ -17,6 +17,7 @@ The site is deployed on an EC2 instance (Ubuntu, managed with PM2) and uses GitH
 - Mounts all API routes under `/api`
 - Falls back to `build/index.html` for all other routes (SPA behavior)
 - Runs HTTP on port 80 (dev: 3000) and HTTPS on port 443 (dev: 3443) when SSL certs are present in `Keys/`
+- Serves Let's Encrypt challenge files at `/.well-known/acme-challenge/` from `ACME_WEBROOT` (default `/var/www/certbot`), outside `build/` so deploys don't wipe them
 
 ### Frontend
 
@@ -72,6 +73,7 @@ Copy `.env.example` to `.env` and fill in values. Key vars:
 - `JWT_SECRET` — used by juicebox and fitness-tracker auth
 - `STRIPE_KEY`, `PROD_STRIPE_KEY` — optional, for scents payments
 - `API_URL` — base URL for the fitness API
+- `ACME_WEBROOT` — optional; the certbot webroot (default `/var/www/certbot`)
 
 ### Database Setup (local)
 
@@ -174,11 +176,12 @@ See `DEPLOYMENT.md` for full setup details.
 │   ├── css/                   # Global stylesheets
 │   └── types/                 # TypeScript type declarations
 ├── public/                    # Static assets (pre-build)
-├── Keys/                      # SSL certificates (gitignored)
+├── Keys/                      # SSL certificates (gitignored); certbot's deploy hook copies renewed certs here
 ├── .github/workflows/
 │   ├── ci.yml                 # CI/CD — test + deploy pipeline
 │   ├── claude-pr-review.yml   # Automated Claude review on PRs
-│   └── claude-issue-fix.yml   # Claude fix attempt on issues labeled claude-fix
+│   ├── claude-issue-fix.yml   # Claude fix attempt on issues labeled claude-fix
+│   └── cert-expiry.yml        # Weekly check; opens an issue if the SSL cert has < 21 days left
 ├── DEPLOYMENT.md              # Deployment setup guide
 └── docker-compose.yml         # Local dev database
 ```

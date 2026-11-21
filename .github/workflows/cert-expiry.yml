@@ -1,0 +1,46 @@
+name: Certificate Expiry Check
+on:
+  # Weekly. Let's Encrypt renews at 30 days left, so under 21 means renewal is failing.
+  schedule:
+    - cron: '0 14 * * 1'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    env:
+      DOMAIN: pelnik.dev
+      WARN_DAYS: 21
+    steps:
+      - name: Read certificate expiry
+        id: cert
+        run: |
+          end=$(echo | openssl s_client -servername "$DOMAIN" -connect "$DOMAIN:443" 2>/dev/null \
+            | openssl x509 -noout -enddate | cut -d= -f2) || true
+          # Can't connect or no cert: fail the run, so GitHub emails about the failed workflow
+          if [ -z "$end" ]; then
+            echo "::error::Could not read the certificate for $DOMAIN"
+            exit 1
+          fi
+          days=$(( ($(date -d "$end" +%s) - $(date +%s)) / 86400 ))
+          echo "$DOMAIN certificate expires $end ($days days)"
+          echo "days=$days" >> "$GITHUB_OUTPUT"
+          echo "end=$end" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update an issue
+        if: fromJSON(steps.cert.outputs.days) < fromJSON(env.WARN_DAYS)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DAYS: ${{ steps.cert.outputs.days }}
+          END: ${{ steps.cert.outputs.end }}
+        run: |
+          body="The certificate for $DOMAIN expires $END ($DAYS days). Let's Encrypt should have renewed it at 30 days left. On EC2, check \`sudo certbot renew --dry-run\` and \`systemctl status certbot.timer\`."
+          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --search "SSL certificate expiring in:title" --json number -q '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --repo "$GITHUB_REPOSITORY" --body "$body"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --label bug --title "SSL certificate expiring: $DOMAIN" --body "$body"
+          fi
