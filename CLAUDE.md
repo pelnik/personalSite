@@ -4,10 +4,11 @@ Matt Pelnik's personal site, with information about him: a React SPA plus the RE
 
 Where things are (the code is the source of truth for the details):
 
-- `app.js` builds the Express app: it mounts `/api`, serves `build/`, answers 404 for any other path with a file extension, then sends `build/index.html` for every other path. **New routes must be registered before that fallback**, or the SPA swallows them. `server.js` only listens on the ports and shuts down gracefully; tests load `app.js` directly.
+- `app.js` builds the Express app: it mounts `/api`, serves `build/`, answers 404 for any other path with a file extension, then sends every other path its prerendered page (listed in `build/prerendered.json`) or the empty app shell, `build/spa.html`. **New routes must be registered before that fallback**, or the SPA swallows them. `server.js` only listens on the ports and shuts down gracefully; tests load `app.js` directly.
 - `src/api/<module>/{api,db,tests}`: one module per API, mounted in `src/api/index.js`. Modules: `fitness-tracker` (`/api/fitness`), `juicebox` and `scents` (the backend for the Netlify storefront). Each has its own Postgres database: `FITNESS_DATABASE_URL`, `DATABASE_URL` (juicebox) and `SCENTS_DATABASE_URL`. Database pools are only created through `src/api/createPool.js`.
 - `src/api/health.js` serves `GET /api/health` (every database; 503 if one is down) and `GET /api/metrics` (memory snapshot; 404 unless `ADMIN_TOKEN` is set). `server.js` logs the same snapshot as one JSON line every 5 minutes, and `npm run metrics:report <log>` summarizes them.
 - The frontend is built with Vite (`vite.config.mts`). `index.html` at the project root loads `src/index.tsx`, and `public/` is copied to `build/` as-is.
+- After `vite build`, `scripts/prerender.mjs` loads `/`, `/about` and `/about/stats` in headless Chromium and saves their rendered HTML, with a title, description and canonical link, so crawlers that don't run JavaScript see the content. React renders over it in the browser as usual. To prerender another page, add it to `ROUTES` in that script. Building needs Playwright's Chromium (`npx playwright install chromium`).
 - `src/components/` holds the site's pages. `src/fullReactProjects/` holds the three demo apps from earlier projects (fitness, juicebox, stranger).
 
 ---
@@ -18,7 +19,7 @@ Where things are (the code is the source of truth for the details):
 docker compose up db -d   # local Postgres
 npm run seed:all          # seed all three databases
 npm run dev               # Express on 3000 + Vite dev server on 3001
-npm run build             # compile the frontend to build/
+npm run build             # compile the frontend to build/ and prerender pages
 npm run typecheck         # tsc --noEmit (Vite doesn't type-check; CI runs this)
 npm run prod              # production server: port 80, plus 443 when Keys/ has certs
 ```
