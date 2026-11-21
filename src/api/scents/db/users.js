@@ -41,11 +41,17 @@ async function createUser({ username, password, name, email, is_admin }) {
   }
 }
 
+// Hash of a random string nobody knows. Unknown usernames are checked against
+// it, so they take as long as a wrong password and response time doesn't
+// reveal which usernames exist.
+const UNKNOWN_USER_HASH = '$2b$10$1.0G1B4hNDXJgf83gPZ8X.K/mgIIlV3.4P9NZLhX2mthWwy4A3zaS';
+
 // Returns the user without its password, or undefined when the username
 // doesn't exist or the password is wrong (the caller can't tell which).
 async function getUser({ username, password }) {
   const user = await getUserByUsername(username);
   if (!user) {
+    await bcrypt.compare(password, UNKNOWN_USER_HASH);
     return;
   }
 
