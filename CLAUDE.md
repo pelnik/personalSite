@@ -1,13 +1,13 @@
 # CLAUDE.md — personalSite
 
-Matt Pelnik's portfolio site: a React SPA plus several portfolio REST APIs, all served by one Express app. It runs on an EC2 instance under PM2. GitHub Actions tests every PR and deploys merges to `main`.
+Matt Pelnik's personal site, with information about him: a React SPA plus the REST APIs behind a few earlier projects, which stay on the site as live demos. One Express app serves it all. It runs on an EC2 instance under PM2. GitHub Actions tests every PR and deploys merges to `main`.
 
 Where things are (the code is the source of truth for the details):
 
 - `server.js` mounts `/api`, serves `build/`, then sends `build/index.html` for every other path. **New routes must be registered before that fallback**, or the SPA swallows them.
 - `src/api/<module>/{api,db,tests}`: one module per API, mounted in `src/api/index.js`. Modules: `fitness-tracker` (`/api/fitness`), `juicebox`, `scents` (the backend for the Netlify storefront) and `admin`. Each has its own Postgres database: `FITNESS_DATABASE_URL`, `DATABASE_URL` (juicebox) and `SCENTS_DATABASE_URL`.
 - The frontend is built with Vite (`vite.config.mts`). `index.html` at the project root loads `src/index.tsx`, and `public/` is copied to `build/` as-is.
-- `src/components/` holds the site's pages. `src/fullReactProjects/` holds three embedded portfolio demo apps (fitness, juicebox, stranger).
+- `src/components/` holds the site's pages. `src/fullReactProjects/` holds the three demo apps from earlier projects (fitness, juicebox, stranger).
 
 ---
 
@@ -47,6 +47,16 @@ npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
   - Test setup refuses to drop tables unless the database host is local.
   - Stripe is stubbed and given a dummy key. The scents seed archives every product in whatever Stripe account it's given.
 - **Known bugs:** tests named `KNOWN BUG: …` pin current buggy behavior on purpose. When fixing one, update that test in the same change.
+
+**Before pushing** a branch or opening a PR, run all three:
+
+```bash
+npm run typecheck
+npm test
+npm run test:e2e
+```
+
+CI runs the first two and the functional e2e tests, but not the screenshot comparisons, which are macOS-only. So a branch that skipped `npm run test:e2e` can pass CI and still change how the site looks. If a screenshot changes on purpose, update the baselines with `--update-snapshots` and look at the new images before committing them.
 
 ---
 
