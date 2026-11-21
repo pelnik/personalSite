@@ -13,7 +13,7 @@ test.describe('crawler files', () => {
     expect(text).toMatch(/^Sitemap: https:\/\/pelnik\.dev\/sitemap\.xml$/m);
   });
 
-  test('every page in sitemap.xml exists', async ({ request }) => {
+  test('every page in sitemap.xml exists', async ({ request, page }) => {
     const response = await request.get('/sitemap.xml');
 
     expect(response.status()).toBe(200);
@@ -24,8 +24,14 @@ test.describe('crawler files', () => {
     expect(urls.length).toBeGreaterThan(0);
     for (const url of urls) {
       expect(url).toMatch(/^https:\/\/pelnik\.dev\//);
-      const page = await request.get(new URL(url).pathname, { maxRedirects: 0 });
-      expect(page.status(), url).toBe(200);
+      const path = new URL(url).pathname;
+      const response = await request.get(path, { maxRedirects: 0 });
+      expect(response.status(), url).toBe(200);
+
+      // The server answers 200 for any path; only the app knows a page is missing.
+      await page.goto(path);
+      await expect(page.getByRole('heading', { name: 'Page Not Found' }), url).toHaveCount(0);
+      await expect(page.locator('.site-full-window'), url).toBeVisible();
     }
   });
 
