@@ -9,6 +9,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/juicebox
+      FITNESS_DATABASE_URL: postgres://postgres:postgres@localhost:5432/fitness
+      SCENTS_DATABASE_URL: postgres://postgres:postgres@localhost:5432/scents
+      JWT_SECRET: test-secret-for-ci
+      API_URL: http://localhost:3000/api/fitness
+
     services:
       postgres:
         image: postgres:16-alpine
@@ -39,14 +46,26 @@ jobs:
           PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE fitness;"
           PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE scents;"
 
-      - name: Run tests
-        env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/juicebox
-          FITNESS_DATABASE_URL: postgres://postgres:postgres@localhost:5432/fitness
-          SCENTS_DATABASE_URL: postgres://postgres:postgres@localhost:5432/scents
-          JWT_SECRET: test-secret-for-ci
-          API_URL: http://localhost:3000/api/fitness
-        run: npm run test:fitness
+      - name: Run API tests
+        run: npm run test:api
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      # Screenshot comparisons are local-only (baselines are macOS-specific).
+      - name: Run end-to-end tests
+        run: npm run test:e2e:functional
+
+      - name: Upload Playwright traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: test-results/
+          retention-days: 7
 
   deploy:
     needs: test

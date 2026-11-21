@@ -14,7 +14,7 @@ let PORT = 80;
 let sshPORT = 443;
 
 if (process.env.NODE_ENV === 'development') {
-  PORT = 3000;
+  PORT = Number(process.env.HTTP_PORT) || 3000;
   sshPORT = 3443;
 }
 

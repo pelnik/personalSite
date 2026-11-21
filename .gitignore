@@ -15,3 +15,6 @@ node_modules/
 /oldpublic
 
 pr_info.md
+# Playwright
+/test-results
+/playwright-report

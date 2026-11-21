@@ -16,7 +16,9 @@
     "seed:all": "npm run seed:juicebox && npm run seed:fitness && npm run seed:scents",
     "test": "jest --runInBand",
     "test:fitness": "jest --selectProjects fitness --runInBand",
-    "test:api": "jest --runInBand"
+    "test:api": "jest --runInBand",
+    "test:e2e": "npm run build && playwright test",
+    "test:e2e:functional": "playwright test --project=functional"
   },
   "repository": {
     "type": "git",
@@ -54,6 +56,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@faker-js/faker": "^9.2.0",
+    "@playwright/test": "^1.65.1",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "concurrently": "^9.2.1",
