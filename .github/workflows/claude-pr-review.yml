@@ -1,18 +1,28 @@
 name: Claude PR Review
 on:
+  # Review once when a PR is ready, not on every push. Comment "@claude" on the PR to re-run.
   pull_request:
-    types: [opened, synchronize, ready_for_review, reopened]
+    types: [opened, ready_for_review, reopened]
   issue_comment:
     types: [created]
 
 jobs:
   review:
-    # Run on PR events OR when someone comments on a PR (not issues)
-    if: github.event_name == 'pull_request' || (github.event_name == 'issue_comment' && github.event.issue.pull_request)
+    # Non-draft PR events, or an "@claude" comment on a PR (not an issue) from someone with write access
+    if: |
+      (github.event_name == 'pull_request' && !github.event.pull_request.draft) ||
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request &&
+        contains(github.event.comment.body, '@claude') &&
+        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number || github.event.issue.number }}
+      cancel-in-progress: true
     permissions:
       contents: read
       pull-requests: write
+      issues: read
       id-token: write
     steps:
       - uses: actions/checkout@v5
@@ -25,15 +35,18 @@ jobs:
           track_progress: true
           prompt: |
             REPO: ${{ github.repository }}
-            PR NUMBER: ${{ github.event.pull_request.number }}
+            PR NUMBER: ${{ github.event.pull_request.number || github.event.issue.number }}
 
             Please review this pull request with a focus on:
             - Code quality and best practices
             - Potential bugs or issues
             - Security implications
             - Performance considerations
+            - Linked GitHub issues: read each issue the PR references (Fixes #N / Refs #N) and
+              confirm the change addresses it. Also check open `bug` issues and flag any this PR
+              fixes without linking.
 
             Provide detailed feedback using inline comments for specific issues.
 
           claude_args: |
-            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh issue view:*),Bash(gh issue list:*)"
