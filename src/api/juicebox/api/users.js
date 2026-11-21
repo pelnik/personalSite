@@ -96,9 +96,16 @@ usersRouter.delete(
   requireUser,
   requireActiveUser,
   async (req, res, next) => {
-    const { userId } = req.params;
+    const userId = Number(req.params.userId);
 
     try {
+      if (!Number.isInteger(userId)) {
+        return next({
+          name: 'UserNotFound',
+          message: "User doesn't exist.",
+        });
+      }
+
       if (req.user === undefined) {
         next({
           name: 'InvalidUserLoginDelete',

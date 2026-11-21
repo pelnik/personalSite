@@ -50,10 +50,10 @@ async function updateUser(id, fields = {}) {
       `
       UPDATE users
       SET ${setString}
-      WHERE id =${id}
+      WHERE id=$${Object.keys(fields).length + 1}
       RETURNING *;
     `,
-      Object.values(fields)
+      [...Object.values(fields), id]
     );
 
     return user;
@@ -97,10 +97,10 @@ async function updatePost(postId, fields = {}) {
         `
         UPDATE posts
         SET ${setString}
-        WHERE id=${postId}
+        WHERE id=$${Object.keys(fields).length + 1}
         RETURNING *;
       `,
-        Object.values(fields)
+        [...Object.values(fields), postId]
       );
     }
 
@@ -109,16 +109,14 @@ async function updatePost(postId, fields = {}) {
     }
 
     const tagList = await createTags(tags);
-    const tagListIdString = tagList.map((tag) => `${tag.id}`).join(', ');
 
     await client.query(
       `
       DELETE FROM post_tags
-      WHERE "tagId"
-      NOT IN (${tagListIdString})
+      WHERE "tagId" <> ALL($2::int[])
       AND "postId"=$1
     `,
-      [postId]
+      [postId, tagList.map((tag) => tag.id)]
     );
 
     await addTagsToPost(postId, tagList);
@@ -159,11 +157,14 @@ async function getAllTags() {
 
 async function getPostsByUser(userId) {
   try {
-    const { rows: postIds } = await client.query(`
+    const { rows: postIds } = await client.query(
+      `
       SELECT id
       FROM posts
-      WHERE "authorId"=${userId};
-    `);
+      WHERE "authorId"=$1;
+    `,
+      [userId]
+    );
 
     const posts = await Promise.all(
       postIds.map((post) => getPostById(post.id))
@@ -177,10 +178,13 @@ async function getPostsByUser(userId) {
 
 async function getUserById(userId) {
   try {
-    const userResult = await client.query(`
+    const userResult = await client.query(
+      `
       SELECT * FROM users
-      WHERE id=${userId};
-    `);
+      WHERE id=$1;
+    `,
+      [userId]
+    );
 
     const user = userResult.rows[0];
 

@@ -77,11 +77,14 @@ async function getRoutineById(id) {
   try {
     const {
       rows: [routine],
-    } = await client.query(`
+    } = await client.query(
+      `
       SELECT *
       FROM routines
-      WHERE id=${id};
-    `);
+      WHERE id=$1;
+    `,
+      [id]
+    );
 
     return routine;
   } catch (error) {
@@ -110,13 +113,16 @@ async function getRoutinesWithoutActivities() {
 //Use the helper function attachActivitiesToRoutines() from "db/activities" to help with this.
 async function getAllRoutinesByUser({ username }) {
   try {
-    const { rows } = await client.query(`
+    const { rows } = await client.query(
+      `
     SELECT r.*, u.username As "creatorName"
     FROM routines r
     JOIN users u
     on r."creatorId" = u.id
-    WHERE u.username = '${username}';
-  `);
+    WHERE u.username = $1;
+  `,
+      [username]
+    );
 
     return await attachActivitiesToRoutines(rows);
   } catch (error) {
@@ -128,13 +134,16 @@ async function getAllRoutinesByUser({ username }) {
 // this function should return an array of all public routines, with their activities attached, where the creatorName matches the name that is passed in as part of the argument. Use the helper function attachActivitiesToRoutines() from "db/activities" to help with this.
 async function getPublicRoutinesByUser({ username }) {
   try {
-    const { rows } = await client.query(`
+    const { rows } = await client.query(
+      `
       SELECT r.*, u.username As "creatorName"
       FROM routines r
       JOIN users u
       on r."creatorId" = u.id
-      WHERE u.username = '${username}' AND "isPublic" = 'true'
-    `);
+      WHERE u.username = $1 AND "isPublic" = 'true'
+    `,
+      [username]
+    );
 
     return await attachActivitiesToRoutines(rows);
   } catch (error) {
@@ -146,15 +155,18 @@ async function getPublicRoutinesByUser({ username }) {
 // this function should return an array of all routines, with their activities attached, contain the activity id that is passed in as part of the argument. Use the helper function attachActivitiesToRoutines() from "db/activities" to help with this.
 async function getPublicRoutinesByActivity({ id }) {
   try {
-    const { rows } = await client.query(`
+    const { rows } = await client.query(
+      `
       SELECT r.*, u.username As "creatorName"
       FROM routines r
       JOIN users u
       on r."creatorId" = u.id
       JOIN routine_activities ra
       on r.id = ra."routineId"
-      WHERE "isPublic" = 'true' AND ra."activityId" = '${id}'
-    `);
+      WHERE "isPublic" = 'true' AND ra."activityId" = $1
+    `,
+      [id]
+    );
 
     const attachedRows = await attachActivitiesToRoutines(rows);
     return attachedRows;
@@ -181,10 +193,10 @@ async function updateRoutine(fields = {}) {
       `
       UPDATE routines
       SET ${setString}
-      WHERE id = ${id}
+      WHERE id = $${Object.keys(fields).length + 1}
       RETURNING *;
       `,
-      Object.values(fields)
+      [...Object.values(fields), id]
     );
 
     return routine;
@@ -199,15 +211,8 @@ async function updateRoutine(fields = {}) {
 // you do not need to return anything
 async function destroyRoutine(id) {
   try {
-    await client.query(`
-
-      DELETE FROM routine_activities
-      WHERE "routineId"=${id}; 
-    
-      DELETE FROM routines
-      WHERE id=${id};
-      
-    `);
+    await client.query('DELETE FROM routine_activities WHERE "routineId"=$1;', [id]);
+    await client.query('DELETE FROM routines WHERE id=$1;', [id]);
   } catch (error) {
     console.error('error deleting routine', error);
     throw error;

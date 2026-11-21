@@ -37,11 +37,14 @@ async function getRoutineActivityById(id) {
   try {
     const {
       rows: [routine_activity],
-    } = await client.query(`
+    } = await client.query(
+      `
       SELECT *
       FROM routine_activities
-      WHERE id=${id};
-    `);
+      WHERE id=$1;
+    `,
+      [id]
+    );
 
     return routine_activity;
   } catch (error) {
@@ -53,11 +56,14 @@ async function getRoutineActivityById(id) {
 // this function should return an array of routine_activity objects that are attached to the routine id that is passed in as part of the argument.
 async function getRoutineActivitiesByRoutine({ id }) {
   try {
-    const { rows } = await client.query(`
+    const { rows } = await client.query(
+      `
       SELECT *
       FROM routine_activities
-      WHERE "routineId" = ${id};
-    `);
+      WHERE "routineId" = $1;
+    `,
+      [id]
+    );
 
     return rows;
   } catch (error) {
@@ -81,10 +87,10 @@ async function updateRoutineActivity({ id, ...fields }) {
       `
       UPDATE routine_activities
       SET ${setString}
-      WHERE id = ${id}
+      WHERE id = $${Object.keys(fields).length + 1}
       RETURNING *;
     `,
-      Object.values(fields)
+      [...Object.values(fields), id]
     );
 
     return routine_activity;
@@ -100,12 +106,15 @@ async function destroyRoutineActivity(id) {
   try {
     const {
       rows: [routine_activity],
-    } = await client.query(`
+    } = await client.query(
+      `
       DELETE FROM routine_activities
-      WHERE id = ${id}
+      WHERE id = $1
       RETURNING *
       ;
-    `);
+    `,
+      [id]
+    );
 
     return routine_activity;
   } catch (error) {
@@ -123,13 +132,16 @@ async function canEditRoutineActivity(routineActivityId, userId) {
   try {
     const {
       rows: [routine_activity],
-    } = await client.query(`
+    } = await client.query(
+      `
       SELECT ra.*, r."creatorId"
       FROM routine_activities ra
       JOIN routines r
         ON ra."routineId" = r.id
-      WHERE ra.id = '${routineActivityId}'
-    `);
+      WHERE ra.id = $1
+    `,
+      [routineActivityId]
+    );
 
     return routine_activity.creatorId === userId;
   } catch (error) {
