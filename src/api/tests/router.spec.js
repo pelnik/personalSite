@@ -12,6 +12,12 @@ describe('/api router', () => {
     });
   });
 
+  it('no longer has the GitHub webhook route', async () => {
+    const res = await request(app).post('/api/admin/github').send({});
+
+    expect(res.body.name).toBe('InvalidAPIPath');
+  });
+
   it('parses JSON request bodies for API modules', async () => {
     const res = await request(app)
       .post('/api/juicebox/users/login')

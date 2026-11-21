@@ -24,14 +24,13 @@ React 19 SPA with TypeScript, built with Vite (`vite.config.mts`). `index.html` 
 
 ### Backend APIs
 
-Four API modules under `src/api/`, each mounted at its own path:
+Three API modules under `src/api/`, each mounted at its own path:
 
 | Path | Module | Description |
 |---|---|---|
 | `/api/fitness` | `fitness-tracker` | Full fitness tracking REST API with auth |
 | `/api/juicebox` | `juicebox` | Social post/tag platform API |
 | `/api/scents` | `scents` | E-commerce API (redirects to Netlify storefront) |
-| `/api/admin` | `admin` | Admin utilities |
 
 Each module follows the same internal structure:
 ```
@@ -96,7 +95,7 @@ npm run test:e2e             # build, then all Playwright tests including screen
 npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
 ```
 
-**API tests (Jest + supertest).** `jest.config.js` has one project per API module: `fitness`, `juicebox`, `scents` and `core` (the `/api` router and admin). Select one with `--selectProjects`. Each project's `tests/setup.js` rebuilds its database. Tests mount the real `/api` router (`tests/support/apiApp.js`), so error shapes and status codes match production.
+**API tests (Jest + supertest).** `jest.config.js` has one project per API module: `fitness`, `juicebox`, `scents` and `core` (the `/api` router and shared helpers such as `createPool`). Select one with `--selectProjects`. Each project's `tests/setup.js` rebuilds its database. Tests mount the real `/api` router (`tests/support/apiApp.js`), so error shapes and status codes match production.
 
 **End-to-end tests (Playwright, `tests/e2e/`).** They run against `build/` served by the real `server.js` on port 3100, after reseeding juicebox and fitness. The fixture in `tests/e2e/fixtures.ts`:
 
@@ -171,7 +170,6 @@ See `DEPLOYMENT.md` for full setup details.
 │   │   ├── fitness-tracker/   # Fitness API + tests
 │   │   ├── juicebox/          # Social post API
 │   │   ├── scents/            # E-commerce API
-│   │   └── admin/             # Admin utilities
 │   ├── components/            # React components (TypeScript)
 │   ├── fullReactProjects/     # Portfolio demo apps
 │   ├── css/                   # Global stylesheets
