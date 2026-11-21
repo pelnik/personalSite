@@ -1,10 +1,6 @@
-let BASE;
-
-if (process.env.NODE_ENV === 'production') {
-  BASE = 'https://pelnik.dev/api/fitness';
-} else {
-  BASE = 'http://localhost:3000/api/fitness';
-}
+// Same-origin: Express serves the API in production, and Vite proxies /api
+// to Express in development.
+const BASE = '/api/fitness';
 
 export const registerAccount = async (username, password) => {
   try {
