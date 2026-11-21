@@ -39,13 +39,6 @@ jbRouter.use(async (req, res, next) => {
   }
 });
 
-jbRouter.use((req, res, next) => {
-  if (req.user) {
-    console.log('User is set:', req.user);
-  }
-  next();
-});
-
 const usersRouter = require('./users');
 const postRouter = require('./posts');
 const tagsRouter = require('./tags');

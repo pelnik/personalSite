@@ -1,30 +1,8 @@
 require('dotenv').config();
 
-const { Pool } = require('pg');
+const { createPool } = require('../../createPool');
 
-const { DATABASE_URL } = process.env;
-console.log('DATABASE_URL', DATABASE_URL);
-
-let client = new Pool({
-  connectionString: DATABASE_URL,
-  ssl:
-    process.env.NODE_ENV === 'production'
-      ? { rejectUnauthorized: false }
-      : undefined,
-  idleTimeoutMillis: 30000,
-});
-
-client.on('error', (e) => {
-  console.error('Database error at juicebox', e.stack);
-  client = new Pool({
-    connectionString: DATABASE_URL,
-    ssl:
-      process.env.NODE_ENV === 'production'
-        ? { rejectUnauthorized: false }
-        : undefined,
-    idleTimeoutMillis: 30000,
-  });
-});
+const client = createPool('juicebox', process.env.DATABASE_URL);
 
 async function getAllUsers() {
   const { rows } = await client.query(
@@ -57,7 +35,6 @@ async function createUser({ username, password, name, location }) {
 }
 
 async function updateUser(id, fields = {}) {
-  console.log('fields', fields);
   const setString = Object.keys(fields)
     .map((key, index) => `"${key}"=$${index + 1}`)
     .join(', ');
@@ -154,9 +131,6 @@ async function updatePost(postId, fields = {}) {
 
 async function getAllPosts() {
   try {
-    console.log('getAllPosts client', client);
-    console.log('getAllPosts database URL', DATABASE_URL);
-
     const { rows: postIds } = await client.query(
       `SELECT id
       FROM posts;
@@ -177,7 +151,6 @@ async function getAllTags() {
   try {
     const tags = await client.query(`
     SELECT * From tags`);
-    console.log(tags);
     return tags.rows;
   } catch (error) {
     throw error;

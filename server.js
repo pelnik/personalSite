@@ -1,13 +1,9 @@
 require('dotenv').config();
 
-const express = require('express');
 const https = require('https');
 const http = require('http');
 const fs = require('fs');
-const path = require('path');
-const morgan = require('morgan');
-const cors = require('cors');
-const apiRouter = require('./src/api');
+const app = require('./app');
 const { ensureDbInitialized } = require('./src/api/fitness-tracker/db/seedData');
 
 let PORT = 80;
@@ -17,24 +13,6 @@ if (process.env.NODE_ENV === 'development') {
   PORT = Number(process.env.HTTP_PORT) || 3000;
   sshPORT = 3443;
 }
-
-const app = express();
-app.use(cors());
-
-app.use(morgan('combined'));
-
-app.use('/api', apiRouter);
-
-app.get('/scents', (req, res, next) => {
-  console.log('entered redirect');
-  res.redirect('https://makes-scents-store.netlify.app/');
-});
-
-app.use(express.static('build'));
-
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve('build', 'index.html'));
-});
 
 if (process.env.NODE_ENV === 'development') {
   ensureDbInitialized();

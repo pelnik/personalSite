@@ -68,7 +68,6 @@ activitiesRouter.patch('/:activityId', requireUser, async (req, res, next) => {
   const id = Number(activityId);
   const { name, description } = req.body;
 
-  console.log('name', name, 'description', description);
   try {
     const activity = await getActivityById(id);
 
@@ -79,8 +78,6 @@ activitiesRouter.patch('/:activityId', requireUser, async (req, res, next) => {
       });
     } else {
       const activityName = await getActivityByName(name);
-
-      console.log('returned activity', activityName, 'returned id', id);
 
       if (activityName && activityName.id !== id) {
         next({

@@ -74,7 +74,6 @@ async function getAllPublicRoutines() {
 // this function should return a single routine (object)
 // from the database that matches the id that is passed in as an argument.
 async function getRoutineById(id) {
-  console.log('what is the routine client', client);
   try {
     const {
       rows: [routine],
