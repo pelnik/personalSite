@@ -4,7 +4,7 @@ import { HomeContent, SiteContentContainer } from '..';
 function Home() {
   useEffect(() => {
     document.title =
-      'Homepage - Matthew Pelnik, Data Analyst and Web Developer - SAS, SQL, Matt Pelnik';
+      'Homepage - Matthew Pelnik, Data Analyst, Databricks and Spark';
   }, []);
 
   return (
