@@ -6,6 +6,7 @@ Where things are (the code is the source of truth for the details):
 
 - `server.js` mounts `/api`, serves `build/`, then sends `build/index.html` for every other path. **New routes must be registered before that fallback**, or the SPA swallows them.
 - `src/api/<module>/{api,db,tests}`: one module per API, mounted in `src/api/index.js`. Modules: `fitness-tracker` (`/api/fitness`), `juicebox`, `scents` (the backend for the Netlify storefront) and `admin`. Each has its own Postgres database: `FITNESS_DATABASE_URL`, `DATABASE_URL` (juicebox) and `SCENTS_DATABASE_URL`.
+- The frontend is built with Vite (`vite.config.mts`). `index.html` at the project root loads `src/index.tsx`, and `public/` is copied to `build/` as-is.
 - `src/components/` holds the site's pages. `src/fullReactProjects/` holds three embedded portfolio demo apps (fitness, juicebox, stranger).
 
 ---
@@ -15,10 +16,13 @@ Where things are (the code is the source of truth for the details):
 ```bash
 docker compose up db -d   # local Postgres
 npm run seed:all          # seed all three databases
-npm run dev               # Express on 3000 + React dev server on 3001
+npm run dev               # Express on 3000 + Vite dev server on 3001
 npm run build             # compile the frontend to build/
+npm run typecheck         # tsc --noEmit (Vite doesn't type-check; CI runs this)
 npm run prod              # production server: port 80, plus 443 when Keys/ has certs
 ```
+
+In development, open http://localhost:3001. Vite proxies `/api` to Express, so the frontend always calls its APIs with same-origin paths (`/api/fitness`, `/api/juicebox`). Never hardcode a host.
 
 Copy `.env.example` to `.env`. `JWT_SECRET` is shared by juicebox and fitness auth. `STRIPE_KEY` is only needed for scents payments.
 
@@ -76,9 +80,9 @@ SSL:
 ### Frontend (TypeScript/React)
 
 - Functional components with hooks; no class components.
-- Components are `.tsx`. Some older utilities are `.jsx`.
+- Components are `.tsx`. Some older utilities are `.jsx`. Any file containing JSX must use a `.jsx` or `.tsx` extension, because Vite requires it.
 - Side effects go in `useEffect`, including the per-page `document.title` update.
-- Import from a folder's `index.js` barrel file, not from individual files.
+- Import from a folder's `index.js` barrel file, not from individual files. Exception: pages lazy-loaded with `React.lazy` in `src/components/Main.tsx` import their module directly, so each gets its own chunk.
 - TypeScript runs in strict mode. JS files are allowed but not type-checked.
 - Dev vs. production behavior is switched with `process.env.NODE_ENV`.
 

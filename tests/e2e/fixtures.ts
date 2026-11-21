@@ -3,27 +3,21 @@ import strangerPosts from './fixtures/stranger-posts.json';
 
 // Every test gets a page that:
 // - never sends analytics, so test runs don't show up in Google Analytics
-// - sends demo-app API calls to the local server, because the CRA build
-//   hardcodes https://pelnik.dev/api/... for production
+// - never reaches the live site: the demo apps call their APIs same-origin,
+//   so any request to pelnik.dev means a hardcoded URL crept back in
 // - mocks the Stranger's Things API, which is a third-party server
 // - fails the test on any console error or failed request (e.g. a missing
-//   image), which is how a broken asset path after the Vite switch shows up
+//   image), which is how a broken asset path shows up
 const STRANGER_API = 'https://strangers-things.herokuapp.com/api/**';
 
-async function routeExternalTraffic(page: Page, baseURL: string) {
+async function routeExternalTraffic(page: Page, errors: string[]) {
   await page.route(/googletagmanager\.com|google-analytics\.com/, (route) =>
     route.fulfill({ status: 200, contentType: 'text/javascript', body: '' })
   );
 
-  await page.route('https://pelnik.dev/api/**', async (route) => {
-    const request = route.request();
-    const localUrl = request.url().replace('https://pelnik.dev', baseURL);
-    const response = await page.request.fetch(localUrl, {
-      method: request.method(),
-      headers: request.headers(),
-      data: request.postDataBuffer() ?? undefined,
-    });
-    await route.fulfill({ response });
+  await page.route(/^https?:\/\/(www\.)?pelnik\.dev\//, (route) => {
+    errors.push(`request to the live site: ${route.request().url()}`);
+    return route.abort('blockedbyclient');
   });
 
   await page.route(STRANGER_API, (route) => {
@@ -49,7 +43,7 @@ export const test = base.extend<Fixtures>({
     await use((...patterns) => allowedErrors.push(...patterns));
   },
 
-  page: async ({ page, baseURL, allowedErrors }, use) => {
+  page: async ({ page, allowedErrors }, use) => {
     const errors: string[] = [];
 
     page.on('console', (message) => {
@@ -68,7 +62,7 @@ export const test = base.extend<Fixtures>({
       }
     });
 
-    await routeExternalTraffic(page, baseURL!);
+    await routeExternalTraffic(page, errors);
     await use(page);
     // Requests still being forwarded when the test ends aren't failures.
     await page.unrouteAll({ behavior: 'ignoreErrors' });
