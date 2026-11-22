@@ -33,6 +33,7 @@ npm run seed:all          # seed all four databases
 npm run dev               # Express on 3000 + Vite dev server on 3001
 npm run build             # compile the frontend to build/ and prerender pages
 npm run typecheck         # tsc --noEmit (Vite doesn't type-check; CI runs this)
+npm run lint              # ESLint (CI fails on errors, not warnings)
 npm run prod              # production server: port 80, plus 443 when Keys/ has certs
 ```
 
@@ -66,12 +67,13 @@ npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
 
 ```bash
 npm run typecheck
+npm run lint
 npm test
 npm run test:e2e              # on macOS: functional + screenshot tests
 npm run test:e2e:functional   # elsewhere: screenshot baselines are macOS-only (run npm run build first)
 ```
 
-- **Screenshots only run locally:** CI runs the first two and the functional e2e tests, but not the screenshot comparisons. So a branch that skipped `npm run test:e2e` on a Mac can pass CI and still change how the site looks. Say so in the PR if you couldn't run the screenshots.
+- **Screenshots only run locally:** CI runs the first three and the functional e2e tests, but not the screenshot comparisons. So a branch that skipped `npm run test:e2e` on a Mac can pass CI and still change how the site looks. Say so in the PR if you couldn't run the screenshots.
 - **Updating baselines:** if a screenshot changes on purpose, update them with `--update-snapshots` and look at the new images before committing them. Never commit screenshot files that aren't `-darwin`.
 
 ---
@@ -113,6 +115,7 @@ SSL:
 - Side effects go in `useEffect`, including the per-page `document.title` update.
 - Import from a folder's `index.js` barrel file, not from individual files. Exception: pages lazy-loaded with `React.lazy` in `src/components/Main.tsx` import their module directly, so each gets its own chunk.
 - TypeScript runs in strict mode. JS files are allowed but not type-checked.
+- `typescript` in `package.json` aliases `@typescript/typescript6` to provide the TS 6 API for `typescript-eslint`; `tsc` remains TS 7 from `@typescript/native`. Don't change the alias or bump `typescript` to 7 until `typescript-eslint` supports TS 7. Fix new lint findings in site code rather than suppressing them; any `eslint-disable` needs a `--` reason.
 - Dev vs. production behavior is switched with `process.env.NODE_ENV`.
 
 ### Adding login to a project

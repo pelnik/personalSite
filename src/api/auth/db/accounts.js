@@ -25,7 +25,8 @@ async function authenticateAccount({ username, password }) {
     return;
   }
   if (!(await bcrypt.compare(password, row.password))) return;
-  const { password: ignored, ...account } = row;
+  const account = { ...row };
+  delete account.password;
   return account;
 }
 

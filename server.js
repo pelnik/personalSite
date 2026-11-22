@@ -57,7 +57,7 @@ if (process.env.NODE_ENV === 'production') {
       console.log(`https server listening on ${sshPORT}`);
     });
     servers.push(httpsServer);
-  } catch (err) {
+  } catch {
     console.warn('SSL certificates not found, HTTPS server not started');
   }
 }
