@@ -132,7 +132,7 @@ Bugs are tracked as GitHub Issues on `pelnik/personalSite`, labeled `bug`. Non-b
 ### Linking issues to PRs
 
 - Before pushing a branch or opening a PR, check open issues (`gh issue list --state open`) for any the change fixes or touches.
-- Reference them in the PR description and in `pr_info.md`:
+- Reference them in the PR description:
   - `Fixes #N` for issues the PR fully resolves (GitHub closes them on merge)
   - `Refs #N` for related or partially addressed issues
 - Commits that fix a specific issue reference it in the message, e.g. `fix: hang on JWT without id (#12)`.
@@ -152,7 +152,7 @@ New features are often designed by one agent and built by another, possibly a di
 
   Write it for an agent that hasn't seen the conversation it came from: name exact files, functions and commands, and leave no open questions. If the work won't fit in one PR (see Instructions), split the spec into numbered parts, one PR each, with the merge order. To revise the spec, edit that comment rather than adding a new one, so there's only ever one current version.
 - **Building:** read the issue and its spec comment (`gh issue view N --comments`) before changing anything, and follow the spec. Don't redesign it.
-  - Small mismatches with the code, such as a moved file or a renamed function, you can adapt to. List each one under "Deviations from spec" in `pr_info.md` and in the PR description.
+  - Small mismatches with the code, such as a moved file or a renamed function, you can adapt to. List each one under "Deviations from spec" in the PR description.
   - If following the spec would change behavior or a design decision, or the spec is wrong, stop and comment on the issue saying what's wrong. Don't improvise.
   - The PR says `Fixes #N` (or `Refs #N` for one part of a split spec).
 - **Reviewing:** flag any difference between the PR and the spec that isn't listed as a deviation, and any acceptance criterion the PR doesn't meet.
@@ -199,4 +199,5 @@ This applies when asked to address review comments on a PR, either once or on a 
   - If a request covers several things, split it into several PRs, each on its own branch from `main`, or from the branch of the PR it depends on.
   - When PRs depend on each other, say so in each description and give the merge order. Otherwise note that they're independent.
   - Problems found along the way that aren't part of the change get logged as an issue (see Issue Tracking), not added to the current PR.
-- For each new feature update, maintain working markdown file pr_info.md, an ignored file in the repo, with information about the goal of the feature, design decisions made, reasons for each design, considerations for deployment to site, and any other relevant information for yourself and for Matt. This will ultimately be used in the PR description. When building from a design spec, start from the spec and add "Deviations from spec".
+- The PR description is the record of the change: its goal, the design decisions and why, deployment considerations, and anything Matt should know. When building from a design spec, link the issue rather than repeating the spec, and add "Deviations from spec". Write the description in full before the PR leaves draft, because the reviewer reads it once, when the PR opens or is marked ready. To change it later, use `gh pr edit N --body-file <file>`.
+- For working notes that need to outlast a session (a to-do list, findings in progress), use `agent-notes.md` at the repo root. It's ignored by git and is scratch, not a record: anything that matters goes into the PR description or the issue.
