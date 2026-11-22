@@ -38,7 +38,16 @@ npm run prod              # production server: port 80, plus 443 when Keys/ has 
 
 In development, open http://localhost:3001. Vite proxies `/api` to Express, so the frontend always calls its APIs with same-origin paths (`/api/fitness`, `/api/juicebox`). Never hardcode a host.
 
-Copy `.env.example` to `.env`. `JWT_SECRET` is shared by juicebox and fitness auth. `STRIPE_KEY` is only needed for scents payments.
+Copy `.env.example` to `.env`. `JWT_SECRET` is shared by juicebox and fitness auth. `STRIPE_KEY` is only needed for scents payments. Tests don't need a `.env`: any database URL it doesn't set defaults to the docker-compose Postgres (`tests/support/localDatabases.js`).
+
+### Sharing the machine with other agents
+
+Matt often has several agents working at once, each in its own clone or worktree of this repo. They share one Postgres container and the machine's ports.
+
+- `docker compose up db -d` from any clone starts that one container, or does nothing if it's already running. Never run `docker compose down` or remove the container: other agents are using it, and `down -v` deletes every database.
+- Never kill a process you didn't start. If a port is taken, another agent's server probably has it. Wait, or tell Matt.
+- Test runs reset the shared databases, so a run in another clone at the same time can fail yours. Rerun before treating a failure as real.
+- Before creating a branch, check that the name is free: `git ls-remote --heads origin <name>`. Never push to a branch another agent is working on.
 
 **Never run `npm run build` on the EC2 server.** It doesn't have enough memory. Builds happen in GitHub Actions.
 
