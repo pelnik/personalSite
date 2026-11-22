@@ -116,7 +116,7 @@ usersRouter.get("/me", requireUser, async (req, res, next) => {
 });
 
 // GET /api/users ** get all users
-usersRouter.get("/", requireAdminUser, async (req, res) => {
+usersRouter.get("/", requireAdminUser, async (req, res, next) => {
   try {
     const users = await getAllUsers();
 
