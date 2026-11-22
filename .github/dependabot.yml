@@ -1,0 +1,13 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # Security updates only (enabled in the repo settings). 0 turns off routine version bumps.
+    open-pull-requests-limit: 0
+    ignore:
+      # faker 10 is ESM-only, and the fitness tests load it with require() under Jest.
+      # Remove this once #73 takes faker out of those tests; the scents seed already works on 10.
+      - dependency-name: "@faker-js/faker"
+        versions: [">=10"]
