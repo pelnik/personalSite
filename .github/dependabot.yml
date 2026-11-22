@@ -9,5 +9,7 @@ updates:
     ignore:
       # faker 10 is ESM-only, and the fitness tests load it with require() under Jest.
       # Remove this once #73 takes faker out of those tests; the scents seed already works on 10.
+      # This also holds back the fix for GHSA-qxc2-j82w-r537 (patched only in 10.5.0). That's
+      # acceptable for now: faker is dev-only, and nothing here calls helpers.fake.
       - dependency-name: "@faker-js/faker"
         versions: [">=10"]
