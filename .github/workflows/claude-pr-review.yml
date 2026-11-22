@@ -8,9 +8,11 @@ on:
 
 jobs:
   review:
-    # Non-draft PR events, or an "@claude" comment on a PR (not an issue) from someone with write access
+    # Non-draft PR events, or an "@claude" comment on a PR (not an issue) from someone with write access.
+    # Dependabot PRs are skipped: the action rejects bot actors, and Dependabot runs don't get Actions secrets.
     if: |
-      (github.event_name == 'pull_request' && !github.event.pull_request.draft) ||
+      (github.event_name == 'pull_request' && !github.event.pull_request.draft &&
+        github.event.pull_request.user.login != 'dependabot[bot]') ||
       (github.event_name == 'issue_comment' && github.event.issue.pull_request &&
         contains(github.event.comment.body, '@claude') &&
         contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))

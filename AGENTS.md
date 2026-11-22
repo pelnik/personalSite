@@ -161,7 +161,7 @@ Specs are built in local sessions, not by the fixer.
 
 ### Automated review and fixes
 
-**The reviewer** (`claude-pr-review.yml`) runs once when a non-draft PR opens or is marked ready, not on every push. Matt can re-run it by commenting the trigger word on the PR; agents never do (see the last rule under Addressing PR review comments). It posts a minute or two after the PR opens, so if you open a PR during a task, check for its review before you report the task done.
+**The reviewer** (`claude-pr-review.yml`) runs once when a non-draft PR opens or is marked ready, not on every push. It skips Dependabot's PRs, which CI still tests. Matt can re-run it by commenting the trigger word on the PR; agents never do (see the last rule under Addressing PR review comments). It posts a minute or two after the PR opens, so if you open a PR during a task, check for its review before you report the task done.
 
 **The fixer** (`claude-issue-fix.yml`) runs on an issue when Matt adds the `claude-fix` label. Nothing runs on new issues by default, so each run is a deliberate choice.
 
