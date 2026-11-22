@@ -2,34 +2,33 @@ const {
   client,
   getAllUsers,
   createUser,
-  updateUser,
   createPost,
   updatePost,
   getAllPosts,
-  getUserById,
   createTags,
   addTagsToPost,
-  getPostsByTagName,
 } = require('./index');
+const { createAuthTables, seedAccounts } = require('../../auth');
+const authClient = require('../../auth/db').client;
 
-async function createInitialUsers() {
+async function createInitialUsers(accounts) {
   try {
     console.log('Starting to create users...');
     const albert = await createUser({
+      id: accounts.albert.id,
       username: 'albert',
-      password: 'bertie99',
       name: 'Albert',
       location: 'New Orleans',
     });
     const sandra = await createUser({
+      id: accounts.sandra.id,
       username: 'sandra',
-      password: '2sandy4me',
       name: 'Sandra',
       location: 'NYC',
     });
     const glamgal = await createUser({
+      id: accounts.glamgal.id,
       username: 'glamgal',
-      password: 'soglam',
       name: 'Chelsea',
       location: 'LA',
     });
@@ -65,11 +64,10 @@ async function createTables() {
 
     await client.query(`
       CREATE TABLE users (
-        id SERIAL PRIMARY KEY,
+        id INTEGER PRIMARY KEY,
         username varchar(255) UNIQUE NOT NULL,
-        password varchar(255) NOT NULL,
         name VARCHAR(255) NOT NULL,
-        location VARCHAR(255) NOT NULL,
+        location VARCHAR(255) NOT NULL DEFAULT '',
         active BOOLEAN DEFAULT true
       );
     `);
@@ -140,9 +138,11 @@ async function createInitialPosts() {
 
 async function rebuildDB() {
   try {
+    await createAuthTables();
+    const accounts = await seedAccounts();
     await dropTables();
     await createTables();
-    await createInitialUsers();
+    await createInitialUsers(accounts);
     await createInitialPosts();
   } catch (error) {
     console.log('Error during rebuildDB');
@@ -174,57 +174,17 @@ async function createInitialTags() {
   }
 }
 
-async function testDB() {
-  try {
-    console.log('Starting to test database...');
-
-    console.log('Calling getAllUsers');
-    const users = await getAllUsers();
-    console.log('Result:', users);
-
-    console.log('Calling updateUser on users[0]');
-    const updateUserResult = await updateUser(users[0].id, {
-      name: 'Newname Sogood',
-      location: 'Lesterville, KY',
-    });
-    console.log('Result:', updateUserResult);
-
-    console.log('Calling getAllPosts');
-    const posts = await getAllPosts();
-    console.log('Result:', posts);
-
-    console.log('Calling updatePost on posts[0]');
-    const updatePostResult = await updatePost(posts[0].id, {
-      title: 'New Title',
-      content: 'Updated Content',
-    });
-    console.log('Result:', updatePostResult);
-
-    console.log('Calling getUserById with 1');
-    const albert = await getUserById(1);
-    console.log('Result:', albert);
-
-    console.log('Calling updatePost on posts[1], only updating tags');
-    const updatePostTagsResult = await updatePost(posts[1].id, {
-      tags: ['#youcandoanything', '#redfish', '#bluefish'],
-    });
-    console.log('result:', updatePostTagsResult);
-
-    console.log('Calling getPostsByTagName with #happy');
-    const postsWithHappy = await getPostsByTagName('#happy');
-    console.log('Result:', postsWithHappy);
-
-    console.log('Finished database tests!');
-  } catch (error) {
-    console.error('Error testing database!');
-    throw error;
-  } finally {
-    client.end();
-  }
-}
-
 if (require.main === module) {
-  rebuildDB().then(testDB).catch(console.error);
+  (async () => {
+    try {
+      await rebuildDB();
+    } catch (error) {
+      console.error(error);
+      process.exitCode = 1;
+    } finally {
+      await Promise.all([client.end(), authClient.end()]);
+    }
+  })();
 }
 
 module.exports = { rebuildDB };

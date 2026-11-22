@@ -33,7 +33,7 @@ describe('/api/juicebox/posts', () => {
     });
 
     it("marks the logged-in user's own posts with isAuthor", async () => {
-      const token = await login('albert', 'bertie99');
+      const token = await login('albert');
 
       const res = await api().get('/api/juicebox/posts').set(auth(token));
 

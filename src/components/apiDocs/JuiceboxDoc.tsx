@@ -39,34 +39,11 @@ function JuiceboxDoc() {
           </span>
         </p>
         <hr />
-        <h3 className="subsection-title">Registration</h3>
-        <p className="doc-code">pelnik.dev/api/juicebox/register</p>
+        <h3 className="subsection-title">Authentication</h3>
         <p className="doc-text">
-          You can get posts without a user token, but to do most things, first
-          you will need a user token. To register a user, you will need to send
-          a username, password, name, and location.
-        </p>
-        <p className="doc-curl">
-          curl https://pelnik.dev/api/juicebox/users/register -X POST -H
-          &quot;Content-Type: application/json&quot; -d &apos;&#123;
-          &quot;username&quot;: &quot;&#91;FunGuy23&#93;&quot;,
-          &quot;password&quot;: &quot;&#91;verysecure&#93;&quot;,
-          &quot;name&quot;: &quot;&#91;Billy&#93;&quot;, &quot;location&quot;:
-          &quot;&#91;Kansas&#93;&quot; &#125;&apos;
-        </p>
-        <hr />
-        <h3 className="subsection-title">Login</h3>
-        <p className="doc-code">pelnik.dev/api/juicebox/login</p>
-        <p className="doc-text">
-          You can get posts without a user token, but to do most things, first
-          you will need a user token. To login a user, you will need to send a
-          username and password.
-        </p>
-        <p className="doc-curl">
-          curl https://pelnik.dev/api/juicebox/users/login -X POST -H
-          &quot;Content-Type: application/json&quot; -d &apos;&#123;
-          &quot;username&quot;: &quot;&#91;FunGuy23&#93;&quot;,
-          &quot;password&quot;: &quot;&#91;verysecure&#93;&quot; &#125;&apos;
+          Juicebox uses the site's shared accounts. Get a Bearer token with
+          POST /api/auth/login or create an account with POST /api/auth/register.
+          Use that token in the Authorization header for protected Juicebox requests.
         </p>
         <hr />
         <h3 className="subsection-title">Get Posts</h3>

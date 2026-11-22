@@ -14,9 +14,10 @@ test.describe('Juicebox demo', () => {
     const title = `E2E post ${Date.now()}`;
 
     await page.goto('/juicebox/login');
+    await expect(page).toHaveURL('/login?next=/juicebox');
     await page.getByLabel('Username').fill('albert');
     await page.getByLabel('Password').fill('bertie99');
-    await page.locator('form button[type="submit"]').click();
+    await page.getByRole('button', { name: 'Log in', exact: true }).click();
 
     await expect(page).toHaveURL('/juicebox');
     await page.getByText('New Post').click();
