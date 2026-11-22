@@ -13,7 +13,7 @@ A personal website built with React frontend and Express backend, featuring mult
 ### 1. Start the database
 
 ```bash
-docker compose up db -d
+docker compose up db -d --no-recreate
 ```
 
 This starts a PostgreSQL 16 container with three databases: `juicebox`, `fitness`, and `scents`.
@@ -65,7 +65,7 @@ Open `http://localhost:3001` in your browser.
 
 ```bash
 # Make sure the database is running
-docker compose up db -d
+docker compose up db -d --no-recreate
 
 # Seed the fitness database
 npm run seed:fitness
@@ -86,7 +86,7 @@ npm run test:frontend
 
 ```bash
 # Start database
-docker compose up db -d
+docker compose up db -d --no-recreate
 
 # Check running containers
 docker compose ps

@@ -7,8 +7,10 @@
 # =============================================================================
 
 # Fixed, rather than named after the folder, so every clone of the repo on a
-# machine manages the same containers: `docker compose up db -d` in a second
-# clone finds the running database instead of failing on its container name.
+# machine manages the same containers: `docker compose up db -d --no-recreate`
+# in a second clone finds the running database instead of failing on its
+# container name. Without --no-recreate, Compose would restart it, because the
+# init-db.sql mount below resolves to a different path in each clone.
 name: personalsite
 
 services:

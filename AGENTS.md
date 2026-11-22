@@ -27,7 +27,7 @@ Where things are (the code is the source of truth for the details):
 ## Development
 
 ```bash
-docker compose up db -d   # local Postgres
+docker compose up db -d --no-recreate   # local Postgres, shared by every clone
 # Existing Docker volumes need this once: docker compose exec db createdb -U postgres auth
 npm run seed:all          # seed all four databases
 npm run dev               # Express on 3000 + Vite dev server on 3001
@@ -44,7 +44,7 @@ Copy `.env.example` to `.env`. `JWT_SECRET` is shared by juicebox and fitness au
 
 Matt often has several agents working at once, each in its own clone or worktree of this repo. They share one Postgres container and the machine's ports.
 
-- `docker compose up db -d` from any clone starts that one container, or does nothing if it's already running. Never run `docker compose down` or remove the container: other agents are using it, and `down -v` deletes every database.
+- `docker compose up db -d --no-recreate` from any clone starts that one container, or does nothing if it's already running. Always pass `--no-recreate`: the `init-db.sql` mount path differs in each clone, so without it Compose restarts the container under everyone else. Never run `docker compose down` or remove the container: other agents are using it, and `down -v` deletes every database.
 - Never kill a process you didn't start. If a port is taken, another agent's server probably has it. Wait, or tell Matt.
 - Test runs reset the shared databases, so a run in another clone at the same time can fail yours. Rerun before treating a failure as real.
 - Before creating a branch, check that the name is free: `git ls-remote --heads origin <name>`. Never push to a branch another agent is working on.
@@ -71,7 +71,7 @@ npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
   - Stripe is stubbed and given a dummy key. The scents seed archives every product in whatever Stripe account it's given.
 - **Known bugs:** tests named `KNOWN BUG: …` pin current buggy behavior on purpose. When fixing one, update that test in the same change.
 
-**Before pushing** a branch or opening a PR, with local Postgres running (`docker compose up db -d`), run:
+**Before pushing** a branch or opening a PR, with local Postgres running (`docker compose up db -d --no-recreate`), run:
 
 ```bash
 npm run typecheck
