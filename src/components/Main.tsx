@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Home, NotFound, MainAbout, AboutStats } from '.';
+import { LoginPage } from './Auth';
 import '../css/site.css';
 
 // Loaded on demand, so the homepage doesn't download the demo apps (and the
@@ -29,6 +30,7 @@ function Main() {
           <Route path="/api/juicebox/docs" element={<JuiceboxDoc />} />
           <Route path="/api/fitness/docs" element={<FitnessDoc />} />
           <Route path="/fitness/*" element={<FitnessMain />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

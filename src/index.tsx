@@ -2,6 +2,7 @@ import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Main } from './components';
+import { AuthProvider } from './components/Auth';
 
 // Pages like the demo apps load as separate chunks. A deploy deletes the old
 // chunks, so a tab still running the previous version can fail to load one.
@@ -31,7 +32,9 @@ const root = createRoot(container);
 root.render(
   <StrictMode>
     <Router>
-      <Main />
+      <AuthProvider>
+        <Main />
+      </AuthProvider>
     </Router>
   </StrictMode>
 );

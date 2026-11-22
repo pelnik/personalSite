@@ -74,6 +74,37 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 8px;
+}
+
+.site-full-window .login-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 360px;
+}
+
+.site-full-window .login-page form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.site-full-window .login-page input {
+  padding: 8px;
+  font: inherit;
+}
+
+.site-full-window .login-page button {
+  width: fit-content;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.site-full-window .login-mode-toggle {
+  background: none;
+  border: 0;
+  text-decoration: underline;
 }
 
 /* .site-full-window #right-navbar {
