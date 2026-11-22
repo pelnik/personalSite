@@ -38,7 +38,7 @@ GitHub secrets the deploy needs: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, `EC2_PRO
   - Binding ports below 1024 as a non-root user needs a capability on the `node` binary. Check with `getcap $(which node)`.
   - **Each new Node version needs this granted again** (see [Upgrading Node](#upgrading-node)), or the server can't bind 80 or 443.
 - **`.env` in the project folder:**
-  - `DATABASE_URL`, `FITNESS_DATABASE_URL`, `SCENTS_DATABASE_URL`
+  - `DATABASE_URL`, `FITNESS_DATABASE_URL`, `SCENTS_DATABASE_URL`, `AUTH_DATABASE_URL`
   - `JWT_SECRET`
   - `STRIPE_KEY`, `PROD_STRIPE_KEY`
   - `ADMIN_TOKEN` (optional; enables `/api/metrics`)
@@ -53,6 +53,10 @@ The site uses Let's Encrypt certificates, renewed by certbot (set up in #23):
 - **Checking:** `.github/workflows/cert-expiry.yml` checks the live certificate every Monday. It opens an issue if renewal looks stuck, and fails if it can't read the certificate at all. On the server, check with `sudo certbot renew --dry-run` and `systemctl list-timers | grep certbot`.
 
 ## One-time setup
+
+Before merging the shared auth API (Part 1 of #57), create the `auth` database on the same Postgres host as the other databases and add `AUTH_DATABASE_URL` to the server's `.env`. The new pool is included in `/api/health`, so the deploy health check requires this setup. After that deploy, run `npm run seed:auth` **once, on the empty auth database**. Once site registration is available, use `npm run auth:make-admin -- <username>` to grant site admin access.
+
+Do not rerun `seed:auth` or `seed:all` after real accounts exist. `seed:auth` drops every account and resets their ids; a still-valid token could then authenticate as a different account with the same id. If rebuilding auth is ever necessary, plan the account reset and rotate `JWT_SECRET` to invalidate those tokens.
 
 Run these once on the server, as `ubuntu`, with nvm loaded (`source ~/.nvm/nvm.sh`).
 

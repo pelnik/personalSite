@@ -26,6 +26,9 @@ module.exports = {
   forceExit: true,
   testTimeout: 30000,
   projects: [
+    apiProject('auth', 'src/api/auth', {
+      globalSetup: '<rootDir>/tests/setup.js',
+    }),
     apiProject('fitness', 'src/api/fitness-tracker', {
       globalSetup: '<rootDir>/tests/setup.js',
       globalTeardown: '<rootDir>/tests/tearDown.js',
