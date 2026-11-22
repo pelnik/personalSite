@@ -42,9 +42,14 @@ jobs:
             - Potential bugs or issues
             - Security implications
             - Performance considerations
-            - Linked GitHub issues: read each issue the PR references (Fixes #N / Refs #N) and
-              confirm the change addresses it. Also check open `bug` issues and flag any this PR
-              fixes without linking.
+            - Linked GitHub issues: read each issue the PR references (Fixes #N / Refs #N), with
+              its comments, and confirm the change addresses it. Also check open `bug` issues and
+              flag any this PR fixes without linking.
+            - Design specs: if a linked issue has a "Design spec" comment, check the PR against it.
+              Flag differences the PR doesn't list under "Deviations from spec", and acceptance
+              criteria it doesn't meet.
+
+            You are "the reviewer" in AGENTS.md.
 
             Provide detailed feedback using inline comments for specific issues.
 

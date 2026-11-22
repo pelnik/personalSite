@@ -14,7 +14,7 @@ node_modules/
 # Legacy
 /oldpublic
 
-pr_info.md
+agent-notes.md
 # Playwright
 /test-results
 /playwright-report
