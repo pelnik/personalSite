@@ -70,7 +70,7 @@ async function attachCartItems(carts) {
       return carts;
     }
 
-    orderItemPromises = carts.map((cart) => {
+    const orderItemPromises = carts.map((cart) => {
       return getAllCartItems({ cart_id: cart.id });
     });
 

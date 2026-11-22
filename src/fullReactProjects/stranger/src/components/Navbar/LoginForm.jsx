@@ -34,7 +34,7 @@ function LoginForm({ userToken, setUserToken, alert, setAlert }) {
         navigate('/stranger');
       }
     } catch (error) {
-      console.error(error, response);
+      console.error(error);
     }
   }
 

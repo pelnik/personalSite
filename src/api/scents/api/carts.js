@@ -82,7 +82,7 @@ cartsRouter.get('/stripe-secret', requireUser, async (req, res, next) => {
         const cleanPrice = item.product_price.slice(1);
         const numY = parseFloat(cleanPrice);
 
-        itemSubtotal = numY * item.quantity * 100;
+        const itemSubtotal = numY * item.quantity * 100;
 
         return acc + itemSubtotal;
       }, 0);
