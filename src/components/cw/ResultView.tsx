@@ -8,10 +8,9 @@ function mistakeLabel(op: Operation) {
   return `extra ${op.typed === ' ' ? 'space' : op.typed}`;
 }
 
-export default function ResultView({ result, loggedIn, complete }: {
+export default function ResultView({ result, loggedIn }: {
   result: Result;
   loggedIn: boolean;
-  complete: boolean;
 }) {
   const mistakes = result.ops.filter((op) => op.type !== 'match');
 
@@ -40,7 +39,6 @@ export default function ResultView({ result, loggedIn, complete }: {
       {!loggedIn && (
         <p><Link to="/login?next=/cw">Log in</Link> to save your progress and get practice weighted to your weak letters</p>
       )}
-      {loggedIn && !complete && <p>You stopped early, so this practice wasn't saved.</p>}
     </section>
   );
 }

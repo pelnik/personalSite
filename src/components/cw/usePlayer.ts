@@ -6,7 +6,6 @@ export type PlayerStatus = 'idle' | 'loading' | 'playing' | 'done';
 export function usePlayer() {
   const [status, setStatus] = useState<PlayerStatus>('idle');
   const [completed, setCompleted] = useState(false);
-  const [playedChars, setPlayedChars] = useState(0);
   const [progress, setProgress] = useState({ elapsed: 0, duration: 0 });
   const player = useRef<Jscw | null>(null);
   const generation = useRef(0);
@@ -23,7 +22,6 @@ export function usePlayer() {
   const start = useCallback(async (text: string, settings: Settings) => {
     const current = ++generation.current;
     setStatus('loading');
-    setPlayedChars(0);
     setCompleted(false);
     setProgress({ elapsed: 0, duration: 0 });
     const Constructor = await loadJscw();
@@ -32,7 +30,6 @@ export function usePlayer() {
     player.current.setWpm(settings.charWpm);
     player.current.setEff(settings.effWpm === settings.charWpm ? 0 : settings.effWpm);
     player.current.setFreq(settings.toneHz);
-    player.current.onCharacterPlay = ({ n }) => { if (current === generation.current) setPlayedChars(n + 1); };
     player.current.onFinished = () => {
       if (current !== generation.current) return;
       setCompleted(true);
@@ -48,8 +45,9 @@ export function usePlayer() {
   const stop = useCallback(() => {
     generation.current++;
     player.current?.stop();
+    setStatus('idle');
     setCompleted(false);
-    setStatus('done');
+    setProgress({ elapsed: 0, duration: 0 });
   }, []);
   useEffect(() => {
     if (status !== 'playing') return;
@@ -71,5 +69,5 @@ export function usePlayer() {
     player.current?.stop();
     void player.current?.audioCtx?.close();
   }, []);
-  return { status, playedChars, completed, progress, prepare, start, stop };
+  return { status, completed, progress, prepare, start, stop };
 }
