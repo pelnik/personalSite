@@ -6,6 +6,7 @@ export type PlayerStatus = 'idle' | 'loading' | 'playing' | 'done';
 export function usePlayer() {
   const [status, setStatus] = useState<PlayerStatus>('idle');
   const [playedChars, setPlayedChars] = useState(0);
+  const [progress, setProgress] = useState({ elapsed: 0, duration: 0 });
   const player = useRef<Jscw | null>(null);
   const generation = useRef(0);
   const prepare = useCallback(() => {
@@ -19,6 +20,7 @@ export function usePlayer() {
     const current = ++generation.current;
     setStatus('loading');
     setPlayedChars(0);
+    setProgress({ elapsed: 0, duration: 0 });
     const Constructor = await loadJscw();
     if (current !== generation.current) return;
     player.current ??= new Constructor();
@@ -28,6 +30,10 @@ export function usePlayer() {
     player.current.onCharacterPlay = ({ n }) => { if (current === generation.current) setPlayedChars(n + 1); };
     player.current.onFinished = () => { if (current === generation.current) setStatus('done'); };
     player.current.play(text);
+    const duration = player.current.getLength();
+    if (Number.isFinite(duration) && duration > 0) {
+      setProgress({ elapsed: 0, duration });
+    }
     setStatus('playing');
   }, []);
   const stop = useCallback(() => {
@@ -35,10 +41,25 @@ export function usePlayer() {
     player.current?.stop();
     setStatus('done');
   }, []);
+  useEffect(() => {
+    if (status !== 'playing') return;
+    const playback = player.current;
+    if (!playback) return;
+
+    const timer = window.setInterval(() => {
+      const duration = playback.getLength();
+      const elapsed = playback.getTime();
+      if (Number.isFinite(duration) && duration > 0 && Number.isFinite(elapsed)) {
+        setProgress({ elapsed: Math.min(elapsed, duration), duration });
+      }
+    }, 250);
+
+    return () => window.clearInterval(timer);
+  }, [status]);
   useEffect(() => () => {
     generation.current++;
     player.current?.stop();
     void player.current?.audioCtx?.close();
   }, []);
-  return { status, playedChars, prepare, start, stop };
+  return { status, playedChars, progress, prepare, start, stop };
 }

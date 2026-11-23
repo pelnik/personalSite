@@ -703,7 +703,35 @@
 
 /* CW trainer */
 .cw-page { max-width: 960px; margin: 0 auto; padding: 2rem 1rem 4rem; color: #20282c; }
-.cw-page h1 { margin-bottom: .5rem; }
+.cw-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem 1rem;
+  margin-bottom: .5rem;
+}
+.cw-account {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem .75rem;
+  min-width: 0;
+  font-size: .9rem;
+}
+.cw-account span { overflow-wrap: anywhere; }
+.site-full-window .cw-auth-control {
+  border: 1px solid #176b81;
+  border-radius: 4px;
+  padding: .5rem .8rem;
+  color: #176b81;
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.site-full-window .cw-auth-control:hover { background: #e7f0ff; }
 .cw-settings { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1.5rem 0; }
 .cw-settings label { display: flex; flex-direction: column; gap: .3rem; min-width: 150px; flex: 1 1 170px; font-weight: 600; }
 .cw-settings select { width: 100%; padding: .55rem; border: 1px solid #8d9b9f; border-radius: 4px; background: white; color: #20282c; }

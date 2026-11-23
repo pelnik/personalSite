@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { SiteContentContainer } from '..';
 import { useAuth } from '../Auth';
 import { SettingsBar, ResultView } from './index';
@@ -6,8 +7,14 @@ import * as cwApi from './cwApi';
 import { usePlayer } from './usePlayer';
 import { loadJscw } from './loadJscw';
 
+function formatTime(seconds: number) {
+  const wholeSeconds = Math.floor(seconds);
+  const minutes = Math.floor(wholeSeconds / 60);
+  return `${minutes}:${String(wholeSeconds % 60).padStart(2, '0')}`;
+}
+
 export default function CwTrainer() {
-  const { token } = useAuth();
+  const { token, account, logout } = useAuth();
   const [settings, setSettings] = useState<cwApi.Settings | null>(null);
   const [playedSettings, setPlayedSettings] = useState<cwApi.Settings | null>(null);
   const [audioReady, setAudioReady] = useState(false);
@@ -95,11 +102,20 @@ export default function CwTrainer() {
     setText('');
     setPlayedSettings(null);
   }
-  const group = player.playedChars ? text.slice(0, player.playedChars).split(' ').length : 0;
-  const totalGroups = text ? text.split(' ').length : 0;
+  const { elapsed, duration } = player.progress;
   const playing = player.status === 'playing' || player.status === 'loading';
   return <SiteContentContainer><section className="cw-page">
-    <h1>CW Trainer</h1>
+    <div className="cw-heading">
+      <h1>CW Trainer</h1>
+      {token ? (
+        <div className="cw-account">
+          {account && <span>Signed in as <strong>{account.username}</strong></span>}
+          <button className="cw-auth-control" type="button" onClick={logout}>Log out</button>
+        </div>
+      ) : (
+        <Link className="cw-auth-control" to="/login?next=/cw">Log in</Link>
+      )}
+    </div>
     <p>Listen to Morse code groups, type what you hear, then check your copy.</p>
     {settings && options ? <>
       <SettingsBar settings={settings} options={options} disabled={playing || loading} onChange={changeSettings} />
@@ -109,7 +125,9 @@ export default function CwTrainer() {
         {text && player.status === 'done' && !result && <button type="button" onClick={check} disabled={loading || player.playedChars < 1}>Check</button>}
         {(result || text && player.status === 'done' && player.playedChars < 1) && <button type="button" onClick={again}>Practice again</button>}
       </div>
-      {playing && <p role="status">Group {group} of {totalGroups}</p>}
+      {player.status === 'playing' && duration > 0 && (
+        <p>Elapsed: {formatTime(elapsed)} of {formatTime(Math.round(duration))} ({Math.floor(100 * elapsed / duration)}%)</p>
+      )}
       {text && <label className="cw-copy-label">Type what you hear<textarea ref={typingBox} autoFocus value={typed} onChange={(event) => setTyped(event.target.value)} autoCapitalize="characters" autoCorrect="off" spellCheck={false} rows={5} /></label>}
       {result && <ResultView result={result} loggedIn={Boolean(token)} />}
     </> : !error && <p>Loading settings…</p>}

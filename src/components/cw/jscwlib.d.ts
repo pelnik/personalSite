@@ -5,6 +5,8 @@ export interface Jscw {
   setFreq(n: number): void;
   play(text: string): void;
   stop(): void;
+  getLength(): number;
+  getTime(): number;
   onCharacterPlay: (c: { n: number; c: string }) => void;
   onFinished: () => void;
 }
