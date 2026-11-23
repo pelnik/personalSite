@@ -16,7 +16,7 @@ If you are running as one of them, the parts about that role apply to you. Other
 Where things are (the code is the source of truth for the details):
 
 - `app.js` builds the Express app: it mounts `/api`, serves `build/`, answers 404 for any other path with a file extension, then sends every other path its prerendered page (listed in `build/prerendered.json`) or the empty app shell, `build/spa.html`. **New routes must be registered before that fallback**, or the SPA swallows them. `server.js` only listens on the ports and shuts down gracefully; tests load `app.js` directly.
-- `src/api/<module>/{api,db,tests}`: one module per API, mounted in `src/api/index.js`. Modules: `auth` (`/api/auth`), `fitness-tracker` (`/api/fitness`), `juicebox` and `scents` (the backend for the Netlify storefront). Each has its own Postgres database: `AUTH_DATABASE_URL`, `FITNESS_DATABASE_URL`, `DATABASE_URL` (juicebox) and `SCENTS_DATABASE_URL`. Database pools are only created through `src/api/createPool.js`.
+- `src/api/<module>/{api,db,tests}`: one module per API, mounted in `src/api/index.js`. Modules: `auth` (`/api/auth`), `cw` (`/api/cw`), `fitness-tracker` (`/api/fitness`), `juicebox` and `scents` (the backend for the Netlify storefront). Each has its own Postgres database: `AUTH_DATABASE_URL`, `CW_DATABASE_URL`, `FITNESS_DATABASE_URL`, `DATABASE_URL` (juicebox) and `SCENTS_DATABASE_URL`. Database pools are only created through `src/api/createPool.js`.
 - `src/api/health.js` serves `GET /api/health` (every database; 503 if one is down) and `GET /api/metrics` (memory snapshot; 404 unless `ADMIN_TOKEN` is set). `server.js` logs the same snapshot as one JSON line every 5 minutes, and `npm run metrics:report <log>` summarizes them.
 - `src/api/diagnostics.js` serves `GET /api/diagnostics` for the `/diagnostics` page. This endpoint is public. Sensitive details belong in the planned `/api/diagnostics/admin` endpoint.
 - The frontend is built with Vite (`vite.config.mts`). `index.html` at the project root loads `src/index.tsx`, and `public/` is copied to `build/` as-is.
@@ -29,8 +29,9 @@ Where things are (the code is the source of truth for the details):
 
 ```bash
 docker compose up db -d --no-recreate   # local Postgres, shared by every clone
-# Existing Docker volumes need this once: docker compose exec db createdb -U postgres auth
-npm run seed:all          # seed all four databases
+# Existing Docker volumes need these once: docker compose exec db createdb -U postgres auth
+# docker compose exec db createdb -U postgres cw
+npm run seed:all          # seed all five databases
 npm run dev               # Express on 3000 + Vite dev server on 3001
 npm run build             # compile the frontend to build/ and prerender pages
 npm run typecheck         # tsc --noEmit (Vite doesn't type-check; CI runs this)
@@ -41,6 +42,8 @@ npm run prod              # production server: port 80, plus 443 when Keys/ has 
 In development, open http://localhost:3001. Vite proxies `/api` to Express, so the frontend always calls its APIs with same-origin paths (`/api/fitness`, `/api/juicebox`). Never hardcode a host.
 
 Copy `.env.example` to `.env`. `JWT_SECRET` is shared by juicebox and fitness auth. `STRIPE_KEY` is only needed for scents payments. Tests don't need a `.env`: any database URL it doesn't set defaults to the docker-compose Postgres (`tests/support/localDatabases.js`).
+
+`cw` holds real practice history; `npm run seed:cw` only creates missing tables and never drops data.
 
 ### Sharing the machine with other agents
 

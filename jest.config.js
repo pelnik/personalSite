@@ -29,6 +29,9 @@ module.exports = {
     apiProject('auth', 'src/api/auth', {
       globalSetup: '<rootDir>/tests/setup.js',
     }),
+    apiProject('cw', 'src/api/cw', {
+      globalSetup: '<rootDir>/tests/setup.js',
+    }),
     apiProject('fitness', 'src/api/fitness-tracker', {
       globalSetup: '<rootDir>/tests/setup.js',
       globalTeardown: '<rootDir>/tests/tearDown.js',

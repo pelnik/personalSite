@@ -7,7 +7,7 @@ test('the footer opens diagnostics and shows the live snapshot', async ({ page }
   await expect(page.getByRole('heading', { name: 'Diagnostics', exact: true })).toBeVisible();
 
   const status = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Status' }) });
-  for (const name of ['auth', 'fitness', 'juicebox', 'scents']) {
+  for (const name of ['auth', 'cw', 'fitness', 'juicebox', 'scents']) {
     await expect(status.locator(`dt:text-is("${name}") + dd`)).toHaveText(/^ok · \d+ ms$/);
   }
   await expect(page.getByRole('heading', { name: 'Your connection' })).toBeVisible();

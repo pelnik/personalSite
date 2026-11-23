@@ -3,6 +3,7 @@ const jbRouter = require('./juicebox/api');
 const fitnessRouter = require('./fitness-tracker/api');
 const scentsRouter = require('./scents/api');
 const authRouter = require('./auth/api');
+const cwRouter = require('./cw/api');
 const healthRouter = require('./health');
 const diagnosticsRouter = require('./diagnostics');
 
@@ -18,6 +19,7 @@ apiRouter.use((req, res, next) => {
 apiRouter.use(healthRouter);
 apiRouter.use(diagnosticsRouter);
 apiRouter.use('/auth', authRouter);
+apiRouter.use('/cw', cwRouter);
 apiRouter.use('/juicebox', jbRouter);
 apiRouter.use('/fitness', fitnessRouter);
 apiRouter.use('/scents', scentsRouter);

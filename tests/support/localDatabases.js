@@ -6,6 +6,7 @@ const LOCAL_DATABASES = {
   FITNESS_DATABASE_URL: 'postgres://postgres:postgres@localhost:5432/fitness',
   SCENTS_DATABASE_URL: 'postgres://postgres:postgres@localhost:5432/scents',
   AUTH_DATABASE_URL: 'postgres://postgres:postgres@localhost:5432/auth',
+  CW_DATABASE_URL: 'postgres://postgres:postgres@localhost:5432/cw',
 };
 
 // Call after dotenv has loaded, so values from .env still win.
