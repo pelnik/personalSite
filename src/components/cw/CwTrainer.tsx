@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import React, { lazy, Suspense, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { SiteContentContainer } from '..';
 import { useAuth } from '../Auth';
@@ -6,6 +6,8 @@ import { SettingsBar, ResultView } from './index';
 import * as cwApi from './cwApi';
 import { usePlayer } from './usePlayer';
 import { loadJscw } from './loadJscw';
+
+const CwStats = lazy(() => import('./CwStats'));
 
 function formatTime(seconds: number) {
   const wholeSeconds = Math.floor(seconds);
@@ -21,6 +23,7 @@ export default function CwTrainer() {
   const [options, setOptions] = useState<cwApi.Options | null>(null);
   const [text, setText] = useState('');
   const [typed, setTyped] = useState('');
+  const [latestSessionId, setLatestSessionId] = useState<number | null>(null);
   const [result, setResult] = useState<cwApi.Result | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -99,6 +102,7 @@ export default function CwTrainer() {
         toneHz: playedSettings.toneHz, groupLength: playedSettings.groupLength, sent, typed, complete: player.completed,
       });
       setResult(response.result);
+      if (response.saved && response.session) setLatestSessionId(response.session.id);
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not check practice'); }
     finally { setLoading(false); }
   }
@@ -187,6 +191,11 @@ export default function CwTrainer() {
           </>
         ) : !error && <p>Loading settings…</p>}
 
+        {token && settings && (
+          <Suspense fallback={<p>Loading stats…</p>}>
+            <CwStats key={token} token={token} lesson={settings.lesson} latestSessionId={latestSessionId} />
+          </Suspense>
+        )}
         {error && <p role="alert" className="cw-error">{error}</p>}
         <p className="cw-credits">
           Lessons follow the Koch course from <a href="https://lcwo.net/">LCWO</a> (lcwo.net). Audio by{' '}

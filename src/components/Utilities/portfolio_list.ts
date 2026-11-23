@@ -1,5 +1,21 @@
 export const portfolio_list = [
   {
+    "id": 101,
+    "img": [
+      {
+        "url": "/Media/main/cw-trainer.jpg",
+        "alt": "CW Trainer playback settings and accuracy history"
+      }
+    ],
+    "link": "/cw",
+    "external": false,
+    "github_link": "https://github.com/pelnik/personalSite",
+    "title": "CW Trainer",
+    "description": [
+      "Learn to copy Morse code by ear with the Koch method. Sign in to practice the letters you miss most and track your accuracy and progress over time."
+    ]
+  },
+  {
     "id": 100,
     "img": [
       {

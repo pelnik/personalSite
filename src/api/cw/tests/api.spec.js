@@ -84,3 +84,63 @@ test('practice weights favor mistakes from the signed-in account', async () => {
   expect(guest.status).toBe(200);
   expect(guest.body.weights).toEqual(guest.body.baseline);
 });
+
+test('stats require an account', async () => {
+  for (const route of ['/stats', '/stats/letter?char=K']) {
+    const response = await api().get(path + route);
+    expect(response.status).toBe(400);
+    expect(response.body.name).toBe('MissingUserError');
+  }
+});
+
+test('stats show only the account’s own sessions, oldest first, and letters in lesson order', async () => {
+  const other = signToken(await getAccountByUsername('sandra'));
+  const first = await api().post(`${path}/results`).set(auth(other)).send(resultBody);
+  await api().post(`${path}/results`).set(auth(token)).send(resultBody);
+  const last = await api().post(`${path}/results`).set(auth(other)).send({
+    ...resultBody, sent: 'KM', typed: 'KM',
+  });
+  expect(first.body.saved).toBe(true);
+  expect(last.body.saved).toBe(true);
+
+  const response = await api().get(`${path}/stats?lesson=2`).set(auth(other));
+  expect(response.status).toBe(200);
+  expect(response.body.sessions.map(({ id, accuracy }) => [id, accuracy]))
+    .toEqual([[first.body.session.id, 50], [last.body.session.id, 100]]);
+  expect(response.body.letters.map(({ char }) => char)).toEqual(['K', 'M', 'U']);
+
+  const defaultLesson = await api().get(`${path}/stats`).set(auth(other));
+  expect(defaultLesson.body.letters.map(({ char }) => char)).toEqual(['K', 'M']);
+  const invalid = await api().get(`${path}/stats?lesson=41`).set(auth(other));
+  expect(invalid.status).toBe(400);
+  expect(invalid.body.name).toBe('InvalidCwSettingsError');
+});
+
+test('letter history supports punctuation and scopes results to the account', async () => {
+  const other = signToken(await getAccountByUsername('sandra'));
+  const save = async (owner, typed) => {
+    const response = await api().post(`${path}/results`).set(auth(owner)).send({
+      ...resultBody, lesson: 24, sent: 'K/', typed,
+    });
+    expect(response.body.saved).toBe(true);
+    return response.body.session.createdAt;
+  };
+  const first = await save(other, 'KK');
+  await save(token, 'K/');
+  const last = await save(other, 'K/');
+
+  const response = await api().get(`${path}/stats/letter?char=%2F`).set(auth(other));
+  expect(response.status).toBe(200);
+  expect(response.body).toEqual({
+    char: '/',
+    points: [
+      { createdAt: first, sent: 1, errors: 1 },
+      { createdAt: last, sent: 1, errors: 0 },
+    ],
+  });
+  for (const char of ['AB', 'Ü']) {
+    const invalid = await api().get(`${path}/stats/letter`).query({ char }).set(auth(other));
+    expect(invalid.status).toBe(400);
+    expect(invalid.body.name).toBe('InvalidCwInputError');
+  }
+});

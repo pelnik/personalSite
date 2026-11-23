@@ -15,3 +15,31 @@ export const getPractice = (token: string, settings: Settings) => {
   return request<{ text: string; chars: string[]; weights: Record<string, number>; baseline: Record<string, number> }>(`/practice?${query}`, token);
 };
 export const postResults = (token: string, values: Omit<Settings, 'minutes'> & { sent: string; typed: string; complete: boolean }) => request<{ result: Result; saved: boolean; session?: { id: number; createdAt: string } }>('/results', token, { method: 'POST', body: JSON.stringify(values) });
+
+export type SessionSummary = {
+  id: number;
+  createdAt: string;
+  lesson: number;
+  accuracy: number;
+  charWpm: number;
+  effWpm: number;
+};
+
+export type LetterSummary = {
+  char: string;
+  attempts: number;
+  errors: number;
+  errorRate: number | null;
+  multiplier: number;
+  share: number;
+  baselineShare: number;
+};
+
+export type CwStatsData = { sessions: SessionSummary[]; letters: LetterSummary[] };
+export type LetterPoint = { createdAt: string; sent: number; errors: number };
+
+export const getStats = (token: string, lesson: number) =>
+  request<CwStatsData>(`/stats?lesson=${lesson}`, token);
+
+export const getLetterHistory = (token: string, char: string) =>
+  request<{ char: string; points: LetterPoint[] }>(`/stats/letter?${new URLSearchParams({ char })}`, token);

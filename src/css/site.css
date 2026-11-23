@@ -763,3 +763,35 @@
 .cw-credits { margin-top: 3rem; font-size: .9rem; }
 @media (max-width: 600px) { .cw-page { padding: 1rem .8rem 3rem; } .cw-settings { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .site-full-window .cw-credits a, .site-full-window .cw-results a { display: inline; color: #176b81; text-decoration: underline; }
+
+.cw-stats {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #8d9b9f;
+}
+.cw-stats h2, .cw-stats h3 { margin-bottom: .5rem; }
+.cw-stats section { margin-top: 1.5rem; }
+.cw-chart { height: 16rem; min-width: 0; margin: .75rem 0; font-size: .85rem; }
+.cw-chart-tooltip {
+  padding: .6rem .8rem;
+  background: white;
+  border: 1px solid #8d9b9f;
+  border-radius: 4px;
+  font-size: .9rem;
+}
+.cw-stats-table-wrap { overflow-x: auto; }
+.cw-stats-table { width: 100%; border-collapse: collapse; text-align: left; }
+.cw-stats-table th, .cw-stats-table td {
+  padding: .5rem;
+  border-bottom: 1px solid #c5ced0;
+}
+.cw-stats-table button {
+  min-width: 2rem;
+  padding: .25rem;
+  border: 1px solid #176b81;
+  border-radius: 4px;
+  background: transparent;
+  color: #176b81;
+  cursor: pointer;
+}
+.cw-stats-table button[aria-pressed="true"] { background: #176b81; color: white; }

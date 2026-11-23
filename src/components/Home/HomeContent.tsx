@@ -23,7 +23,7 @@ function HomeContent() {
   const [projectWidth, setProjectWidth] = useState<number | null>(null);
   const projectElement = useRef<HTMLDivElement | null>(null);
 
-  const firstProjectID = 100;
+  const firstProjectID = 101;
 
   function getProjectElementWidth() {
     if (!projectElement.current)
