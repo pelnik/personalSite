@@ -61,26 +61,16 @@ Open `http://localhost:3001` in your browser.
 
 ## Running Tests
 
-### Fitness API Tests
-
 ```bash
-# Make sure the database is running
 docker compose up db -d --no-recreate
-
-# Seed the fitness database
-npm run seed:fitness
-
-# Run tests
-npm run test:fitness
+npm test                     # all API tests
+npm run test:fitness         # fitness API tests only
+npm run test:e2e             # build and run functional and screenshot tests
+npm run test:e2e:functional  # functional Playwright tests (build first)
+npm run test:db:clean        # remove every checkout's test databases
 ```
 
-Tests use [supertest](https://github.com/ladjs/supertest) to test the Express app directly without needing a running server.
-
-### Frontend Tests
-
-```bash
-npm run test:frontend
-```
+Test databases are created automatically and do not require seeding the development databases. `test:db:clean` can interrupt tests in another checkout. See [AGENTS.md](AGENTS.md#testing) for setup, safety, and screenshot details.
 
 ## Docker Commands
 
@@ -113,7 +103,9 @@ docker compose down -v
 | `npm run seed:juicebox` | Seed juicebox database |
 | `npm run seed:scents` | Seed scents database |
 | `npm run test:fitness` | Run fitness API tests |
-| `npm run test:frontend` | Run frontend tests |
+| `npm test` | Run API tests |
+| `npm run test:e2e` | Build and run Playwright tests |
+| `npm run test:db:clean` | Drop all checkout test databases |
 
 ## Project Structure
 

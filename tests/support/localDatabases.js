@@ -16,3 +16,4 @@ function useLocalDatabaseDefaults() {
 }
 
 module.exports = useLocalDatabaseDefaults;
+module.exports.LOCAL_DATABASES = LOCAL_DATABASES;

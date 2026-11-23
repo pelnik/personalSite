@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
 import useLocalDatabaseDefaults from './tests/support/localDatabases';
+import { checkoutId } from './tests/support/testDatabases.js';
 
 // The web server (seed and server.js) inherits these, so e2e runs work in a
 // clone without a .env.
@@ -13,8 +14,8 @@ useLocalDatabaseDefaults();
 //   functional  - behavior checks; runs in CI
 //   visual      - full-page screenshot comparisons; local only, because font
 //                 rendering differs between operating systems
-// Not 3000, so a running `npm run dev` doesn't get in the way.
-const PORT = 3100;
+// Each checkout gets a port in 3100–3999; E2E_PORT resolves rare collisions.
+const PORT = Number(process.env.E2E_PORT) || 3100 + (parseInt(checkoutId().slice(0, 4), 16) % 900);
 
 export default defineConfig({
   testDir: './tests/e2e',
@@ -51,7 +52,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'node tests/e2e/seed.js && node server.js',
+    command: 'node tests/e2e/seed.js && node --require ./tests/e2e/e2eEnv.js server.js',
     url: `http://localhost:${PORT}/api/fitness/health`,
     reuseExistingServer: false,
     timeout: 60_000,

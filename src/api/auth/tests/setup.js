@@ -1,8 +1,8 @@
 require('../../../../tests/support/testEnv');
-const assertLocalDatabase = require('../../../../tests/support/assertLocalDatabase');
+const { ensureTestDatabases } = require('../../../../tests/support/testDatabases');
 
 module.exports = async () => {
-  assertLocalDatabase('AUTH_DATABASE_URL');
+  await ensureTestDatabases();
   const { client, createAuthTables, seedAccounts } = require('../db');
   try {
     await createAuthTables();

@@ -1,9 +1,9 @@
 require('../../../../tests/support/testEnv');
-const assertLocalDatabase = require('../../../../tests/support/assertLocalDatabase');
+const { ensureTestDatabases } = require('../../../../tests/support/testDatabases');
 
 // Seeds users albert, sandra and glamgal, each with one post.
 const setup = async () => {
-  assertLocalDatabase('DATABASE_URL');
+  await ensureTestDatabases();
 
   const { rebuildDB } = require('../db/seed');
   const { client } = require('../db');

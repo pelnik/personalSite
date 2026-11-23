@@ -17,6 +17,7 @@
     "seed:all": "npm run seed:auth && npm run seed:juicebox && npm run seed:fitness && npm run seed:scents",
     "test": "npm run test:api",
     "test:fitness": "jest --selectProjects fitness --runInBand",
+    "test:db:clean": "node scripts/drop-test-databases.js",
     "test:api": "jest --runInBand",
     "test:e2e": "npm run build && playwright test",
     "test:e2e:functional": "playwright test --project=functional",
