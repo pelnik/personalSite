@@ -14,6 +14,7 @@ const chartColor = '#176b81';
 const dateTick = (time: number) => shortDate.format(time);
 const percentTick = (value: number) => `${value}%`;
 
+type ChartSession = SessionSummary & { time: number; firstInLesson: boolean };
 type DaySummary = { time: number; sent: number; errors: number };
 
 function summarizeDays(points: LetterPoint[]) {
@@ -30,12 +31,13 @@ function summarizeDays(points: LetterPoint[]) {
 }
 
 function AccuracyTooltip({ active, payload }: Pick<TooltipContentProps<number, string>, 'active' | 'payload'>) {
-  const session = payload?.[0]?.payload as SessionSummary | undefined;
+  const session = payload?.[0]?.payload as ChartSession | undefined;
   if (!active || !session) return null;
   return (
     <div className="cw-chart-tooltip">
       <strong>{fullDate.format(new Date(session.createdAt))}</strong>
       <div>Lesson {session.lesson} · {session.accuracy}% accuracy</div>
+      {session.firstInLesson && <div>First session of lesson {session.lesson}</div>}
       <div>{session.charWpm} WPM character speed · {session.effWpm} WPM effective</div>
     </div>
   );
@@ -124,7 +126,12 @@ export default function CwStats({ token, lesson, latestSessionId }: {
   }, [token, lesson, latestSessionId]);
 
   const stats = data?.lesson === lesson ? data.stats : null;
-  const chartSessions = stats?.sessions.map((session) => ({ ...session, time: Date.parse(session.createdAt) }));
+  const lessonStartIds = new Set(stats?.lessonStarts.map(({ sessionId }) => sessionId));
+  const chartSessions = stats?.sessions.map((session) => ({
+    ...session,
+    time: Date.parse(session.createdAt),
+    firstInLesson: lessonStartIds.has(session.id),
+  }));
   const letters = stats?.letters ?? [];
   const selected = letters.some(({ char }) => char === selectedChar) ? selectedChar : null;
   const chartLetters = letters.map(({ char, errorRate }) => ({ char, rate: errorRate === null ? null : errorRate * 100 }));
@@ -142,11 +149,19 @@ export default function CwStats({ token, lesson, latestSessionId }: {
                   <p>{chartSessions.length} {chartSessions.length === 1 ? 'session' : 'sessions'}</p>
                   <div className="cw-chart" role="group" aria-label="Session accuracy">
                     <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={chartSessions}>
+                      <LineChart data={chartSessions} margin={{ top: 24, right: 24, bottom: 5, left: 5 }}>
                         <CartesianGrid strokeDasharray="4 4" vertical={false} />
                         <XAxis dataKey="time" type="number" scale="time" domain={['dataMin', 'dataMax']} tickFormatter={dateTick} />
                         <YAxis domain={[0, 100]} tickFormatter={percentTick} />
                         <ReferenceLine y={90} stroke="#167147" strokeDasharray="5 4" label={{ value: '90%', position: 'insideTopRight' }} />
+                        {chartSessions.filter(({ firstInLesson }) => firstInLesson).map((session) => (
+                          <ReferenceLine
+                            key={session.id}
+                            x={session.time}
+                            stroke="#8d9b9f"
+                            label={{ value: `L${session.lesson}`, position: 'top' }}
+                          />
+                        ))}
                         <Tooltip content={AccuracyTooltip} />
                         <Line dataKey="accuracy" stroke={chartColor} strokeWidth={2} isAnimationActive={false} />
                       </LineChart>
@@ -170,7 +185,7 @@ export default function CwStats({ token, lesson, latestSessionId }: {
                     <table className="cw-stats-table">
                       <thead><tr>
                         <th scope="col">Letter</th>
-                        <th scope="col">Seen (last 100)</th>
+                        <th scope="col">Recent attempts</th>
                         <th scope="col">Error rate</th>
                         <th scope="col">Shown vs baseline</th>
                       </tr></thead>

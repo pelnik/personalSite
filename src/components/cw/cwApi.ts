@@ -35,7 +35,11 @@ export type LetterSummary = {
   baselineShare: number;
 };
 
-export type CwStatsData = { sessions: SessionSummary[]; letters: LetterSummary[] };
+export type CwStatsData = {
+  sessions: SessionSummary[];
+  letters: LetterSummary[];
+  lessonStarts: { lesson: number; sessionId: number }[];
+};
 export type LetterPoint = { createdAt: string; sent: number; errors: number };
 
 export const getStats = (token: string, lesson: number) =>

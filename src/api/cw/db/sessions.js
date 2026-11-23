@@ -37,4 +37,17 @@ async function getLetterHistory(profileId, char, limit = 500) {
   return rows.reverse();
 }
 
-module.exports = { createSession, getRecentLetterCounts, getSessionSummaries, getLetterHistory };
+async function getLessonStarts(profileId) {
+  const { rows } = await client.query(
+    `SELECT DISTINCT ON (lesson) lesson, id AS "sessionId"
+       FROM cw_sessions
+      WHERE profile_id = $1
+      ORDER BY lesson, created_at, id`,
+    [profileId]
+  );
+  return rows;
+}
+
+module.exports = {
+  createSession, getRecentLetterCounts, getSessionSummaries, getLetterHistory, getLessonStarts,
+};

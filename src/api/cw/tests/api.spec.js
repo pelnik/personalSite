@@ -102,11 +102,19 @@ test('stats show only the account’s own sessions, oldest first, and letters in
   });
   expect(first.body.saved).toBe(true);
   expect(last.body.saved).toBe(true);
+  const nextLesson = await api().post(`${path}/results`).set(auth(other)).send({
+    ...resultBody, lesson: 2, sent: 'KMU', typed: 'KMU',
+  });
+  expect(nextLesson.body.saved).toBe(true);
 
   const response = await api().get(`${path}/stats?lesson=2`).set(auth(other));
   expect(response.status).toBe(200);
   expect(response.body.sessions.map(({ id, accuracy }) => [id, accuracy]))
-    .toEqual([[first.body.session.id, 50], [last.body.session.id, 100]]);
+    .toEqual([[first.body.session.id, 50], [last.body.session.id, 100], [nextLesson.body.session.id, 100]]);
+  expect(response.body.lessonStarts).toEqual([
+    { lesson: 1, sessionId: first.body.session.id },
+    { lesson: 2, sessionId: nextLesson.body.session.id },
+  ]);
   expect(response.body.letters.map(({ char }) => char)).toEqual(['K', 'M', 'U']);
 
   const defaultLesson = await api().get(`${path}/stats`).set(auth(other));

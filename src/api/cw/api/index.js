@@ -2,7 +2,7 @@ const express = require('express');
 const { authenticate, requireAccount } = require('../../auth');
 const {
   ensureProfile, updateProfileSettings, createSession,
-  getRecentLetterCounts, getSessionSummaries, getLetterHistory,
+  getRecentLetterCounts, getSessionSummaries, getLetterHistory, getLessonStarts,
 } = require('../db');
 const { DEFAULT_SETTINGS, OPTIONS, validateSettings } = require('../lib/settings');
 const { KOCH_ORDER, LESSON_COUNT, lessonChars } = require('../lib/koch');
@@ -97,11 +97,12 @@ cwRouter.get('/stats', requireAccount, async (req, res, next) => {
       return next(fail('InvalidCwSettingsError', 'Invalid lesson'));
     }
 
-    const [sessions, recentCounts] = await Promise.all([
+    const [sessions, recentCounts, lessonStarts] = await Promise.all([
       getSessionSummaries(req.user.id),
       getRecentLetterCounts(req.user.id),
+      getLessonStarts(req.user.id),
     ]);
-    return res.send({ sessions, letters: practiceWeights(lesson, recentCounts).letters });
+    return res.send({ sessions, letters: practiceWeights(lesson, recentCounts).letters, lessonStarts });
   } catch (error) { return next(error); }
 });
 
