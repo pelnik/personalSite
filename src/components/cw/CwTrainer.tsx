@@ -1,42 +1,30 @@
-import React, { lazy, Suspense, useEffect, useRef, useState, type KeyboardEvent } from 'react';
-import { Link } from 'react-router-dom';
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { SiteContentContainer } from '..';
 import { useAuth } from '../Auth';
-import { SettingsBar, ResultView } from './trainer';
+import { ModeSwitch, SettingsBar, TestMode } from './trainer';
 import * as cwApi from './cwApi';
-import { usePlayer } from './usePlayer';
+import { FeedbackMode } from './feedback';
 import { loadJscw } from './loadJscw';
 
 const CwStats = lazy(() => import('./CwStats'));
 
-function formatTime(seconds: number) {
-  const wholeSeconds = Math.floor(seconds);
-  const minutes = Math.floor(wholeSeconds / 60);
-  return `${minutes}:${String(wholeSeconds % 60).padStart(2, '0')}`;
-}
-
 export default function CwTrainer() {
   const { token, account, logout } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const mode = searchParams.get('mode') === 'feedback' ? 'feedback' : 'test';
+  const [busyMode, setBusyMode] = useState<typeof mode | null>(null);
+  const busy = busyMode === mode;
+  const onBusyChange = useCallback((isBusy: boolean) => {
+    setBusyMode(isBusy ? mode : null);
+  }, [mode]);
+  useEffect(() => () => { setBusyMode(null); }, [mode]);
   const [settings, setSettings] = useState<cwApi.Settings | null>(null);
-  const [playedSettings, setPlayedSettings] = useState<cwApi.Settings | null>(null);
   const [audioReady, setAudioReady] = useState(false);
   const [options, setOptions] = useState<cwApi.Options | null>(null);
-  const [text, setText] = useState('');
-  const [typed, setTyped] = useState('');
   const [latestSessionId, setLatestSessionId] = useState<number | null>(null);
-  const [result, setResult] = useState<cwApi.Result | null>(null);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const saveQueue = useRef(Promise.resolve());
-  const player = usePlayer();
-  const { elapsed, duration } = player.progress;
-  const playing = player.status === 'playing' || player.status === 'loading';
-  const showCheck = Boolean(text && player.status === 'done' && !result);
-  const canCheck = showCheck && !loading && player.playedChars > 0;
-  const nextLesson = playedSettings ? playedSettings.lesson + 1 : null;
-  const canAdvance = result?.passed && player.completed &&
-    options?.lessons.some(({ lesson }) => lesson === nextLesson);
-
   useEffect(() => { document.title = 'CW Trainer - Matthew Pelnik'; }, []);
   useEffect(() => {
     let active = true;
@@ -71,57 +59,12 @@ export default function CwTrainer() {
       })();
     }
   }
-  async function start() {
-    if (!settings || !audioReady) return;
-    try { player.prepare(); }
-    catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not start audio'); return; }
-    setPlayedSettings({ ...settings });
+  function changeMode(nextMode: typeof mode) {
+    const next = new URLSearchParams(searchParams);
+    if (nextMode === 'feedback') next.set('mode', 'feedback');
+    else next.delete('mode');
     setError('');
-    setResult(null);
-    setTyped('');
-    setText('');
-    setLoading(true);
-    try {
-      const practice = await cwApi.getPractice(token, settings);
-      setText(practice.text);
-      await player.start(practice.text, settings);
-    } catch (cause) {
-      setText('');
-      player.stop();
-      setError(cause instanceof Error ? cause.message : 'Could not start practice');
-    } finally { setLoading(false); }
-  }
-  async function check() {
-    if (!playedSettings || !canCheck) return;
-    setLoading(true);
-    setError('');
-    try {
-      const sent = player.completed ? text : text.slice(0, player.playedChars).trimEnd();
-      const response = await cwApi.postResults(token, {
-        lesson: playedSettings.lesson, charWpm: playedSettings.charWpm, effWpm: playedSettings.effWpm,
-        toneHz: playedSettings.toneHz, groupLength: playedSettings.groupLength, sent, typed, complete: player.completed,
-      });
-      setResult(response.result);
-      if (response.saved && response.session) setLatestSessionId(response.session.id);
-    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not check practice'); }
-    finally { setLoading(false); }
-  }
-  function again() {
-    setResult(null);
-    setTyped('');
-    setText('');
-    setPlayedSettings(null);
-  }
-  function advance() {
-    if (!canAdvance || nextLesson === null) return;
-    changeSettings({ lesson: nextLesson });
-    again();
-  }
-
-  function checkShortcut(event: KeyboardEvent<HTMLTextAreaElement>) {
-    if (event.key !== 'Enter' || (!event.ctrlKey && !event.metaKey)) return;
-    event.preventDefault();
-    if (canCheck && !event.repeat) void check();
+    setSearchParams(next, { replace: true });
   }
 
   return (
@@ -138,56 +81,40 @@ export default function CwTrainer() {
             <Link className="cw-auth-control" to="/login?next=/cw">Log in</Link>
           )}
         </div>
-        <p>Listen to Morse code groups, type what you hear, then check your copy.</p>
+        <ModeSwitch mode={mode} disabled={busy} onChange={changeMode} />
+        <p>{mode === 'feedback'
+          ? 'Each group plays, then waits while you type it. A wrong letter turns red, buzzes, and shows the right letter underneath. Letters you miss come up more often. Nothing is saved.'
+          : 'Listen to Morse code groups, type what you hear, then check your copy.'}</p>
 
         {settings && options ? (
           <>
             <SettingsBar
               settings={settings}
               options={options}
-              disabled={playing || loading}
+              disabled={busy}
+              hidden={mode === 'feedback' ? ['minutes'] : []}
               onChange={changeSettings}
             />
-            <div className="cw-actions">
-              {!text && (
-                <button type="button" onClick={start} disabled={loading || !audioReady}>Start</button>
-              )}
-              {playing && <button type="button" onClick={player.stop}>Stop</button>}
-              {showCheck && (
-                <button type="button" onClick={check} disabled={!canCheck}>Check</button>
-              )}
-              {(result || (showCheck && player.playedChars < 1)) && (
-                <button type="button" onClick={again}>Practice again</button>
-              )}
-              {canAdvance && <button type="button" onClick={advance}>Next lesson</button>}
-            </div>
-            {token && !text && <p>Practice adapts to the letters you miss</p>}
-            {player.status === 'playing' && duration > 0 && (
-              <p>
-                Elapsed: {formatTime(elapsed)} of {formatTime(Math.round(duration))}{' '}
-                ({Math.floor(100 * elapsed / duration)}%)
-              </p>
+            {mode === 'feedback' ? (
+              <FeedbackMode
+                settings={settings}
+                kochOrder={options.lessons.at(-1)?.chars ?? []}
+                audioReady={audioReady}
+                onBusyChange={onBusyChange}
+                onError={setError}
+              />
+            ) : (
+              <TestMode
+                settings={settings}
+                lessons={options.lessons}
+                token={token}
+                audioReady={audioReady}
+                onChangeSettings={changeSettings}
+                onBusyChange={onBusyChange}
+                onSaved={setLatestSessionId}
+                onError={setError}
+              />
             )}
-            {text && (
-              <>
-                <label className="cw-copy-label">
-                  Type what you hear
-                  <textarea
-                    autoFocus
-                    value={typed}
-                    onChange={(event) => setTyped(event.target.value)}
-                    onKeyDown={checkShortcut}
-                    aria-describedby="cw-check-hint"
-                    autoCapitalize="characters"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    rows={5}
-                  />
-                </label>
-                <p id="cw-check-hint" className="cw-check-hint">Ctrl+Enter or ⌘+Enter to check</p>
-              </>
-            )}
-            {result && <ResultView result={result} loggedIn={Boolean(token)} complete={player.completed} />}
           </>
         ) : !error && <p>Loading settings…</p>}
 

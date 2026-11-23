@@ -71,5 +71,5 @@ export function usePlayer() {
     player.current?.stop();
     void player.current?.audioCtx?.close();
   }, []);
-  return { status, playedChars, completed, progress, prepare, start, stop };
+  return { status, playedChars, completed, progress, prepare, start, stop, audioContext: () => player.current?.audioCtx ?? null };
 }

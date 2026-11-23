@@ -738,6 +738,20 @@
 .cw-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin: 1rem 0; }
 .cw-actions button { border: 0; border-radius: 4px; padding: .65rem 1.25rem; background: #176b81; color: white; cursor: pointer; font-weight: 700; }
 .cw-actions button:disabled { opacity: .55; cursor: default; }
+.cw-mode-switch { display: inline-flex; margin: .5rem 0; }
+.cw-mode-switch button {
+  border: 1px solid #176b81;
+  padding: .55rem 1rem;
+  background: white;
+  color: #176b81;
+  cursor: pointer;
+  font-weight: 700;
+}
+.cw-mode-switch button:first-child { border-radius: 4px 0 0 4px; }
+.cw-mode-switch button:last-child { border-radius: 0 4px 4px 0; border-left: 0; }
+.cw-mode-switch button[aria-pressed="true"] { background: #176b81; color: white; }
+.cw-mode-switch button:disabled { opacity: .65; cursor: default; }
+.cw-mode-switch button:focus-visible { z-index: 1; }
 .cw-copy-label { display: block; font-weight: 600; margin-top: 1rem; }
 .cw-copy-label textarea { display: block; width: 100%; margin-top: .4rem; padding: .7rem; font: 1.1rem/1.5 monospace; border: 1px solid #8d9b9f; border-radius: 4px; }
 .cw-check-hint { margin-top: .35rem; font-size: .85rem; }
@@ -758,6 +772,32 @@
 .cw-alignment-row { display: flex; }
 .cw-alignment-row span { display: inline-block; min-width: 1ch; text-align: center; }
 .cw-wrong, .cw-missing { color: #b42318; background: #ffe8e6; }
+.cw-fb-board {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  min-height: 5.25rem;
+  padding: .8rem;
+  border-radius: 4px;
+  background: #f2f6f7;
+  font: 1.4rem/1.3 monospace;
+  cursor: text;
+}
+.cw-fb-board:focus-within { outline: 2px solid #176b81; outline-offset: 2px; }
+.cw-fb-board input { font-size: 16px; }
+.cw-fb-group {
+  display: inline-flex;
+  align-self: start;
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid #8d9b9f;
+  border-radius: 4px;
+}
+.cw-fb-slot { display: flex; flex-direction: column; width: 2ch; min-width: 1ch; text-align: center; }
+.cw-fb-waiting .cw-fb-typed { color: #5a696d; }
+.cw-fb-correct { min-height: 1.3em; color: #167147; }
+.cw-fb-wrong .cw-fb-typed { color: #b42318; background: #ffe8e6; }
 .cw-extra { color: #1357a6; background: #e7f0ff; }
 .cw-error { color: #b42318; font-weight: 700; }
 .cw-credits { margin-top: 3rem; font-size: .9rem; }

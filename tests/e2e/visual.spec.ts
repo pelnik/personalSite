@@ -21,6 +21,7 @@ type Shot = {
 const SHOTS: Shot[] = [
   { name: 'home', path: '/', heading: 'Web Projects' },
   { name: 'cw', path: '/cw', heading: 'CW Trainer' },
+  { name: 'cw-feedback', path: '/cw?mode=feedback', heading: 'CW Trainer' },
   { name: 'about', path: '/about', heading: 'Links' },
   { name: 'about-stats', path: '/about/stats', heading: 'Stats' },
   { name: 'not-found', path: '/no-such-page', heading: 'Page Not Found' },
