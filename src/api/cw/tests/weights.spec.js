@@ -30,11 +30,20 @@ test('uses a neutral adjustment for an unseen letter and clamps extreme rates', 
 
 test('stops at the whole session that crosses the window for each letter', () => {
   const { letters } = practiceWeights(1, [
-    { K: [60, 2], M: [30, 3] },
-    { K: [50, 5], M: [20, 4] },
-    { K: [10, 9], M: [20, 1] },
+    { K: [600, 2], M: [300, 3] },
+    { K: [500, 5], M: [200, 4] },
+    { K: [100, 9], M: [200, 1] },
   ]);
 
   expect(letters.map(({ char, attempts, errors }) => [char, attempts, errors]))
-    .toEqual([['K', 110, 7], ['M', 70, 8]]);
+    .toEqual([['K', 1100, 7], ['M', 700, 8]]);
+});
+
+test('stops once a letter reaches exactly 1000 attempts', () => {
+  const { letters } = practiceWeights(1, [
+    { K: [1000, 10] },
+    { K: [20, 5] },
+  ]);
+
+  expect(letters[0]).toMatchObject({ char: 'K', attempts: 1000, errors: 10 });
 });
