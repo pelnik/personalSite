@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { patchPost } from '../api-adapter';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -12,6 +12,7 @@ function EditPost(props) {
   let { id } = useParams();
   id = Number(id);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -29,8 +30,8 @@ function EditPost(props) {
     setContent(evt.target.value);
   };
 
-  function onClickLogIn(evt) {
-    navigate('/juicebox/login');
+  function onClickLogIn() {
+    navigate(`/login?next=${encodeURIComponent(location.pathname)}`);
   }
 
   function noPostComp() {

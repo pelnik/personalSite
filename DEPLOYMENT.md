@@ -56,7 +56,7 @@ The site uses Let's Encrypt certificates, renewed by certbot (set up in #23):
 
 Before merging the shared auth API (Part 1 of #57), create the `auth` database on the same Postgres host as the other databases and add `AUTH_DATABASE_URL` to the server's `.env`. The new pool is included in `/api/health`, so the deploy health check requires this setup. After that deploy, run `npm run seed:auth` **once, on the empty auth database**. Once site registration is available, use `npm run auth:make-admin -- <username>` to grant site admin access.
 
-Do not rerun `seed:auth` or `seed:all` after real accounts exist. `seed:auth` drops every account and resets their ids; a still-valid token could then authenticate as a different account with the same id. If rebuilding auth is ever necessary, plan the account reset and rotate `JWT_SECRET` to invalidate those tokens.
+Do not rerun `seed:auth` or `seed:all` after real accounts exist. `seed:auth` drops every account and resets their ids; a still-valid token could then authenticate as a different account with the same id. If rebuilding auth is ever necessary, plan the account reset, rotate `JWT_SECRET` to invalidate those tokens, and reseed the project databases so their profiles match the new account ids and usernames.
 
 Run these once on the server, as `ubuntu`, with nvm loaded (`source ~/.nvm/nvm.sh`).
 

@@ -41,7 +41,7 @@ function Navbar(props) {
           {!token ? (
             <li onClick={onClickLogIn}>
               <Tooltip title="Log In">
-                <LoginIcon />
+                <LoginIcon aria-label="Log In" />
               </Tooltip>
             </li>
           ) : null}

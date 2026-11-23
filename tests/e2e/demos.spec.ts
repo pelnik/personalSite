@@ -1,6 +1,19 @@
 import { test, expect } from './fixtures';
 
 test.describe('Juicebox demo', () => {
+  test('returns to the new post form after login', async ({ page }) => {
+    await page.goto('/juicebox/post');
+    await page.getByRole('button', { name: 'Please Log In' }).click();
+    await expect(page).toHaveURL('/login?next=%2Fjuicebox%2Fpost');
+
+    await page.getByLabel('Username').fill('albert');
+    await page.getByLabel('Password').fill('bertie99');
+    await page.getByRole('button', { name: 'Log in', exact: true }).click();
+
+    await expect(page).toHaveURL('/juicebox/post');
+    await expect(page.getByRole('heading', { name: 'Create New Post' })).toBeVisible();
+  });
+
   test('shows the seeded posts', async ({ page }) => {
     await page.goto('/juicebox');
 
