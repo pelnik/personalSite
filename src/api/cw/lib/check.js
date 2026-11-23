@@ -47,7 +47,11 @@ function checkCopy(sent, input) {
       sentCount++;
       if (op.type === 'wrong' || op.type === 'missing') letterCounts[op.sent][1]++;
     }
-    if (op.type === 'wrong' || op.type === 'missing' && op.sent !== ' ' || op.type === 'extra' && op.typed !== ' ') errors++;
+    if (op.type === 'wrong' ||
+        (op.type === 'missing' && op.sent !== ' ') ||
+        (op.type === 'extra' && op.typed !== ' ')) {
+      errors++;
+    }
   }
   const accuracy = sentCount ? Math.max(0, Math.round(1000 * (1 - errors / sentCount)) / 10) : 0;
   return { ops, errors, sentCount, accuracy, passed: accuracy >= 90, letterCounts };

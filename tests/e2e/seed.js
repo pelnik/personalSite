@@ -5,14 +5,13 @@ const { ensureTestDatabases } = require('../support/testDatabases');
 
 async function seed() {
   await ensureTestDatabases();
-  const { client: authClient, createAuthTables, seedAccounts } = require('../../src/api/auth/db');
+  const { client: authClient, rebuildDB: rebuildAuth } = require('../../src/api/auth/db');
   const juicebox = require('../../src/api/juicebox/db/seed');
   const { client: juiceboxClient } = require('../../src/api/juicebox/db');
   const fitness = require('../../src/api/fitness-tracker/db/seedData');
   const fitnessClient = require('../../src/api/fitness-tracker/db/client');
   const { client: cwClient, dropCwTables, createCwTables } = require('../../src/api/cw/db');
-  await createAuthTables();
-  await seedAccounts();
+  await rebuildAuth();
   await dropCwTables();
   await createCwTables();
   await juicebox.rebuildDB();

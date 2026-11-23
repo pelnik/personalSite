@@ -10,7 +10,14 @@ function duration(text, charWpm, effWpm) {
   for (let i = 0; i < text.length; i++) {
     const code = CODES[text[i]];
     if (code) seconds += [...code].reduce((sum, element) => sum + (element === '.' ? 1 : 3), code.length - 1) * t;
-    if (i < text.length - 1) seconds += text[i + 1] === ' ' || text[i] === ' ' ? (text[i] === ' ' ? 0 : 7 * ts) : 3 * ts;
+    if (i === text.length - 1 || text[i] === ' ') continue;
+    if (text[i + 1] === ' ') {
+      // A space separates groups.
+      seconds += 7 * ts;
+    } else {
+      // Adjacent characters in the same group.
+      seconds += 3 * ts;
+    }
   }
   return seconds;
 }

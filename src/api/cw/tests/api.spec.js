@@ -7,7 +7,7 @@ beforeAll(async () => { token = signToken(await getAccountByUsername('albert'));
 afterAll(async () => { expect(app.lateErrors).toEqual([]); await client.end(); });
 const path = '/api/cw';
 const practice = { lesson: 1, charWpm: 20, effWpm: 15, minutes: 1, groupLength: 5 };
-const resultBody = { lesson: 1, charWpm: 20, effWpm: 15, toneHz: 700, groupLength: 5, sent: 'KM', typed: 'KK' };
+const resultBody = { lesson: 1, charWpm: 20, effWpm: 15, toneHz: 700, groupLength: 5, sent: 'KM', typed: 'KK', complete: true };
 test('settings defaults, account persistence and validation', async () => {
   const out = await api().get(`${path}/settings`);
   expect(out.body.settings.lesson).toBe(1);
@@ -37,6 +37,11 @@ test('results save only for account', async () => {
   const sessionsBefore = await client.query('SELECT count(*) FROM cw_sessions');
   const anon = await api().post(`${path}/results`).send(resultBody);
   expect(anon.body.saved).toBe(false);
+  const partial = await api().post(`${path}/results`).set(auth(token)).send({
+    ...resultBody, complete: false,
+  });
+  expect(partial.status).toBe(200);
+  expect(partial.body).toMatchObject({ saved: false, result: { accuracy: 50 } });
   const sessionsAfter = await client.query('SELECT count(*) FROM cw_sessions');
   expect(sessionsAfter.rows).toEqual(sessionsBefore.rows);
   const account = await api().post(`${path}/results`).set(auth(token)).send(resultBody);
@@ -53,6 +58,8 @@ test('results reject invalid text or missing settings', async () => {
     { typed: 'K'.repeat(103) },
     { typed: 'ﬃ'.repeat(35) }, // Fits the raw limit but exceeds it after uppercasing.
     { lesson: undefined },
+    { complete: undefined },
+    { complete: 'true' },
   ];
   for (const changes of invalid) {
     const bad = await api().post(`${path}/results`).send({ ...resultBody, ...changes });
