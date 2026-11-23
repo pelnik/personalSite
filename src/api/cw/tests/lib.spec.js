@@ -1,7 +1,7 @@
 const { KOCH_ORDER, lessonChars } = require('../lib/koch');
 const { baselineWeights } = require('../lib/baseline');
 const { duration } = require('../lib/morse');
-const { generatePractice } = require('../lib/generate');
+const { generateGroup, generatePractice } = require('../lib/generate');
 const { DEFAULT_SETTINGS, validateSettings } = require('../lib/settings');
 function seeded(seed) {
   return () => {
@@ -25,6 +25,20 @@ test('PARIS timing', () => {
   const ts = (6 - 1.86) / 19;
   expect(duration('PARIS PARIS', 20, 10)).toBeCloseTo(62 * 0.06 + 31 * ts, 6);
 });
+test('group generation uses the requested lengths, lesson and weights', () => {
+  const settings = { lesson: 5, weights: baselineWeights(5), random: seeded(42) };
+  expect(generateGroup({ ...settings, groupLength: 5 })).toHaveLength(5);
+  const groups = Array.from({ length: 100 }, () => generateGroup({ ...settings, groupLength: 0 }));
+  expect([...new Set(groups.map((group) => group.length))].sort()).toEqual([2, 3, 4, 5, 6, 7]);
+  expect([...groups.join('')].every((char) => lessonChars(5).includes(char))).toBe(true);
+  expect(generateGroup({ lesson: 1, weights: { K: 1, M: 0 }, groupLength: 5, random: seeded(42) })).toBe('KKKKK');
+});
+
+test('practice generation preserves the original seeded sequence', () => {
+  const settings = { lesson: 5, weights: baselineWeights(5), groupLength: 0, minutes: 1, charWpm: 20, effWpm: 15, random: seeded(42) };
+  expect(generatePractice(settings)).toBe('USEMR RSU SEM RER US RK KME KMSUE UKKR MRMME RMMMKR ESKSU KKKUURS ES EMRE SRS RURM MUSESS RMKE');
+});
+
 test('practice generation respects lengths, lesson and bounds', () => {
   for (const groupLength of [0, 5]) {
     const settings = { lesson: 5, weights: baselineWeights(5), groupLength, minutes: 1, charWpm: 20, effWpm: 15, random: seeded(42) };
