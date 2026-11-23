@@ -47,7 +47,7 @@ Matt often has several agents working at once, each in its own clone or worktree
 
 - `docker compose up db -d --no-recreate` from any clone starts that one container, or does nothing if it's already running. Always pass `--no-recreate`: the `init-db.sql` mount path differs in each clone, so without it Compose restarts the container under everyone else. Never run `docker compose down` or remove the container: other agents are using it, and `down -v` deletes every database.
 - Never kill a process you didn't start. If a port is taken, another agent's server probably has it. Wait, or tell Matt.
-- Test runs reset the shared databases, so a run in another clone at the same time can fail yours. Rerun before treating a failure as real.
+- Test databases are separate for each checkout. `npm run test:db:clean` drops every checkout's test databases, so don't run it while another agent is testing.
 - Before creating a branch, check that the name is free: `git ls-remote --heads origin <name>`. Never push to a branch another agent is working on.
 
 **Never run `npm run build` on the EC2 server.** It doesn't have enough memory. Builds happen in GitHub Actions.
@@ -63,10 +63,12 @@ npm test                     # all API tests (same as npm run test:api)
 npm run test:fitness         # fitness API tests only
 npm run test:e2e             # build, then all Playwright tests including screenshots
 npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
+npm run test:db:clean         # drop every checkout's test and e2e databases
 ```
 
-- **API tests** are Jest projects: `fitness`, `juicebox`, `scents`, and `core` (the `/api` router and shared helpers). Pick one with `--selectProjects`. Each project rebuilds its database. Tests mount the real `/api` router, so status codes and error shapes match production.
-- **E2E tests** run Playwright against `build/`, served by the real `server.js` on port 3100. The shared fixture fails a test on any console error or failed request; pass `allowErrors` for expected ones. Screenshot baselines are macOS-only and run locally. Update them with `--update-snapshots` only for intended visual changes.
+- **API tests** are Jest projects: `auth`, `fitness`, `juicebox`, `scents`, and `core` (the `/api` router and shared helpers). Pick one with `--selectProjects`. Tests use automatically created `<db>_test_<id>` databases on the same server; e2e uses separate `<db>_e2e_<id>` databases. Neither touches the dev databases. Tests mount the real `/api` router, so status codes and error shapes match production.
+- **E2E tests** run Playwright against `build/`, served by the real `server.js` on a checkout-derived port from 3100–3999 (`E2E_PORT` overrides it if ports collide). The shared fixture fails a test on any console error or failed request; pass `allowErrors` for expected ones. Screenshot baselines are macOS-only and run locally. Update them with `--update-snapshots` only for intended visual changes.
+- **Cleaning test databases:** `npm run test:db:clean` drops every checkout's `_test_` and `_e2e_` databases, including deleted worktrees' leftovers. It can interrupt tests running in another checkout.
 - **Safety:**
   - Test setup refuses to drop tables unless the database host is local.
   - Stripe is stubbed and given a dummy key. The scents seed archives every product in whatever Stripe account it's given.

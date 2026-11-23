@@ -39,7 +39,10 @@ module.exports = {
     apiProject('scents', 'src/api/scents', {
       globalSetup: '<rootDir>/tests/setup.js',
     }),
-    // The top-level /api router and shared helpers. No database setup.
-    apiProject('core', 'src/api'),
+    // The top-level /api router and shared helpers. Ensure all test databases
+    // exist for its health checks; they only need SELECT 1, not schemas.
+    apiProject('core', 'src/api', {
+      globalSetup: '<rootDir>/tests/setup.js',
+    }),
   ],
 };

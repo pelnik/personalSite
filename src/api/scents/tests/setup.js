@@ -1,11 +1,11 @@
 require('../../../../tests/support/testEnv');
-const assertLocalDatabase = require('../../../../tests/support/assertLocalDatabase');
+const { ensureTestDatabases } = require('../../../../tests/support/testDatabases');
 
 // The real seed creates 100 users and 100 products and calls Stripe for every
 // product. Tests only need the schema plus a small, known fixture set, so this
 // builds the tables from the seed and inserts fixtures directly.
 const setup = async () => {
-  assertLocalDatabase('SCENTS_DATABASE_URL');
+  await ensureTestDatabases();
 
   // Global setup runs outside Jest's module registry, so moduleNameMapper
   // doesn't apply: requiring the seed loads the real stripe package. Nothing

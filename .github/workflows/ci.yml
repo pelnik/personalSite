@@ -49,13 +49,6 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Create test databases
-        run: |
-          PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE auth;"
-          PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE juicebox;"
-          PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE fitness;"
-          PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE scents;"
-
       - name: Run API tests
         run: npm run test:api
 
