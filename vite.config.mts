@@ -1,5 +1,20 @@
+import { execFileSync } from 'node:child_process';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+
+function gitCommit() {
+  try {
+    return execFileSync('git', ['rev-parse', '--short', 'HEAD'], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+  } catch {
+    return '';
+  }
+}
+
+process.env.VITE_BUILD_COMMIT ??= gitCommit();
+process.env.VITE_BUILD_TIME ??= new Date().toISOString();
 
 export default defineConfig({
   plugins: [react()],
