@@ -1,7 +1,7 @@
 const { api, auth, app } = require('./helpers');
 const { signToken } = require('../../auth');
 const { getAccountByUsername } = require('../../auth/db');
-const { client } = require('../db');
+const { client, ensureProfile, getProfile, updateProfileSettings } = require('../db');
 let token;
 beforeAll(async () => { token = signToken(await getAccountByUsername('albert')); });
 afterAll(async () => { expect(app.lateErrors).toEqual([]); await client.end(); });
@@ -151,4 +151,90 @@ test('letter history supports punctuation and scopes results to the account', as
     expect(invalid.status).toBe(400);
     expect(invalid.body.name).toBe('InvalidCwInputError');
   }
+});
+
+describe('public showcase', () => {
+  let originalUsername;
+
+  beforeEach(() => { originalUsername = process.env.CW_SHOWCASE_USERNAME; });
+  afterEach(() => {
+    if (originalUsername === undefined) delete process.env.CW_SHOWCASE_USERNAME;
+    else process.env.CW_SHOWCASE_USERNAME = originalUsername;
+  });
+
+  test('is hidden when unset or the account is unknown', async () => {
+    for (const username of [undefined, 'no-such-showcase-account']) {
+      if (username === undefined) delete process.env.CW_SHOWCASE_USERNAME;
+      else process.env.CW_SHOWCASE_USERNAME = username;
+
+      const summary = await api().get(`${path}/showcase`);
+      expect(summary.status).toBe(200);
+      expect(summary.body).toEqual({ showcase: null });
+      const letter = await api().get(`${path}/showcase/letter?char=K`);
+      expect(letter.status).toBe(200);
+      expect(letter.body).toEqual({ char: 'K', points: [] });
+    }
+  });
+
+  test('does not create a profile for either an anonymous or signed-in caller', async () => {
+    const account = await getAccountByUsername('glamgal');
+    process.env.CW_SHOWCASE_USERNAME = account.username;
+    const credentials = auth(signToken(account));
+
+    expect(await getProfile(account.id)).toBeUndefined();
+    expect((await api().get(`${path}/showcase`)).body).toEqual({ showcase: null });
+    const signedIn = await api().get(`${path}/showcase`).set(credentials);
+    expect(signedIn.status).toBe(200);
+    expect(signedIn.body).toEqual({ showcase: null });
+    expect((await api().get(`${path}/showcase/letter?char=K`).set(credentials)).body)
+      .toEqual({ char: 'K', points: [] });
+    expect(await getProfile(account.id)).toBeUndefined();
+
+    await ensureProfile(account);
+    expect((await api().get(`${path}/showcase`)).body).toEqual({ showcase: null });
+  });
+
+  test('returns only configured-account summaries and never exposes copy text', async () => {
+    const account = await getAccountByUsername('sandra');
+    process.env.CW_SHOWCASE_USERNAME = account.username;
+    const profile = await ensureProfile(account);
+    await updateProfileSettings(profile.id, { ...profile, lesson: 2 });
+
+    const sent = 'KMUKU KMUKM KUUKM';
+    const typed = 'KMUKU KMUKM KUUKK';
+    const saved = await api().post(`${path}/results`).set(auth(signToken(account))).send({
+      ...resultBody, lesson: 2, sent, typed,
+    });
+    expect(saved.body.saved).toBe(true);
+
+    const guest = await api().get(`${path}/showcase`);
+    const signedIn = await api().get(`${path}/showcase`).set(auth(token));
+    expect(guest.status).toBe(200);
+    expect(signedIn.status).toBe(200);
+    expect(signedIn.body).toEqual(guest.body);
+    const { showcase } = guest.body;
+    expect(showcase.lesson).toBe(2);
+    expect(showcase.letters.map(({ char }) => char)).toEqual(['K', 'M', 'U']);
+    expect(showcase.lessonStarts.map(({ lesson }) => lesson)).toContain(2);
+    expect(showcase.sessions.at(-1).id).toBe(saved.body.session.id);
+    expect(showcase.sessions.map(({ createdAt }) => createdAt))
+      .toEqual(showcase.sessions.map(({ createdAt }) => createdAt).sort());
+    expect(guest.text).not.toMatch(/"(?:sent|typed)":/);
+    expect(guest.text).not.toContain(sent);
+    expect(guest.text).not.toContain(typed);
+
+    const history = await api().get(`${path}/showcase/letter?char=U`);
+    expect(history.status).toBe(200);
+    expect(history.body.char).toBe('U');
+    expect(history.body.points.at(-1)).toEqual({
+      createdAt: saved.body.session.createdAt, sent: 5, errors: 0,
+    });
+  });
+
+  test('rejects invalid letters', async () => {
+    delete process.env.CW_SHOWCASE_USERNAME;
+    const response = await api().get(`${path}/showcase/letter?char=AB`);
+    expect(response.status).toBe(400);
+    expect(response.body.name).toBe('InvalidCwInputError');
+  });
 });

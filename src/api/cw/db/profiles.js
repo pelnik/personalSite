@@ -2,7 +2,11 @@ const client = require('./client');
 const columns = 'id, lesson, char_wpm AS "charWpm", eff_wpm AS "effWpm", tone_hz AS "toneHz", minutes, group_length AS "groupLength"';
 async function ensureProfile(account) {
   await client.query('INSERT INTO cw_profiles (id) VALUES ($1) ON CONFLICT (id) DO NOTHING', [account.id]);
-  const { rows: [profile] } = await client.query(`SELECT ${columns} FROM cw_profiles WHERE id = $1`, [account.id]);
+  return getProfile(account.id);
+}
+
+async function getProfile(id) {
+  const { rows: [profile] } = await client.query(`SELECT ${columns} FROM cw_profiles WHERE id = $1`, [id]);
   return profile;
 }
 async function updateProfileSettings(id, settings) {
@@ -10,4 +14,4 @@ async function updateProfileSettings(id, settings) {
     [id, settings.lesson, settings.charWpm, settings.effWpm, settings.toneHz, settings.minutes, settings.groupLength]);
   return profile;
 }
-module.exports = { ensureProfile, updateProfileSettings };
+module.exports = { ensureProfile, getProfile, updateProfileSettings };

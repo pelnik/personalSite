@@ -1,7 +1,7 @@
 const express = require('express');
-const { authenticate, requireAccount } = require('../../auth');
+const { authenticate, requireAccount, getAccountByUsername } = require('../../auth');
 const {
-  ensureProfile, updateProfileSettings, createSession,
+  ensureProfile, getProfile, updateProfileSettings, createSession,
   getRecentLetterCounts, getSessionSummaries, getLetterHistory, getLessonStarts,
 } = require('../db');
 const { DEFAULT_SETTINGS, OPTIONS, validateSettings } = require('../lib/settings');
@@ -12,9 +12,51 @@ const { generatePractice } = require('../lib/generate');
 const { checkCopy, normalizeCopy } = require('../lib/check');
 
 const cwRouter = express.Router();
-cwRouter.use(authenticate(ensureProfile));
 const fail = (name, message) => ({ name, message });
 const withoutId = (profile) => Object.fromEntries(Object.entries(profile).filter(([key]) => key !== 'id'));
+
+async function statsFor(profileId, lesson) {
+  const [sessions, recentCounts, lessonStarts] = await Promise.all([
+    getSessionSummaries(profileId),
+    getRecentLetterCounts(profileId),
+    getLessonStarts(profileId),
+  ]);
+  return { sessions, letters: practiceWeights(lesson, recentCounts).letters, lessonStarts };
+}
+
+async function showcaseProfile() {
+  const username = process.env.CW_SHOWCASE_USERNAME;
+  if (!username) return null;
+
+  const account = await getAccountByUsername(username);
+  return account ? (await getProfile(account.id)) ?? null : null;
+}
+
+// Public reads must not create profiles, even if a visitor sends a token.
+cwRouter.get('/showcase', async (req, res, next) => {
+  try {
+    const profile = await showcaseProfile();
+    if (!profile) return res.send({ showcase: null });
+
+    const stats = await statsFor(profile.id, profile.lesson);
+    return res.send({ showcase: stats.sessions.length ? { lesson: profile.lesson, ...stats } : null });
+  } catch (error) { return next(error); }
+});
+
+cwRouter.get('/showcase/letter', async (req, res, next) => {
+  try {
+    const { char } = req.query;
+    if (!KOCH_ORDER.includes(char)) {
+      return next(fail('InvalidCwInputError', 'Invalid letter'));
+    }
+
+    const profile = await showcaseProfile();
+    const points = profile ? await getLetterHistory(profile.id, char) : [];
+    return res.send({ char, points });
+  } catch (error) { return next(error); }
+});
+
+cwRouter.use(authenticate(ensureProfile));
 
 cwRouter.get('/settings', (req, res) => {
   const settings = req.user ? withoutId(req.user) : DEFAULT_SETTINGS;
@@ -97,12 +139,7 @@ cwRouter.get('/stats', requireAccount, async (req, res, next) => {
       return next(fail('InvalidCwSettingsError', 'Invalid lesson'));
     }
 
-    const [sessions, recentCounts, lessonStarts] = await Promise.all([
-      getSessionSummaries(req.user.id),
-      getRecentLetterCounts(req.user.id),
-      getLessonStarts(req.user.id),
-    ]);
-    return res.send({ sessions, letters: practiceWeights(lesson, recentCounts).letters, lessonStarts });
+    return res.send(await statsFor(req.user.id, lesson));
   } catch (error) { return next(error); }
 });
 
