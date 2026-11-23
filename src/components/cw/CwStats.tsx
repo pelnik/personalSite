@@ -21,6 +21,12 @@ function chartColor(showcase: boolean) {
 const dateTick = (time: number) => shortDate.format(time);
 const percentTick = (value: number) => `${value}%`;
 
+// Error rates are usually low, so a 0–50% axis is easier to read; switch to 0–100% only when needed.
+function errorRateAxis(rates: (number | null | undefined)[]) {
+  const top = rates.some((rate) => rate != null && rate > 50) ? 100 : 50;
+  return { domain: [0, top] as [number, number], ticks: top === 50 ? [0, 10, 20, 30, 40, 50] : [0, 25, 50, 75, 100] };
+}
+
 type ChartSession = SessionSummary & { time: number; firstInLesson: boolean };
 type DaySummary = { time: number; sent: number; errors: number };
 
@@ -91,14 +97,15 @@ function LetterHistory({ load, char, latestSessionId, color }: {
   if (error?.char === char) return <p role="alert">{error.message}</p>;
   if (history?.char !== char) return <p>Loading letter history…</p>;
   if (!history.points.length) return <p>No practice for {char} yet.</p>;
+  const days = summarizeDays(history.points);
 
   return (
     <div className="cw-chart" role="group" aria-label={`Error rate by day for ${char}`}>
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={summarizeDays(history.points)}>
+        <LineChart data={days}>
           <CartesianGrid strokeDasharray="4 4" vertical={false} />
           <XAxis dataKey="time" type="number" scale="time" domain={['dataMin', 'dataMax']} tickFormatter={dateTick} />
-          <YAxis domain={[0, 100]} tickFormatter={percentTick} />
+          <YAxis {...errorRateAxis(days.map(({ rate }) => rate))} tickFormatter={percentTick} />
           <Tooltip content={HistoryTooltip} />
           <Line dataKey="rate" stroke={color} strokeWidth={2} isAnimationActive={false} />
         </LineChart>
@@ -206,7 +213,7 @@ export default function CwStats(props: Props) {
                       <BarChart data={chartLetters}>
                         <CartesianGrid strokeDasharray="4 4" vertical={false} />
                         <XAxis dataKey="char" />
-                        <YAxis domain={[0, 100]} tickFormatter={percentTick} />
+                        <YAxis {...errorRateAxis(chartLetters.map(({ rate }) => rate))} tickFormatter={percentTick} />
                         <Tooltip formatter={(value) => [`${Number(value).toFixed(1)}%`, 'Error rate']} />
                         <Bar dataKey="rate" fill={color} isAnimationActive={false} />
                       </BarChart>
