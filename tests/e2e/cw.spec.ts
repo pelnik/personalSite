@@ -10,9 +10,9 @@ test('logged-out CW practice shows results without stats', async ({ page }) => {
   await expect(page.getByLabel('Duration')).toHaveValue('1');
   await expect(page.getByLabel('Group length')).toHaveValue('5');
   await page.getByRole('button', { name: 'Start' }).click();
+  await expect(page.getByLabel('Type what you hear')).toBeFocused();
   await expect(page.getByRole('status')).toContainText('Group 1 of');
   await page.getByRole('button', { name: 'Stop' }).click();
-  await expect(page.getByLabel('Type what you hear')).toBeFocused();
   await page.getByLabel('Type what you hear').fill('KM');
   await page.getByLabel('Lesson').selectOption('2');
   const [request] = await Promise.all([
