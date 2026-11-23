@@ -1,8 +1,11 @@
 const express = require('express');
 const { authenticate, requireAccount } = require('../../auth');
-const { ensureProfile, updateProfileSettings, createSession, getRecentLetterCounts } = require('../db');
+const {
+  ensureProfile, updateProfileSettings, createSession,
+  getRecentLetterCounts, getSessionSummaries, getLetterHistory, getLessonStarts,
+} = require('../db');
 const { DEFAULT_SETTINGS, OPTIONS, validateSettings } = require('../lib/settings');
-const { lessonChars } = require('../lib/koch');
+const { KOCH_ORDER, LESSON_COUNT, lessonChars } = require('../lib/koch');
 const { baselineWeights } = require('../lib/baseline');
 const { practiceWeights } = require('../lib/weights');
 const { generatePractice } = require('../lib/generate');
@@ -84,4 +87,33 @@ cwRouter.post('/results', async (req, res, next) => {
     return res.send({ result, saved: true, session });
   } catch (error) { return next(error); }
 });
+cwRouter.get('/stats', requireAccount, async (req, res, next) => {
+  try {
+    const value = req.query.lesson;
+    const lesson = value === undefined
+      ? req.user.lesson
+      : typeof value === 'string' && /^\d+$/.test(value) ? Number(value) : NaN;
+    if (!Number.isInteger(lesson) || lesson < 1 || lesson > LESSON_COUNT) {
+      return next(fail('InvalidCwSettingsError', 'Invalid lesson'));
+    }
+
+    const [sessions, recentCounts, lessonStarts] = await Promise.all([
+      getSessionSummaries(req.user.id),
+      getRecentLetterCounts(req.user.id),
+      getLessonStarts(req.user.id),
+    ]);
+    return res.send({ sessions, letters: practiceWeights(lesson, recentCounts).letters, lessonStarts });
+  } catch (error) { return next(error); }
+});
+
+cwRouter.get('/stats/letter', requireAccount, async (req, res, next) => {
+  try {
+    const { char } = req.query;
+    if (!KOCH_ORDER.includes(char)) {
+      return next(fail('InvalidCwInputError', 'Invalid letter'));
+    }
+    return res.send({ char, points: await getLetterHistory(req.user.id, char) });
+  } catch (error) { return next(error); }
+});
+
 module.exports = cwRouter;

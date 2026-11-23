@@ -92,3 +92,32 @@ test('keyboard checks a complete passing practice and advances to the next lesso
   await expect(page.getByRole('heading', { name: /accuracy/ })).toHaveCount(0);
   await expect(copy).toHaveCount(0);
 });
+
+test('a complete signed-in practice appears in stats and letter history', async ({ page }) => {
+  await page.goto('/login?next=/cw');
+  await page.getByLabel('Username').fill('albert');
+  await page.getByLabel('Password').fill('bertie99');
+  await page.getByRole('button', { name: 'Log in', exact: true }).click();
+  await expect(page).toHaveURL('/cw');
+  await expect(page.getByText('Practice adapts to the letters you miss')).toBeVisible();
+  await expect(page.getByText('No sessions yet. Finish a practice to see your stats.')).toBeVisible();
+
+  await page.getByRole('combobox', { name: /^Character speed/ }).selectOption('20');
+  await page.getByRole('combobox', { name: /^Effective speed/ }).selectOption('15');
+  await usePracticeText(page, 'KM');
+  await page.getByRole('button', { name: 'Start' }).click();
+  await page.getByLabel('Type what you hear').fill('KM');
+  await page.getByRole('button', { name: 'Check', exact: true }).click();
+
+  const stats = page.getByRole('region', { name: 'Your stats' });
+  await expect(stats.getByText('1 session', { exact: true })).toBeVisible();
+  const accuracyChart = stats.getByRole('group', { name: 'Session accuracy' });
+  await expect(accuracyChart.locator('.recharts-line-dot')).toHaveCount(1);
+  await expect(accuracyChart.getByText('L1', { exact: true })).toBeVisible();
+  await stats.getByRole('button', { name: 'K', exact: true }).click();
+  await expect(stats.getByRole('group', { name: 'Error rate by day for K' })).toBeVisible();
+  await page.getByRole('combobox', { name: /^Lesson/ }).selectOption('2');
+  await expect(stats.getByRole('button', { name: 'U', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Log out' }).click();
+  await expect(stats).toHaveCount(0);
+});

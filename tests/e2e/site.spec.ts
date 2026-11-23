@@ -1,6 +1,7 @@
 import { test, expect } from './fixtures';
 
 const PROJECT_LINKS = [
+  '/cw',
   '/portfolio/ZooClicker/index.html',
   '/fitness',
   '/scents',
@@ -26,6 +27,7 @@ test.describe('main site', () => {
       const hrefs = await page
         .locator('#project-container a[href^="/"]')
         .evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+      expect(hrefs[0]).toBe('/cw');
       expect(new Set(hrefs)).toEqual(new Set(PROJECT_LINKS));
 
       // Every image, including the project screenshots, actually loaded.
