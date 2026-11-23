@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { SiteContentContainer } from '..';
 import { useAuth } from '../Auth';
@@ -24,9 +24,15 @@ export default function CwTrainer() {
   const [result, setResult] = useState<cwApi.Result | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const typingBox = useRef<HTMLTextAreaElement>(null);
   const saveQueue = useRef(Promise.resolve());
   const player = usePlayer();
+  const { elapsed, duration } = player.progress;
+  const playing = player.status === 'playing' || player.status === 'loading';
+  const showCheck = Boolean(text && player.status === 'done' && !result);
+  const canCheck = showCheck && !loading && player.playedChars > 0;
+  const nextLesson = playedSettings ? playedSettings.lesson + 1 : null;
+  const canAdvance = result?.passed && player.completed &&
+    options?.lessons.some(({ lesson }) => lesson === nextLesson);
 
   useEffect(() => { document.title = 'CW Trainer - Matthew Pelnik'; }, []);
   useEffect(() => {
@@ -83,14 +89,14 @@ export default function CwTrainer() {
     } finally { setLoading(false); }
   }
   async function check() {
-    if (!playedSettings || !text || player.playedChars < 1) return;
+    if (!playedSettings || !canCheck) return;
     setLoading(true);
     setError('');
     try {
-      const sent = text.slice(0, player.playedChars).trimEnd();
+      const sent = player.completed ? text : text.slice(0, player.playedChars).trimEnd();
       const response = await cwApi.postResults(token, {
         lesson: playedSettings.lesson, charWpm: playedSettings.charWpm, effWpm: playedSettings.effWpm,
-        toneHz: playedSettings.toneHz, groupLength: playedSettings.groupLength, sent, typed,
+        toneHz: playedSettings.toneHz, groupLength: playedSettings.groupLength, sent, typed, complete: player.completed,
       });
       setResult(response.result);
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not check practice'); }
@@ -102,36 +108,90 @@ export default function CwTrainer() {
     setText('');
     setPlayedSettings(null);
   }
-  const { elapsed, duration } = player.progress;
-  const playing = player.status === 'playing' || player.status === 'loading';
-  return <SiteContentContainer><section className="cw-page">
-    <div className="cw-heading">
-      <h1>CW Trainer</h1>
-      {token ? (
-        <div className="cw-account">
-          {account && <span>Signed in as <strong>{account.username}</strong></span>}
-          <button className="cw-auth-control" type="button" onClick={logout}>Log out</button>
+  function advance() {
+    if (!canAdvance || nextLesson === null) return;
+    changeSettings({ lesson: nextLesson });
+    again();
+  }
+
+  function checkShortcut(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key !== 'Enter' || (!event.ctrlKey && !event.metaKey)) return;
+    event.preventDefault();
+    if (canCheck && !event.repeat) void check();
+  }
+
+  return (
+    <SiteContentContainer>
+      <section className="cw-page">
+        <div className="cw-heading">
+          <h1>CW Trainer</h1>
+          {token ? (
+            <div className="cw-account">
+              {account && <span>Signed in as <strong>{account.username}</strong></span>}
+              <button className="cw-auth-control" type="button" onClick={logout}>Log out</button>
+            </div>
+          ) : (
+            <Link className="cw-auth-control" to="/login?next=/cw">Log in</Link>
+          )}
         </div>
-      ) : (
-        <Link className="cw-auth-control" to="/login?next=/cw">Log in</Link>
-      )}
-    </div>
-    <p>Listen to Morse code groups, type what you hear, then check your copy.</p>
-    {settings && options ? <>
-      <SettingsBar settings={settings} options={options} disabled={playing || loading} onChange={changeSettings} />
-      <div className="cw-actions">
-        {!text && <button type="button" onClick={start} disabled={loading || !audioReady}>Start</button>}
-        {playing && <button type="button" onClick={player.stop}>Stop</button>}
-        {text && player.status === 'done' && !result && <button type="button" onClick={check} disabled={loading || player.playedChars < 1}>Check</button>}
-        {(result || text && player.status === 'done' && player.playedChars < 1) && <button type="button" onClick={again}>Practice again</button>}
-      </div>
-      {player.status === 'playing' && duration > 0 && (
-        <p>Elapsed: {formatTime(elapsed)} of {formatTime(Math.round(duration))} ({Math.floor(100 * elapsed / duration)}%)</p>
-      )}
-      {text && <label className="cw-copy-label">Type what you hear<textarea ref={typingBox} autoFocus value={typed} onChange={(event) => setTyped(event.target.value)} autoCapitalize="characters" autoCorrect="off" spellCheck={false} rows={5} /></label>}
-      {result && <ResultView result={result} loggedIn={Boolean(token)} />}
-    </> : !error && <p>Loading settings…</p>}
-    {error && <p role="alert" className="cw-error">{error}</p>}
-    <p className="cw-credits">Lessons follow the Koch course from <a href="https://lcwo.net/">LCWO</a> (lcwo.net). Audio by <a href="https://fkurz.net/ham/jscwlib.html">jscwlib</a>, by Fabian Kurz, DJ5CW (MIT).</p>
-  </section></SiteContentContainer>;
+        <p>Listen to Morse code groups, type what you hear, then check your copy.</p>
+
+        {settings && options ? (
+          <>
+            <SettingsBar
+              settings={settings}
+              options={options}
+              disabled={playing || loading}
+              onChange={changeSettings}
+            />
+            <div className="cw-actions">
+              {!text && (
+                <button type="button" onClick={start} disabled={loading || !audioReady}>Start</button>
+              )}
+              {playing && <button type="button" onClick={player.stop}>Stop</button>}
+              {showCheck && (
+                <button type="button" onClick={check} disabled={!canCheck}>Check</button>
+              )}
+              {(result || (showCheck && player.playedChars < 1)) && (
+                <button type="button" onClick={again}>Practice again</button>
+              )}
+              {canAdvance && <button type="button" onClick={advance}>Next lesson</button>}
+            </div>
+            {player.status === 'playing' && duration > 0 && (
+              <p>
+                Elapsed: {formatTime(elapsed)} of {formatTime(Math.round(duration))}{' '}
+                ({Math.floor(100 * elapsed / duration)}%)
+              </p>
+            )}
+            {text && (
+              <>
+                <label className="cw-copy-label">
+                  Type what you hear
+                  <textarea
+                    autoFocus
+                    value={typed}
+                    onChange={(event) => setTyped(event.target.value)}
+                    onKeyDown={checkShortcut}
+                    aria-describedby="cw-check-hint"
+                    autoCapitalize="characters"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    rows={5}
+                  />
+                </label>
+                <p id="cw-check-hint" className="cw-check-hint">Ctrl+Enter or ⌘+Enter to check</p>
+              </>
+            )}
+            {result && <ResultView result={result} loggedIn={Boolean(token)} complete={player.completed} />}
+          </>
+        ) : !error && <p>Loading settings…</p>}
+
+        {error && <p role="alert" className="cw-error">{error}</p>}
+        <p className="cw-credits">
+          Lessons follow the Koch course from <a href="https://lcwo.net/">LCWO</a> (lcwo.net). Audio by{' '}
+          <a href="https://fkurz.net/ham/jscwlib.html">jscwlib</a>, by Fabian Kurz, DJ5CW (MIT).
+        </p>
+      </section>
+    </SiteContentContainer>
+  );
 }

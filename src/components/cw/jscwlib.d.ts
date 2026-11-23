@@ -11,5 +11,6 @@ export interface Jscw {
   onFinished: () => void;
 }
 declare global {
+  interface Navigator { readonly audioSession?: { type: string } }
   interface Window { jscw?: new (params?: object) => Jscw }
 }

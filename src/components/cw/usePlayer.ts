@@ -5,6 +5,7 @@ import type { Settings } from './cwApi';
 export type PlayerStatus = 'idle' | 'loading' | 'playing' | 'done';
 export function usePlayer() {
   const [status, setStatus] = useState<PlayerStatus>('idle');
+  const [completed, setCompleted] = useState(false);
   const [playedChars, setPlayedChars] = useState(0);
   const [progress, setProgress] = useState({ elapsed: 0, duration: 0 });
   const player = useRef<Jscw | null>(null);
@@ -12,6 +13,9 @@ export function usePlayer() {
   const prepare = useCallback(() => {
     const Constructor = window.jscw;
     if (!Constructor) throw new Error('Audio player is not ready');
+    if ('audioSession' in navigator && navigator.audioSession) {
+      navigator.audioSession.type = 'playback';
+    }
     player.current ??= new Constructor();
     // Resume during the click gesture for browsers with strict audio rules.
     void player.current.audioCtx?.resume();
@@ -20,6 +24,7 @@ export function usePlayer() {
     const current = ++generation.current;
     setStatus('loading');
     setPlayedChars(0);
+    setCompleted(false);
     setProgress({ elapsed: 0, duration: 0 });
     const Constructor = await loadJscw();
     if (current !== generation.current) return;
@@ -28,7 +33,11 @@ export function usePlayer() {
     player.current.setEff(settings.effWpm === settings.charWpm ? 0 : settings.effWpm);
     player.current.setFreq(settings.toneHz);
     player.current.onCharacterPlay = ({ n }) => { if (current === generation.current) setPlayedChars(n + 1); };
-    player.current.onFinished = () => { if (current === generation.current) setStatus('done'); };
+    player.current.onFinished = () => {
+      if (current !== generation.current) return;
+      setCompleted(true);
+      setStatus('done');
+    };
     player.current.play(text);
     const duration = player.current.getLength();
     if (Number.isFinite(duration) && duration > 0) {
@@ -39,6 +48,7 @@ export function usePlayer() {
   const stop = useCallback(() => {
     generation.current++;
     player.current?.stop();
+    setCompleted(false);
     setStatus('done');
   }, []);
   useEffect(() => {
@@ -61,5 +71,5 @@ export function usePlayer() {
     player.current?.stop();
     void player.current?.audioCtx?.close();
   }, []);
-  return { status, playedChars, progress, prepare, start, stop };
+  return { status, playedChars, completed, progress, prepare, start, stop };
 }

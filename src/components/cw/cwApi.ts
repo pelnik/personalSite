@@ -14,4 +14,4 @@ export const getPractice = (token: string, settings: Settings) => {
   const query = new URLSearchParams(Object.entries(settings).filter(([key]) => key !== 'toneHz').map(([key, value]) => [key, String(value)]));
   return request<{ text: string; chars: string[]; weights: Record<string, number>; baseline: Record<string, number> }>(`/practice?${query}`, token);
 };
-export const postResults = (token: string, values: Omit<Settings, 'minutes'> & { sent: string; typed: string }) => request<{ result: Result; saved: boolean; session?: { id: number; createdAt: string } }>('/results', token, { method: 'POST', body: JSON.stringify(values) });
+export const postResults = (token: string, values: Omit<Settings, 'minutes'> & { sent: string; typed: string; complete: boolean }) => request<{ result: Result; saved: boolean; session?: { id: number; createdAt: string } }>('/results', token, { method: 'POST', body: JSON.stringify(values) });
