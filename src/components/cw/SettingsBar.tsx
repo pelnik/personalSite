@@ -10,8 +10,30 @@ export default function SettingsBar({ settings, options, disabled, onChange }: P
     { key: 'minutes', label: 'Duration', choices: options.minutes.map((n) => ({ value: n, text: `${n} minute${n === 1 ? '' : 's'}` })) },
     { key: 'groupLength', label: 'Group length', choices: options.groupLength.map((n) => ({ value: n, text: n ? String(n) : 'Random (2–7)' })) },
   ];
-  return <div className="cw-settings">{controls.map(({ key, label, choices }) => <label key={key}>{label}<select value={settings[key]} disabled={disabled} onChange={(event) => {
-    const value = Number(event.target.value);
-    onChange(key === 'charWpm' && value < settings.effWpm ? { charWpm: value, effWpm: value } : { [key]: value });
-  }}>{choices.map(({ value, text }) => <option key={value} value={value}>{text}</option>)}</select></label>)}</div>;
+  function changeValue(key: keyof Settings, value: number) {
+    if (key === 'charWpm' && value < settings.effWpm) {
+      onChange({ charWpm: value, effWpm: value });
+      return;
+    }
+    onChange({ [key]: value });
+  }
+
+  return (
+    <div className="cw-settings">
+      {controls.map(({ key, label, choices }) => (
+        <label key={key}>
+          {label}
+          <select
+            value={settings[key]}
+            disabled={disabled}
+            onChange={(event) => changeValue(key, Number(event.target.value))}
+          >
+            {choices.map(({ value, text }) => (
+              <option key={value} value={value}>{text}</option>
+            ))}
+          </select>
+        </label>
+      ))}
+    </div>
+  );
 }

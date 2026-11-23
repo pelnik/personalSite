@@ -52,7 +52,8 @@ test('logged-in CW settings persist and partial practices are not saved', async 
   await page.reload();
   await expect(page.getByLabel('Tone')).toHaveValue('650');
   await page.getByRole('combobox', { name: /^Character speed/ }).selectOption('5');
-  await usePracticeText(page, 'KKK');
+  // Leave a word gap after the first K so Stop has more time to land.
+  await usePracticeText(page, 'K KK');
   await page.getByRole('button', { name: 'Start' }).click();
   await expect(page.getByText(/^Elapsed:/)).toHaveText(/^Elapsed: 0:0[1-9] of/);
   await page.getByRole('button', { name: 'Stop' }).click();
