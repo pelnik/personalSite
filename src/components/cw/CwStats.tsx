@@ -1,16 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Bar, BarChart, CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer,
   Tooltip, XAxis, YAxis, type TooltipContentProps,
 } from 'recharts';
-import { getLetterHistory, getStats, type CwStatsData, type LetterPoint, type SessionSummary } from './cwApi';
+import { Link } from 'react-router-dom';
+import {
+  getLetterHistory, getShowcase, getShowcaseLetterHistory, getStats,
+  type CwStatsData, type LetterPoint, type SessionSummary,
+} from './cwApi';
 
 const shortDate = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' });
+const dateOnly = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' });
 const fullDate = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' });
 const percent = new Intl.NumberFormat(undefined, { style: 'percent', maximumFractionDigits: 1 });
 const multiplier = new Intl.NumberFormat(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
-const chartColor = '#176b81';
+function chartColor(showcase: boolean) {
+  return showcase ? '#5f6f74' : '#176b81';
+}
 const dateTick = (time: number) => shortDate.format(time);
 const percentTick = (value: number) => `${value}%`;
 
@@ -30,12 +37,12 @@ function summarizeDays(points: LetterPoint[]) {
   return [...days.values()].map((day) => ({ ...day, rate: 100 * day.errors / day.sent }));
 }
 
-function AccuracyTooltip({ active, payload }: Pick<TooltipContentProps<number, string>, 'active' | 'payload'>) {
+function AccuracyTooltip({ active, payload, showcase }: Pick<TooltipContentProps<number, string>, 'active' | 'payload'> & { showcase: boolean }) {
   const session = payload?.[0]?.payload as ChartSession | undefined;
   if (!active || !session) return null;
   return (
     <div className="cw-chart-tooltip">
-      <strong>{fullDate.format(new Date(session.createdAt))}</strong>
+      <strong>{(showcase ? dateOnly : fullDate).format(new Date(session.createdAt))}</strong>
       <div>Lesson {session.lesson} · {session.accuracy}% accuracy</div>
       {session.firstInLesson && <div>First session of lesson {session.lesson}</div>}
       <div>{session.charWpm} WPM character speed · {session.effWpm} WPM effective</div>
@@ -55,19 +62,20 @@ function HistoryTooltip({ active, payload }: Pick<TooltipContentProps<number, st
   );
 }
 
-function LetterHistory({ token, char, latestSessionId }: {
-  token: string;
+function LetterHistory({ load, char, latestSessionId, color }: {
+  load: (char: string) => Promise<{ char: string; points: LetterPoint[] }>;
   char: string;
   latestSessionId: number | null;
+  color: string;
 }) {
   const [history, setHistory] = useState<{ char: string; points: LetterPoint[] } | null>(null);
   const [error, setError] = useState<{ char: string; message: string } | null>(null);
 
   useEffect(() => {
     let active = true;
-    async function load() {
+    async function fetchHistory() {
       try {
-        const response = await getLetterHistory(token, char);
+        const response = await load(char);
         if (active) {
           setHistory(response);
           setError(null);
@@ -76,9 +84,9 @@ function LetterHistory({ token, char, latestSessionId }: {
         if (active) setError({ char, message: cause instanceof Error ? cause.message : 'Could not load letter history' });
       }
     }
-    void load();
+    void fetchHistory();
     return () => { active = false; };
-  }, [token, char, latestSessionId]);
+  }, [load, char, latestSessionId]);
 
   if (error?.char === char) return <p role="alert">{error.message}</p>;
   if (history?.char !== char) return <p>Loading letter history…</p>;
@@ -92,18 +100,27 @@ function LetterHistory({ token, char, latestSessionId }: {
           <XAxis dataKey="time" type="number" scale="time" domain={['dataMin', 'dataMax']} tickFormatter={dateTick} />
           <YAxis domain={[0, 100]} tickFormatter={percentTick} />
           <Tooltip content={HistoryTooltip} />
-          <Line dataKey="rate" stroke={chartColor} strokeWidth={2} isAnimationActive={false} />
+          <Line dataKey="rate" stroke={color} strokeWidth={2} isAnimationActive={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>
   );
 }
 
-export default function CwStats({ token, lesson, latestSessionId }: {
-  token: string;
-  lesson: number;
-  latestSessionId: number | null;
-}) {
+type Props =
+  | { mode: 'account'; token: string; lesson: number; latestSessionId: number | null }
+  | { mode: 'showcase' };
+
+export default function CwStats(props: Props) {
+  const showcaseMode = props.mode === 'showcase';
+  const token = props.mode === 'account' ? props.token : null;
+  const lesson = props.mode === 'account' ? props.lesson : null;
+  const latestSessionId = props.mode === 'account' ? props.latestSessionId : null;
+  const color = chartColor(showcaseMode);
+  const loadHistory = useCallback(
+    (char: string) => token ? getLetterHistory(token, char) : getShowcaseLetterHistory(char),
+    [token]
+  );
   const [data, setData] = useState<{ lesson: number; stats: CwStatsData } | null>(null);
   const [error, setError] = useState<{ lesson: number; message: string } | null>(null);
   const [selectedChar, setSelectedChar] = useState<string | null>(null);
@@ -112,20 +129,26 @@ export default function CwStats({ token, lesson, latestSessionId }: {
     let active = true;
     async function load() {
       try {
-        const stats = await getStats(token, lesson);
-        if (active) {
-          setData({ lesson, stats });
-          setError(null);
+        if (token && lesson !== null) {
+          const stats = await getStats(token, lesson);
+          if (active) {
+            setData({ lesson, stats });
+            setError(null);
+          }
+        } else {
+          const { showcase } = await getShowcase();
+          if (active && showcase) setData({ lesson: showcase.lesson, stats: showcase });
         }
       } catch (cause) {
-        if (active) setError({ lesson, message: cause instanceof Error ? cause.message : 'Could not load stats' });
+        if (active && lesson !== null) setError({ lesson, message: cause instanceof Error ? cause.message : 'Could not load stats' });
       }
     }
     void load();
     return () => { active = false; };
   }, [token, lesson, latestSessionId]);
 
-  const stats = data?.lesson === lesson ? data.stats : null;
+  const stats = data && (showcaseMode || data.lesson === lesson) ? data.stats : null;
+  if (showcaseMode && !stats) return null;
   const lessonStartIds = new Set(stats?.lessonStarts.map(({ sessionId }) => sessionId));
   const chartSessions = stats?.sessions.map((session) => ({
     ...session,
@@ -137,8 +160,14 @@ export default function CwStats({ token, lesson, latestSessionId }: {
   const chartLetters = letters.map(({ char, errorRate }) => ({ char, rate: errorRate === null ? null : errorRate * 100 }));
 
   return (
-    <section className="cw-stats" aria-labelledby="cw-stats-title">
-      <h2 id="cw-stats-title">Your stats</h2>
+    <section className={showcaseMode ? 'cw-stats cw-stats-showcase' : 'cw-stats'} aria-labelledby="cw-stats-title">
+      <h2 id="cw-stats-title">{showcaseMode ? "Matt's practice" : 'Your stats'}</h2>
+      {showcaseMode && (
+        <p>
+          Matt is learning Morse code with this trainer. These are his real results.{' '}
+          <Link to="/login?next=/cw">Log in</Link> to track your own.
+        </p>
+      )}
       {error?.lesson === lesson ? <p role="alert">{error.message}</p>
         : !chartSessions ? <p>Loading stats…</p>
           : chartSessions.length === 0 ? <p>No sessions yet. Finish a practice to see your stats.</p>
@@ -162,14 +191,16 @@ export default function CwStats({ token, lesson, latestSessionId }: {
                             label={{ value: `L${session.lesson}`, position: 'top' }}
                           />
                         ))}
-                        <Tooltip content={AccuracyTooltip} />
-                        <Line dataKey="accuracy" stroke={chartColor} strokeWidth={2} isAnimationActive={false} />
+                        <Tooltip content={(tooltip) => <AccuracyTooltip {...tooltip} showcase={showcaseMode} />} />
+                        <Line dataKey="accuracy" stroke={color} strokeWidth={2} isAnimationActive={false} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
                 </section>
                 <section aria-labelledby="cw-letters-title">
-                  <h3 id="cw-letters-title">Letters in this lesson</h3>
+                  <h3 id="cw-letters-title">
+                    {showcaseMode ? `Letters in Matt's current lesson (Lesson ${data?.lesson})` : 'Letters in this lesson'}
+                  </h3>
                   <div className="cw-chart" role="group" aria-label="Error rate by letter">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={chartLetters}>
@@ -177,7 +208,7 @@ export default function CwStats({ token, lesson, latestSessionId }: {
                         <XAxis dataKey="char" />
                         <YAxis domain={[0, 100]} tickFormatter={percentTick} />
                         <Tooltip formatter={(value) => [`${Number(value).toFixed(1)}%`, 'Error rate']} />
-                        <Bar dataKey="rate" fill={chartColor} isAnimationActive={false} />
+                        <Bar dataKey="rate" fill={color} isAnimationActive={false} />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -217,7 +248,7 @@ export default function CwStats({ token, lesson, latestSessionId }: {
                 <section aria-labelledby="cw-letter-history-title">
                   <h3 id="cw-letter-history-title">{selected ? `Letter history: ${selected}` : 'Letter history'}</h3>
                   {selected
-                    ? <LetterHistory key={selected} token={token} char={selected} latestSessionId={latestSessionId} />
+                    ? <LetterHistory key={selected} load={loadHistory} char={selected} latestSessionId={latestSessionId} color={color} />
                     : <p>Select a letter in the table to see its history.</p>}
                 </section>
               </>

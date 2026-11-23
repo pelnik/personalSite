@@ -808,3 +808,19 @@
   cursor: pointer;
 }
 .cw-stats-table button[aria-pressed="true"] { background: #176b81; color: white; }
+
+.cw-stats-showcase {
+  padding: 1rem;
+  background: #f2f6f7;
+  border: 1px solid #c5ced0;
+  border-radius: 4px;
+}
+.site-full-window .cw-stats-showcase a {
+  display: inline;
+  color: #176b81;
+  text-decoration: underline;
+}
+.cw-stats-showcase .cw-stats-table button[aria-pressed="true"] {
+  background: #5f6f74;
+  border-color: #5f6f74;
+}

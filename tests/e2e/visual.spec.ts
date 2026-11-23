@@ -82,3 +82,13 @@ for (const shot of SHOTS) {
     });
   });
 }
+
+test('cw-showcase', async ({ page }) => {
+  await page.goto('/cw');
+  const heading = page.getByRole('heading', { name: "Matt's practice" });
+  await expect(heading).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Session accuracy' }).getByText('L2', { exact: true })).toBeVisible();
+  await waitUntilSettled(page);
+  await heading.evaluate((element) => element.scrollIntoView({ block: 'start' }));
+  await expect(page).toHaveScreenshot('cw-showcase.png');
+});

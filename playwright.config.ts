@@ -62,6 +62,7 @@ export default defineConfig({
       // The scents API creates its Stripe client at startup and throws without
       // a key. A dummy key also keeps a real one from .env out of e2e runs.
       STRIPE_KEY: 'sk_test_e2e_dummy',
+      CW_SHOWCASE_USERNAME: 'sandra',
       ACME_WEBROOT: 'tests/e2e/fixtures/acme',
     },
     stdout: 'ignore',

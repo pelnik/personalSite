@@ -191,9 +191,13 @@ export default function CwTrainer() {
           </>
         ) : !error && <p>Loading settings…</p>}
 
-        {token && settings && (
+        {token ? settings && (
           <Suspense fallback={<p>Loading stats…</p>}>
-            <CwStats key={token} token={token} lesson={settings.lesson} latestSessionId={latestSessionId} />
+            <CwStats key={token} mode="account" token={token} lesson={settings.lesson} latestSessionId={latestSessionId} />
+          </Suspense>
+        ) : (
+          <Suspense fallback={null}>
+            <CwStats key="showcase" mode="showcase" />
           </Suspense>
         )}
         {error && <p role="alert" className="cw-error">{error}</p>}

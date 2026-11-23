@@ -41,6 +41,7 @@ GitHub secrets the deploy needs: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, `EC2_PRO
   - `DATABASE_URL`, `FITNESS_DATABASE_URL`, `SCENTS_DATABASE_URL`, `AUTH_DATABASE_URL`, `CW_DATABASE_URL`
   - `JWT_SECRET`
   - `STRIPE_KEY`, `PROD_STRIPE_KEY`
+  - `CW_SHOWCASE_USERNAME` (optional). Set it to the account that opted to share its CW practice summaries, then restart the app. Without it, or until the account has completed practices, the showcase is hidden.
   - `ADMIN_TOKEN` (optional; enables `/api/metrics`)
   - `METRICS_INTERVAL_MS` (optional)
 

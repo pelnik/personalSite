@@ -47,3 +47,9 @@ export const getStats = (token: string, lesson: number) =>
 
 export const getLetterHistory = (token: string, char: string) =>
   request<{ char: string; points: LetterPoint[] }>(`/stats/letter?${new URLSearchParams({ char })}`, token);
+
+export const getShowcase = () =>
+  request<{ showcase: (CwStatsData & { lesson: number }) | null }>('/showcase', '');
+
+export const getShowcaseLetterHistory = (char: string) =>
+  request<{ char: string; points: LetterPoint[] }>(`/showcase/letter?${new URLSearchParams({ char })}`, '');
