@@ -1,9 +1,10 @@
 const express = require('express');
 const { authenticate, requireAccount } = require('../../auth');
-const { ensureProfile, updateProfileSettings, createSession } = require('../db');
+const { ensureProfile, updateProfileSettings, createSession, getRecentLetterCounts } = require('../db');
 const { DEFAULT_SETTINGS, OPTIONS, validateSettings } = require('../lib/settings');
 const { lessonChars } = require('../lib/koch');
 const { baselineWeights } = require('../lib/baseline');
+const { practiceWeights } = require('../lib/weights');
 const { generatePractice } = require('../lib/generate');
 const { checkCopy, normalizeCopy } = require('../lib/check');
 
@@ -25,7 +26,7 @@ cwRouter.put('/settings', requireAccount, async (req, res, next) => {
     return res.send({ settings: withoutId(profile) });
   } catch (error) { return next(error); }
 });
-cwRouter.get('/practice', (req, res, next) => {
+cwRouter.get('/practice', async (req, res, next) => {
   try {
     const names = ['lesson', 'charWpm', 'effWpm', 'minutes', 'groupLength'];
     const unexpected = Object.keys(req.query).some((key) => !names.includes(key));
@@ -40,7 +41,15 @@ cwRouter.get('/practice', (req, res, next) => {
     const error = validateSettings(settings);
     if (error) return next(fail('InvalidCwSettingsError', error));
     const baseline = baselineWeights(settings.lesson);
-    return res.send({ text: generatePractice({ ...settings, weights: baseline }), chars: lessonChars(settings.lesson), weights: baseline, baseline });
+    const weights = req.user
+      ? practiceWeights(settings.lesson, await getRecentLetterCounts(req.user.id)).weights
+      : baseline;
+    return res.send({
+      text: generatePractice({ ...settings, weights }),
+      chars: lessonChars(settings.lesson),
+      weights,
+      baseline,
+    });
   } catch (error) { return next(error); }
 });
 function validPracticeText(sent, typed, chars) {

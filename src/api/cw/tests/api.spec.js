@@ -67,3 +67,20 @@ test('results reject invalid text or missing settings', async () => {
     expect(bad.body.name).toBe('InvalidCwInputError');
   }
 });
+
+test('practice weights favor mistakes from the signed-in account', async () => {
+  const saved = await api().post(`${path}/results`).set(auth(token)).send({
+    ...resultBody,
+    sent: 'KKKKK MMMMM',
+    typed: 'MMMMM MMMMM',
+  });
+  expect(saved.body.saved).toBe(true);
+
+  const signedIn = await api().get(`${path}/practice`).set(auth(token)).query(practice);
+  expect(signedIn.status).toBe(200);
+  expect(signedIn.body.weights.K).toBeGreaterThan(signedIn.body.baseline.K);
+
+  const guest = await api().get(`${path}/practice`).query(practice);
+  expect(guest.status).toBe(200);
+  expect(guest.body.weights).toEqual(guest.body.baseline);
+});

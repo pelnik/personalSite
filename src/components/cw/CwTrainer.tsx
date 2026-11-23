@@ -157,6 +157,7 @@ export default function CwTrainer() {
               )}
               {canAdvance && <button type="button" onClick={advance}>Next lesson</button>}
             </div>
+            {token && !text && <p>Practice adapts to the letters you miss</p>}
             {player.status === 'playing' && duration > 0 && (
               <p>
                 Elapsed: {formatTime(elapsed)} of {formatTime(Math.round(duration))}{' '}
