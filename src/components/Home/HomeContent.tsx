@@ -2,10 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { HomeAbout, ProjectWrapper } from '..';
 import { portfolio_list } from '../Utilities/portfolio_list';
 
-type HomeContentProps = {
-  // portfolioRef: React.RefObject<HTMLDivElement | null>;
-};
-
 type DescriptionTracker = Record<number, boolean[]>;
 
 function HomeContent() {
@@ -27,7 +23,7 @@ function HomeContent() {
   const [projectWidth, setProjectWidth] = useState<number | null>(null);
   const projectElement = useRef<HTMLDivElement | null>(null);
 
-  let firstProjectID = 100;
+  const firstProjectID = 100;
 
   function getProjectElementWidth() {
     if (!projectElement.current)
@@ -43,9 +39,6 @@ function HomeContent() {
     function setEventListenerOnResize() {
       if (!projectElement.current)
         throw new Error('No project element ref found');
-
-      let stringWidth = getComputedStyle(projectElement.current).width;
-      stringWidth = stringWidth.slice(0, -2);
 
       setProjectWidth(getProjectElementWidth());
     }

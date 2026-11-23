@@ -1,4 +1,10 @@
+import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
+import useLocalDatabaseDefaults from './tests/support/localDatabases';
+
+// The web server (seed and server.js) inherits these, so e2e runs work in a
+// clone without a .env.
+useLocalDatabaseDefaults();
 
 // End-to-end tests against the built site (build/) served by the real Express
 // server. Run `npm run build` first; `npm run test:e2e` does both.

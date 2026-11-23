@@ -27,18 +27,28 @@ Where things are (the code is the source of truth for the details):
 ## Development
 
 ```bash
-docker compose up db -d   # local Postgres
+docker compose up db -d --no-recreate   # local Postgres, shared by every clone
 # Existing Docker volumes need this once: docker compose exec db createdb -U postgres auth
 npm run seed:all          # seed all four databases
 npm run dev               # Express on 3000 + Vite dev server on 3001
 npm run build             # compile the frontend to build/ and prerender pages
 npm run typecheck         # tsc --noEmit (Vite doesn't type-check; CI runs this)
+npm run lint              # ESLint (CI fails on errors, not warnings)
 npm run prod              # production server: port 80, plus 443 when Keys/ has certs
 ```
 
 In development, open http://localhost:3001. Vite proxies `/api` to Express, so the frontend always calls its APIs with same-origin paths (`/api/fitness`, `/api/juicebox`). Never hardcode a host.
 
-Copy `.env.example` to `.env`. `JWT_SECRET` is shared by juicebox and fitness auth. `STRIPE_KEY` is only needed for scents payments.
+Copy `.env.example` to `.env`. `JWT_SECRET` is shared by juicebox and fitness auth. `STRIPE_KEY` is only needed for scents payments. Tests don't need a `.env`: any database URL it doesn't set defaults to the docker-compose Postgres (`tests/support/localDatabases.js`).
+
+### Sharing the machine with other agents
+
+Matt often has several agents working at once, each in its own clone or worktree of this repo. They share one Postgres container and the machine's ports.
+
+- `docker compose up db -d --no-recreate` from any clone starts that one container, or does nothing if it's already running. Always pass `--no-recreate`: the `init-db.sql` mount path differs in each clone, so without it Compose restarts the container under everyone else. Never run `docker compose down` or remove the container: other agents are using it, and `down -v` deletes every database.
+- Never kill a process you didn't start. If a port is taken, another agent's server probably has it. Wait, or tell Matt.
+- Test runs reset the shared databases, so a run in another clone at the same time can fail yours. Rerun before treating a failure as real.
+- Before creating a branch, check that the name is free: `git ls-remote --heads origin <name>`. Never push to a branch another agent is working on.
 
 **Never run `npm run build` on the EC2 server.** It doesn't have enough memory. Builds happen in GitHub Actions.
 
@@ -62,16 +72,17 @@ npm run test:e2e:functional  # Playwright without screenshots (what CI runs)
   - Stripe is stubbed and given a dummy key. The scents seed archives every product in whatever Stripe account it's given.
 - **Known bugs:** tests named `KNOWN BUG: …` pin current buggy behavior on purpose. When fixing one, update that test in the same change.
 
-**Before pushing** a branch or opening a PR, with local Postgres running (`docker compose up db -d`), run:
+**Before pushing** a branch or opening a PR, with local Postgres running (`docker compose up db -d --no-recreate`), run:
 
 ```bash
 npm run typecheck
+npm run lint
 npm test
 npm run test:e2e              # on macOS: functional + screenshot tests
 npm run test:e2e:functional   # elsewhere: screenshot baselines are macOS-only (run npm run build first)
 ```
 
-- **Screenshots only run locally:** CI runs the first two and the functional e2e tests, but not the screenshot comparisons. So a branch that skipped `npm run test:e2e` on a Mac can pass CI and still change how the site looks. Say so in the PR if you couldn't run the screenshots.
+- **Screenshots only run locally:** CI runs the first three and the functional e2e tests, but not the screenshot comparisons. So a branch that skipped `npm run test:e2e` on a Mac can pass CI and still change how the site looks. Say so in the PR if you couldn't run the screenshots.
 - **Updating baselines:** if a screenshot changes on purpose, update them with `--update-snapshots` and look at the new images before committing them. Never commit screenshot files that aren't `-darwin`.
 
 ---
@@ -113,6 +124,7 @@ SSL:
 - Side effects go in `useEffect`, including the per-page `document.title` update.
 - Import from a folder's `index.js` barrel file, not from individual files. Exception: pages lazy-loaded with `React.lazy` in `src/components/Main.tsx` import their module directly, so each gets its own chunk.
 - TypeScript runs in strict mode. JS files are allowed but not type-checked.
+- `typescript` in `package.json` aliases `@typescript/typescript6` to provide the TS 6 API for `typescript-eslint`; `tsc` remains TS 7 from `@typescript/native`. Don't change the alias or bump `typescript` to 7 until `typescript-eslint` supports TS 7. Fix new lint findings in site code rather than suppressing them; any `eslint-disable` needs a `--` reason.
 - Dev vs. production behavior is switched with `process.env.NODE_ENV`.
 
 ### Adding login to a project

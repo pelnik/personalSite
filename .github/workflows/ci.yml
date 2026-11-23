@@ -46,6 +46,9 @@ jobs:
       - name: Type check
         run: npm run typecheck
 
+      - name: Lint
+        run: npm run lint
+
       - name: Create test databases
         run: |
           PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE auth;"

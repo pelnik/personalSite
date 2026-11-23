@@ -8,7 +8,7 @@ async function submit(path: string, username: string, password: string) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password }),
   });
-  const data: AuthResponse = await response.json();
+  const data: AuthResponse = await response.json().catch(() => ({}));
   if (!response.ok || !data.token || !data.account) {
     throw new Error(data.message || 'Authentication failed');
   }

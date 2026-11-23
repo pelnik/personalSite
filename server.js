@@ -23,7 +23,8 @@ if (process.env.NODE_ENV === 'development') {
 const server = http.createServer(app);
 server.on('error', (err) => {
   if (err.code === 'EADDRINUSE') {
-    console.error(`Port ${PORT} is already in use. Run "lsof -ti :${PORT} | xargs kill" to free it.`);
+    // Another clone's server may own it, so don't suggest killing it.
+    console.error(`Port ${PORT} is already in use. "lsof -i :${PORT}" shows which process has it.`);
     process.exit(1);
   }
   throw err;
@@ -57,7 +58,7 @@ if (process.env.NODE_ENV === 'production') {
       console.log(`https server listening on ${sshPORT}`);
     });
     servers.push(httpsServer);
-  } catch (err) {
+  } catch {
     console.warn('SSL certificates not found, HTTPS server not started');
   }
 }
