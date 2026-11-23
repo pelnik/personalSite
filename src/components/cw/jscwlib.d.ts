@@ -1,4 +1,5 @@
 export interface Jscw {
+  audioCtx?: AudioContext;
   setWpm(n: number): void;
   setEff(n: number): void;
   setFreq(n: number): void;

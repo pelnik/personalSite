@@ -8,6 +8,13 @@ export function usePlayer() {
   const [playedChars, setPlayedChars] = useState(0);
   const player = useRef<Jscw | null>(null);
   const generation = useRef(0);
+  const prepare = useCallback(() => {
+    const Constructor = window.jscw;
+    if (!Constructor) throw new Error('Audio player is not ready');
+    player.current ??= new Constructor();
+    // Resume during the click gesture for browsers with strict audio rules.
+    void player.current.audioCtx?.resume();
+  }, []);
   const start = useCallback(async (text: string, settings: Settings) => {
     const current = ++generation.current;
     setStatus('loading');
@@ -28,6 +35,10 @@ export function usePlayer() {
     player.current?.stop();
     setStatus('done');
   }, []);
-  useEffect(() => () => { generation.current++; player.current?.stop(); }, []);
-  return { status, playedChars, start, stop };
+  useEffect(() => () => {
+    generation.current++;
+    player.current?.stop();
+    void player.current?.audioCtx?.close();
+  }, []);
+  return { status, playedChars, prepare, start, stop };
 }

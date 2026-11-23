@@ -4,10 +4,13 @@ import { useAuth } from '../Auth';
 import { SettingsBar, ResultView } from './index';
 import * as cwApi from './cwApi';
 import { usePlayer } from './usePlayer';
+import { loadJscw } from './loadJscw';
 
 export default function CwTrainer() {
   const { token } = useAuth();
   const [settings, setSettings] = useState<cwApi.Settings | null>(null);
+  const [playedSettings, setPlayedSettings] = useState<cwApi.Settings | null>(null);
+  const [audioReady, setAudioReady] = useState(false);
   const [options, setOptions] = useState<cwApi.Options | null>(null);
   const [text, setText] = useState('');
   const [typed, setTyped] = useState('');
@@ -21,21 +24,42 @@ export default function CwTrainer() {
   useEffect(() => { document.title = 'CW Trainer - Matthew Pelnik'; }, []);
   useEffect(() => {
     let active = true;
-    cwApi.getSettings(token).then(({ settings: next, options: choices }) => {
-      if (active) { setSettings(next); setOptions(choices); setError(''); }
-    }).catch((cause: Error) => { if (active) setError(cause.message); });
+    async function load() {
+      try {
+        const { settings: next, options: choices } = await cwApi.getSettings(token);
+        if (active) { setSettings(next); setOptions(choices); setError(''); }
+      } catch (cause) { if (active) setError(cause instanceof Error ? cause.message : 'Could not load settings'); }
+    }
+    void load();
     return () => { active = false; };
   }, [token]);
+  useEffect(() => {
+    let active = true;
+    async function loadAudio() {
+      try { await loadJscw(); if (active) setAudioReady(true); }
+      catch (cause) { if (active) setError(cause instanceof Error ? cause.message : 'Could not load audio player'); }
+    }
+    void loadAudio();
+    return () => { active = false; };
+  }, []);
 
   function changeSettings(changes: Partial<cwApi.Settings>) {
     setSettings((current) => current ? { ...current, ...changes } : current);
     setError('');
     if (token) {
-      saveQueue.current = saveQueue.current.then(() => cwApi.putSettings(token, changes).then(() => undefined)).catch((cause: Error) => { setError(cause.message); });
+      const previous = saveQueue.current;
+      saveQueue.current = (async () => {
+        await previous;
+        try { await cwApi.putSettings(token, changes); }
+        catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not save settings'); }
+      })();
     }
   }
   async function start() {
-    if (!settings) return;
+    if (!settings || !audioReady) return;
+    try { player.prepare(); }
+    catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not start audio'); return; }
+    setPlayedSettings({ ...settings });
     setError('');
     setResult(null);
     setTyped('');
@@ -44,7 +68,6 @@ export default function CwTrainer() {
     try {
       const practice = await cwApi.getPractice(token, settings);
       setText(practice.text);
-      typingBox.current?.focus();
       await player.start(practice.text, settings);
     } catch (cause) {
       setText('');
@@ -53,14 +76,14 @@ export default function CwTrainer() {
     } finally { setLoading(false); }
   }
   async function check() {
-    if (!settings || !text || player.playedChars < 1) return;
+    if (!playedSettings || !text || player.playedChars < 1) return;
     setLoading(true);
     setError('');
     try {
       const sent = text.slice(0, player.playedChars).trimEnd();
       const response = await cwApi.postResults(token, {
-        lesson: settings.lesson, charWpm: settings.charWpm, effWpm: settings.effWpm,
-        toneHz: settings.toneHz, groupLength: settings.groupLength, sent, typed,
+        lesson: playedSettings.lesson, charWpm: playedSettings.charWpm, effWpm: playedSettings.effWpm,
+        toneHz: playedSettings.toneHz, groupLength: playedSettings.groupLength, sent, typed,
       });
       setResult(response.result);
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Could not check practice'); }
@@ -70,6 +93,7 @@ export default function CwTrainer() {
     setResult(null);
     setTyped('');
     setText('');
+    setPlayedSettings(null);
   }
   const group = player.playedChars ? text.slice(0, player.playedChars).split(' ').length : 0;
   const totalGroups = text ? text.split(' ').length : 0;
@@ -80,13 +104,13 @@ export default function CwTrainer() {
     {settings && options ? <>
       <SettingsBar settings={settings} options={options} disabled={playing || loading} onChange={changeSettings} />
       <div className="cw-actions">
-        {!text && <button type="button" onClick={start} disabled={loading}>Start</button>}
+        {!text && <button type="button" onClick={start} disabled={loading || !audioReady}>Start</button>}
         {playing && <button type="button" onClick={player.stop}>Stop</button>}
         {text && player.status === 'done' && !result && <button type="button" onClick={check} disabled={loading || player.playedChars < 1}>Check</button>}
         {(result || text && player.status === 'done' && player.playedChars < 1) && <button type="button" onClick={again}>Practice again</button>}
       </div>
       {playing && <p role="status">Group {group} of {totalGroups}</p>}
-      {text && <label className="cw-copy-label">Type what you hear<textarea ref={typingBox} value={typed} onChange={(event) => setTyped(event.target.value)} autoCapitalize="characters" autoCorrect="off" spellCheck={false} rows={5} /></label>}
+      {text && <label className="cw-copy-label">Type what you hear<textarea ref={typingBox} autoFocus value={typed} onChange={(event) => setTyped(event.target.value)} autoCapitalize="characters" autoCorrect="off" spellCheck={false} rows={5} /></label>}
       {result && <ResultView result={result} loggedIn={Boolean(token)} />}
     </> : !error && <p>Loading settings…</p>}
     {error && <p role="alert" className="cw-error">{error}</p>}
