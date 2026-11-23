@@ -7,6 +7,7 @@ import '../css/site.css';
 // Loaded on demand, so the homepage doesn't download the demo apps (and the
 // MUI components they use). These import modules directly rather than through
 // the barrel, which would pull everything into one chunk.
+const Diagnostics = lazy(() => import('./Diagnostics/Diagnostics'));
 const Snake = lazy(() => import('./portfolio/snake/Snake'));
 const JuiceboxDoc = lazy(() => import('./apiDocs/JuiceboxDoc'));
 const FitnessDoc = lazy(() => import('./apiDocs/FitnessDoc'));
@@ -31,6 +32,7 @@ function Main() {
           <Route path="/api/fitness/docs" element={<FitnessDoc />} />
           <Route path="/fitness/*" element={<FitnessMain />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/diagnostics" element={<Diagnostics />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

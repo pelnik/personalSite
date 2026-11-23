@@ -5,6 +5,7 @@ const scentsRouter = require('./scents/api');
 const authRouter = require('./auth/api');
 const cwRouter = require('./cw/api');
 const healthRouter = require('./health');
+const diagnosticsRouter = require('./diagnostics');
 
 const apiRouter = express.Router();
 
@@ -16,6 +17,7 @@ apiRouter.use((req, res, next) => {
   next();
 });
 apiRouter.use(healthRouter);
+apiRouter.use(diagnosticsRouter);
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/cw', cwRouter);
 apiRouter.use('/juicebox', jbRouter);
