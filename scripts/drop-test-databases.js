@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('../tests/support/localDatabases')();
 const { Client } = require('pg');
 const assertLocalDatabase = require('../tests/support/assertLocalDatabase');
 
