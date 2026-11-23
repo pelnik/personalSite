@@ -700,3 +700,27 @@
     text-align: center;
   }
 }
+
+/* CW trainer */
+.cw-page { max-width: 960px; margin: 0 auto; padding: 2rem 1rem 4rem; color: #20282c; }
+.cw-page h1 { margin-bottom: .5rem; }
+.cw-settings { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1.5rem 0; }
+.cw-settings label { display: flex; flex-direction: column; gap: .3rem; min-width: 150px; flex: 1 1 170px; font-weight: 600; }
+.cw-settings select { width: 100%; padding: .55rem; border: 1px solid #8d9b9f; border-radius: 4px; background: white; color: #20282c; }
+.cw-actions { display: flex; gap: .7rem; margin: 1rem 0; }
+.cw-actions button { border: 0; border-radius: 4px; padding: .65rem 1.25rem; background: #176b81; color: white; cursor: pointer; font-weight: 700; }
+.cw-actions button:disabled { opacity: .55; cursor: default; }
+.cw-copy-label { display: block; font-weight: 600; margin-top: 1rem; }
+.cw-copy-label textarea { display: block; width: 100%; margin-top: .4rem; padding: .7rem; font: 1.1rem/1.5 monospace; border: 1px solid #8d9b9f; border-radius: 4px; }
+.cw-results { margin-top: 1.5rem; }
+.cw-results h2 { margin-bottom: .3rem; }
+.cw-good { color: #167147; font-weight: 700; }
+.cw-alignment { overflow-x: auto; white-space: nowrap; font: 1.1rem/1.4 monospace; padding: .8rem; background: #f2f6f7; border-radius: 4px; }
+.cw-alignment-row { display: flex; }
+.cw-alignment-row span { display: inline-block; min-width: 1ch; text-align: center; }
+.cw-wrong, .cw-missing { color: #b42318; background: #ffe8e6; }
+.cw-extra { color: #1357a6; background: #e7f0ff; }
+.cw-error { color: #b42318; font-weight: 700; }
+.cw-credits { margin-top: 3rem; font-size: .9rem; }
+@media (max-width: 600px) { .cw-page { padding: 1rem .8rem 3rem; } .cw-settings label { flex-basis: 135px; min-width: 135px; } }
+.site-full-window .cw-credits a, .site-full-window .cw-results a { display: inline; color: #176b81; text-decoration: underline; }

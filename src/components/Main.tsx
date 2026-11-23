@@ -9,6 +9,7 @@ import '../css/site.css';
 // the barrel, which would pull everything into one chunk.
 const Diagnostics = lazy(() => import('./Diagnostics/Diagnostics'));
 const Snake = lazy(() => import('./portfolio/snake/Snake'));
+const CwTrainer = lazy(() => import('./cw/CwTrainer'));
 const JuiceboxDoc = lazy(() => import('./apiDocs/JuiceboxDoc'));
 const FitnessDoc = lazy(() => import('./apiDocs/FitnessDoc'));
 const StrangerMain = lazy(() => import('../fullReactProjects/stranger/src/components/StrangerMain'));
@@ -33,6 +34,7 @@ function Main() {
           <Route path="/fitness/*" element={<FitnessMain />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/diagnostics" element={<Diagnostics />} />
+          <Route path="/cw" element={<CwTrainer />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
