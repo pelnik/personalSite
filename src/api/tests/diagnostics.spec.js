@@ -45,7 +45,7 @@ describe('GET /api/diagnostics', () => {
       },
       diskGB: { total: number, available: number },
       eventLoopDelayMs: { p50: number, p99: number, max: number },
-      databases: { auth: database, juicebox: database, fitness: database, scents: database },
+      databases: { auth: database, cw: database, juicebox: database, fitness: database, scents: database },
       versions: { serverCommit: expect.stringMatching(/^[0-9a-f]{7,}$/), serverCommittedAt: string },
       tls: null,
       visitor: {
