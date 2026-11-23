@@ -1,15 +1,14 @@
 const request = require('supertest');
 const crypto = require('crypto');
 const app = require('../../../../tests/support/apiApp');
+const { createAccount, getAccountByUsername, signToken } = require('../../auth');
 
 const api = () => request(app);
 const auth = (token) => ({ Authorization: `Bearer ${token}` });
 
-async function login(username, password) {
-  const res = await api()
-    .post('/api/juicebox/users/login')
-    .send({ username, password });
-  return res.body.token;
+async function login(username) {
+  const account = await getAccountByUsername(username);
+  return signToken(account);
 }
 
 // Registers a brand-new user so tests that mutate data never touch the seed.
@@ -20,11 +19,10 @@ async function registerUser() {
     name: 'Test User',
     location: 'Testville',
   };
-  const res = await api().post('/api/juicebox/users/register').send(user);
-  const { id } = JSON.parse(
-    Buffer.from(res.body.token.split('.')[1], 'base64url').toString()
-  );
-  return { ...user, id, token: res.body.token };
+  const account = await createAccount(user);
+  const token = signToken(account);
+  await api().get('/api/juicebox/posts').set(auth(token));
+  return { ...user, id: account.id, token };
 }
 
 async function createPost(token, fields = {}) {
