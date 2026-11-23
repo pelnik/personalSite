@@ -14,33 +14,24 @@ async function getAllUsers() {
   return rows;
 }
 
-async function createUser({ id, username, name, location }) {
+async function createUser({ username, password, name, location }) {
   try {
     const {
       rows: [user],
     } = await client.query(
       `
-      INSERT INTO users(id, username, name, location)
+      INSERT INTO users(username, password, name, location)
       VALUES($1, $2, $3, $4)
-      ON CONFLICT (id) DO NOTHING
+      ON CONFLICT (username) DO NOTHING
       RETURNING *;
     `,
-      [id, username, name, location]
+      [username, password, name, location]
     );
 
     return user;
   } catch (error) {
     throw error;
   }
-}
-
-async function ensureProfile(account) {
-  await client.query(
-    `INSERT INTO users(id, username, name) VALUES ($1, $2, $2)
-     ON CONFLICT (id) DO NOTHING`,
-    [account.id, account.username]
-  );
-  return getUserById(account.id);
 }
 
 async function updateUser(id, fields = {}) {
@@ -201,6 +192,8 @@ async function getUserById(userId) {
       return;
     }
 
+    delete user.password;
+
     const posts = await getPostsByUser(userId);
     user.posts = posts;
 
@@ -335,11 +328,28 @@ async function getPostsByTagName(tagName) {
   }
 }
 
+async function getUserByUsername(username) {
+  try {
+    const {
+      rows: [user],
+    } = await client.query(
+      `
+    SELECT *
+    FROM users 
+    WHERE username=$1;`,
+      [username]
+    );
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   client,
   getAllUsers,
   createUser,
-  ensureProfile,
   updateUser,
   createPost,
   updatePost,
@@ -351,5 +361,6 @@ module.exports = {
   addTagsToPost,
   getPostsByTagName,
   getAllTags,
+  getUserByUsername,
   getPostById,
 };

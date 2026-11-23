@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
@@ -11,7 +11,6 @@ function PostForm(props) {
   const setPosts = props.setPosts;
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -24,8 +23,8 @@ function PostForm(props) {
     setContent(evt.target.value);
   };
 
-  function onClickLogIn() {
-    navigate(`/login?next=${encodeURIComponent(location.pathname)}`);
+  function onClickLogIn(evt) {
+    navigate('/juicebox/login');
   }
 
   const handleSubmit = async (evt) => {

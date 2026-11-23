@@ -19,4 +19,21 @@ describe('juicebox stops after the first error', () => {
     expect(app.lateErrors).toEqual([]);
   });
 
+  it('login with missing credentials', async () => {
+    const res = await api().post('/api/juicebox/users/login').send({});
+    await settle();
+
+    expect(res.body.name).toBe('MissingCredentialsError');
+    expect(app.lateErrors).toEqual([]);
+  });
+
+  it('register with an existing username', async () => {
+    const res = await api()
+      .post('/api/juicebox/users/register')
+      .send({ username: 'albert', password: 'whatever', name: 'A', location: 'B' });
+    await settle();
+
+    expect(res.body.name).toBe('UserExistsError');
+    expect(app.lateErrors).toEqual([]);
+  });
 });

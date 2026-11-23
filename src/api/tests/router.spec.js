@@ -20,7 +20,7 @@ describe('/api router', () => {
 
   it('parses JSON request bodies for API modules', async () => {
     const res = await request(app)
-      .post('/api/auth/login')
+      .post('/api/juicebox/users/login')
       .set('Content-Type', 'application/json')
       .send('{"username": "nobody"}');
 
@@ -31,7 +31,7 @@ describe('/api router', () => {
 
   it('rejects malformed JSON with a 400', async () => {
     const res = await request(app)
-      .post('/api/auth/login')
+      .post('/api/juicebox/users/login')
       .set('Content-Type', 'application/json')
       .send('{not json');
 

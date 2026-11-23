@@ -35,7 +35,7 @@ const SHOTS: Shot[] = [
   { name: 'docs-fitness', path: '/api/fitness/docs', heading: 'Fitness Tracker API Documentation' },
   { name: 'docs-juicebox', path: '/api/juicebox/docs', heading: 'Juicebox API Documentation' },
   { name: 'juicebox', path: '/juicebox', heading: 'Third Post' },
-  { name: 'juicebox-login', path: '/login?next=/juicebox', heading: 'Log in' },
+  { name: 'juicebox-login', path: '/juicebox/login', heading: 'Login' },
   { name: 'fitness-routines', path: '/fitness', heading: 'Name: Chest Day' },
   { name: 'fitness-activities', path: '/fitness/activities' },
   { name: 'fitness-login', path: '/fitness/users/login', heading: 'Login' },

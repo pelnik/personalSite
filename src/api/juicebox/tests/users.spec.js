@@ -1,4 +1,5 @@
-const { api, auth, registerUser } = require('./helpers');
+const jwt = require('jsonwebtoken');
+const { api, auth, login, registerUser } = require('./helpers');
 
 describe('/api/juicebox/users', () => {
   describe('GET /', () => {
@@ -20,6 +21,81 @@ describe('/api/juicebox/users', () => {
         ])
       );
       res.body.users.forEach((user) => expect(user).not.toHaveProperty('password'));
+    });
+  });
+
+  describe('POST /login', () => {
+    it('returns a token for the seeded user', async () => {
+      const res = await api()
+        .post('/api/juicebox/users/login')
+        .send({ username: 'albert', password: 'bertie99' });
+
+      expect(res.status).toBe(200);
+      expect(res.body.message).toBe("you're logged in!");
+      const payload = jwt.verify(res.body.token, process.env.JWT_SECRET);
+      expect(payload).toMatchObject({ id: expect.any(Number), username: 'albert' });
+    });
+
+    it('rejects a wrong password', async () => {
+      const res = await api()
+        .post('/api/juicebox/users/login')
+        .send({ username: 'albert', password: 'wrong' });
+
+      expect(res.status).toBe(400);
+      expect(res.body).toEqual({
+        name: 'IncorrectCredentialsError',
+        message: 'Username or password is incorrect',
+      });
+    });
+
+    it('rejects missing credentials', async () => {
+      const res = await api().post('/api/juicebox/users/login').send({});
+
+      expect(res.status).toBe(400);
+      expect(res.body.name).toBe('MissingCredentialsError');
+    });
+  });
+
+  describe('POST /register', () => {
+    it('creates a user and returns a token', async () => {
+      const res = await api().post('/api/juicebox/users/register').send({
+        username: `new-${Date.now()}`,
+        password: 'password123',
+        name: 'New',
+        location: 'Here',
+      });
+
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({
+        message: 'thank you for signing up',
+        token: expect.any(String),
+      });
+    });
+
+    it('lets the new user log in', async () => {
+      const user = await registerUser();
+      expect(await login(user.username, user.password)).toEqual(expect.any(String));
+    });
+
+    it('rejects a username that already exists', async () => {
+      const res = await api().post('/api/juicebox/users/register').send({
+        username: 'albert',
+        password: 'whatever',
+        name: 'Albert',
+        location: 'Anywhere',
+      });
+
+      expect(res.status).toBe(400);
+      expect(res.body.name).toBe('UserExistsError');
+    });
+
+    it('rejects a registration missing required fields', async () => {
+      const res = await api()
+        .post('/api/juicebox/users/register')
+        .send({ username: `incomplete-${Date.now()}`, password: 'password123' });
+
+      expect(res.status).toBe(400);
+      expect(res.body.message).toEqual(expect.any(String));
     });
   });
 
