@@ -38,7 +38,7 @@ export default defineConfig({
     {
       name: 'functional',
       testIgnore: /visual\.spec\.ts/,
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'], launchOptions: { args: ['--autoplay-policy=no-user-gesture-required'] } },
     },
     {
       name: 'visual-desktop',

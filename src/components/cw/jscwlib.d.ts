@@ -1,0 +1,16 @@
+export interface Jscw {
+  audioCtx?: AudioContext;
+  setWpm(n: number): void;
+  setEff(n: number): void;
+  setFreq(n: number): void;
+  play(text: string): void;
+  stop(): void;
+  getLength(): number;
+  getTime(): number;
+  onCharacterPlay: (c: { n: number; c: string }) => void;
+  onFinished: () => void;
+}
+declare global {
+  interface Navigator { readonly audioSession?: { type: string } }
+  interface Window { jscw?: new (params?: object) => Jscw }
+}
