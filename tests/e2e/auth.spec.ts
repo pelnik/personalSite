@@ -11,11 +11,17 @@ test('site login survives reload and logs out', async ({ page }) => {
   await expect(page).toHaveTitle('Log in - Matthew Pelnik');
   await logIn(page);
   await expect(page).toHaveURL('/');
-  await expect(page.locator('#right-navbar')).toContainText('albert');
+  await page.goto('/login');
+  await expect(page.getByText('Logged in as albert')).toBeVisible();
   await page.reload();
-  await expect(page.locator('#right-navbar')).toContainText('albert');
+  await expect(page.getByText('Logged in as albert')).toBeVisible();
   await page.getByRole('button', { name: 'Log out' }).click();
-  await expect(page.getByRole('link', { name: 'Log in' })).toBeVisible();
+  await expect(page.getByLabel('Username')).toBeVisible();
+});
+
+test('site header has no login control', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#right-navbar')).toHaveText('About');
 });
 
 test('wrong password shows an inline error', async ({ page, allowErrors }) => {
@@ -47,5 +53,6 @@ test('registration signs in the new account', async ({ page }) => {
   await page.getByLabel('Password').fill('password123');
   await page.getByRole('button', { name: 'Create account', exact: true }).click();
   await expect(page).toHaveURL('/');
-  await expect(page.locator('#right-navbar')).toContainText(username);
+  await page.goto('/login');
+  await expect(page.getByText(`Logged in as ${username}`)).toBeVisible();
 });
