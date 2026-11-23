@@ -1,6 +1,35 @@
+import { saveToLocalStorage } from '../utils/localStorage';
+
 // Same-origin: Express serves the API in production, and Vite proxies /api
 // to Express in development.
 const BASE_URL = '/api/juicebox';
+
+export async function login(username, password) {
+  try {
+    let token = null;
+
+    const response = await fetch(`${BASE_URL}/users/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    });
+    const fullResponse = await response.json();
+
+    if ('token' in fullResponse) {
+      token = fullResponse.token;
+      saveToLocalStorage(token);
+    }
+
+    return token;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export async function getPosts(token) {
   const headerObject = {
@@ -22,6 +51,35 @@ export async function getPosts(token) {
     const posts = fullResponse.posts;
 
     return posts;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function register(user) {
+  try {
+    let token = null;
+
+    const response = await fetch(`${BASE_URL}/users/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: user.username,
+        password: user.password,
+        name: user.name,
+        location: user.location,
+      }),
+    });
+    const fullResponse = await response.json();
+
+    if ('token' in fullResponse) {
+      token = fullResponse.token;
+      saveToLocalStorage(token);
+    }
+
+    return fullResponse;
   } catch (error) {
     console.error(error);
   }

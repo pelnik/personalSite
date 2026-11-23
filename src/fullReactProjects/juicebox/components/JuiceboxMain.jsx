@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { Navbar, PostForm, EditPost, Posts } from '.';
+import { Routes, Route } from 'react-router-dom';
+import { Navbar, Register, PostForm, EditPost, Login, Posts } from '.';
 import { getPosts } from '../api-adapter';
-import { useAuth } from '../../../components/Auth';
+import { getToken } from '../utils/localStorage.js';
 import '../../../css/juicebox.css';
 
 function Main() {
-  const { token } = useAuth();
+  const [token, setToken] = useState('');
   const [posts, setPosts] = useState([]);
 
   async function fetchPosts(token) {
@@ -22,21 +22,24 @@ function Main() {
   }, [token]);
 
   useEffect(() => {
+    const localToken = getToken();
+    setToken(localToken);
+
     document.title = `JuiceBox Social - A social media site project -
       Matthew Pelnik, Data Analyst, Databricks and Spark`;
   }, []);
 
   return (
     <div className="jbMainContainer" id="jbMainContainer">
-      <Navbar token={token} />
+      <Navbar setToken={setToken} token={token} />
       <Routes>
         <Route
           path="login"
-          element={<Navigate to="/login?next=/juicebox" replace />}
+          element={<Login setToken={setToken} token={token} />}
         />
         <Route
           path="register"
-          element={<Navigate to="/login?next=/juicebox" replace />}
+          element={<Register setToken={setToken} token={token} />}
         />
         <Route
           path="post"

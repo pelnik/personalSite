@@ -1,24 +1,30 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../components/Auth';
+import { saveToLocalStorage } from '../utils/localStorage';
 
 import Tooltip from '@mui/joy/Tooltip';
 import HomeIcon from '@mui/icons-material/Home';
 import LoginIcon from '@mui/icons-material/Login';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 function Navbar(props) {
+  const setToken = props.setToken;
   const token = props.token;
-  const { logout } = useAuth();
 
   const navigate = useNavigate();
 
   function onClickLogOut() {
-    logout();
+    saveToLocalStorage('');
+    setToken('');
   }
 
   function onClickLogIn() {
-    navigate('/login?next=/juicebox');
+    navigate('/juicebox/login');
+  }
+
+  function onClickRegister() {
+    navigate('/juicebox/register');
   }
 
   function onClickHome() {
@@ -41,7 +47,14 @@ function Navbar(props) {
           {!token ? (
             <li onClick={onClickLogIn}>
               <Tooltip title="Log In">
-                <LoginIcon aria-label="Log In" />
+                <LoginIcon />
+              </Tooltip>
+            </li>
+          ) : null}
+          {!token ? (
+            <li onClick={onClickRegister}>
+              <Tooltip title="Register">
+                <PersonAddIcon />
               </Tooltip>
             </li>
           ) : null}
