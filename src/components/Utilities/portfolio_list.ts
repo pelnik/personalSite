@@ -4,7 +4,7 @@ export const portfolio_list = [
     "img": [
       {
         "url": "/Media/main/cw-trainer.jpg",
-        "alt": "CW Trainer playback settings and accuracy history"
+        "alt": "CW Trainer checked result with marked errors and accuracy history chart"
       }
     ],
     "link": "/cw",

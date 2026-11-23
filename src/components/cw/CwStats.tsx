@@ -149,11 +149,11 @@ export default function CwStats({ token, lesson, latestSessionId }: {
                   <p>{chartSessions.length} {chartSessions.length === 1 ? 'session' : 'sessions'}</p>
                   <div className="cw-chart" role="group" aria-label="Session accuracy">
                     <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={chartSessions} margin={{ top: 24, right: 24, bottom: 5, left: 5 }}>
+                      <LineChart data={chartSessions} margin={{ top: 24, right: 42, bottom: 5, left: 5 }}>
                         <CartesianGrid strokeDasharray="4 4" vertical={false} />
                         <XAxis dataKey="time" type="number" scale="time" domain={['dataMin', 'dataMax']} tickFormatter={dateTick} />
                         <YAxis domain={[0, 100]} tickFormatter={percentTick} />
-                        <ReferenceLine y={90} stroke="#167147" strokeDasharray="5 4" label={{ value: '90%', position: 'insideTopRight' }} />
+                        <ReferenceLine y={90} stroke="#167147" strokeDasharray="5 4" label={{ value: '90%', position: 'right' }} />
                         {chartSessions.filter(({ firstInLesson }) => firstInLesson).map((session) => (
                           <ReferenceLine
                             key={session.id}
@@ -185,9 +185,18 @@ export default function CwStats({ token, lesson, latestSessionId }: {
                     <table className="cw-stats-table">
                       <thead><tr>
                         <th scope="col">Letter</th>
-                        <th scope="col">Recent attempts</th>
-                        <th scope="col">Error rate</th>
-                        <th scope="col">Shown vs baseline</th>
+                        <th scope="col">
+                          <span className="cw-table-heading-full">Recent attempts</span>
+                          <span className="cw-table-heading-short">Seen</span>
+                        </th>
+                        <th scope="col">
+                          <span className="cw-table-heading-full">Error rate</span>
+                          <span className="cw-table-heading-short">Error %</span>
+                        </th>
+                        <th scope="col">
+                          <span className="cw-table-heading-full">Shown vs baseline</span>
+                          <span className="cw-table-heading-short">vs baseline</span>
+                        </th>
                       </tr></thead>
                       <tbody>
                         {letters.map((letter) => (

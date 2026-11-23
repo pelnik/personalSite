@@ -785,6 +785,19 @@
   padding: .5rem;
   border-bottom: 1px solid #c5ced0;
 }
+.cw-table-heading-short { display: none; }
+
+@media (max-width: 600px) {
+  .cw-stats-table { table-layout: fixed; font-size: .8rem; }
+  .cw-stats-table th, .cw-stats-table td {
+    padding: .5rem .2rem;
+    overflow-wrap: anywhere;
+  }
+  .cw-stats-table th:last-child { width: 30%; }
+  .cw-table-heading-full { display: none; }
+  .cw-table-heading-short { display: inline; }
+}
+
 .cw-stats-table button {
   min-width: 2rem;
   padding: .25rem;
