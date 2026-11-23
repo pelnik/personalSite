@@ -1,3 +1,2 @@
-export { default as SettingsBar } from './SettingsBar';
-export { default as ResultView } from './ResultView';
+export { SettingsBar, ResultView } from './trainer';
 export { default as CwStats } from './CwStats';

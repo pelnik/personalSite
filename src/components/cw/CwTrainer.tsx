@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useEffect, useRef, useState, type KeyboardEvent 
 import { Link } from 'react-router-dom';
 import { SiteContentContainer } from '..';
 import { useAuth } from '../Auth';
-import { SettingsBar, ResultView } from './index';
+import { SettingsBar, ResultView } from './trainer';
 import * as cwApi from './cwApi';
 import { usePlayer } from './usePlayer';
 import { loadJscw } from './loadJscw';
