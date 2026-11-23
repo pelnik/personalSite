@@ -49,6 +49,7 @@ services:
       FITNESS_DATABASE_URL: postgres://postgres:postgres@db:5432/fitness
       SCENTS_DATABASE_URL: postgres://postgres:postgres@db:5432/scents
       AUTH_DATABASE_URL: postgres://postgres:postgres@db:5432/auth
+      CW_DATABASE_URL: postgres://postgres:postgres@db:5432/cw
       API_URL: http://localhost:3000/api/fitness
       JWT_SECRET: ${JWT_SECRET:-development-secret-please-change-in-production}
       STRIPE_KEY: ${STRIPE_KEY:-}

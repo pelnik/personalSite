@@ -10,7 +10,7 @@ describe('GET /api/health', () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       status: 'ok',
-      databases: { auth: 'ok', juicebox: 'ok', fitness: 'ok', scents: 'ok' },
+      databases: { auth: 'ok', cw: 'ok', juicebox: 'ok', fitness: 'ok', scents: 'ok' },
     });
   });
 
@@ -24,7 +24,7 @@ describe('GET /api/health', () => {
     expect(res.status).toBe(503);
     expect(res.body).toEqual({
       status: 'error',
-      databases: { auth: 'ok', juicebox: 'ok', fitness: 'error', scents: 'ok' },
+      databases: { auth: 'ok', cw: 'ok', juicebox: 'ok', fitness: 'error', scents: 'ok' },
     });
     query.mockRestore();
     consoleError.mockRestore();
@@ -43,7 +43,7 @@ describe('GET /api/health with an unresponsive database', () => {
 
     expect(Date.now() - started).toBeLessThan(5000);
     expect(res.status).toBe(503);
-    expect(res.body.databases).toEqual({ auth: 'ok', juicebox: 'ok', fitness: 'ok', scents: 'error' });
+    expect(res.body.databases).toEqual({ auth: 'ok', cw: 'ok', juicebox: 'ok', fitness: 'ok', scents: 'error' });
     expect(consoleError).toHaveBeenCalledWith(
       'Health check: scents database unreachable:',
       'timed out after 3000ms'
