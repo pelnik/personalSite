@@ -8,7 +8,7 @@ const OPTIONS = {
 };
 function validateSettings(settings) {
   if (!settings || typeof settings !== 'object' || Array.isArray(settings)) return 'Settings must be an object';
-  if (Object.keys(settings).some((key) => !(key in DEFAULT_SETTINGS))) return 'Unknown setting';
+  if (Object.keys(settings).some((key) => !Object.hasOwn(DEFAULT_SETTINGS, key))) return 'Unknown setting';
   for (const key of Object.keys(DEFAULT_SETTINGS)) {
     const choices = key === 'lesson' ? OPTIONS.lessons.map(({ lesson }) => lesson) : OPTIONS[key];
     if (!choices.includes(settings[key])) return `Invalid ${key}`;

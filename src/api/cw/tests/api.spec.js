@@ -18,24 +18,45 @@ test('settings defaults, account persistence and validation', async () => {
   expect((await api().get(`${path}/settings`).set(auth(token))).body.settings.toneHz).toBe(650);
   const bad = await api().put(`${path}/settings`).set(auth(token)).send({ toneHz: 651 });
   expect(bad.status).toBe(400);
+  const unknown = await api().put(`${path}/settings`).set(auth(token)).send({ constructor: 1 });
+  expect(unknown.status).toBe(400);
+  expect(unknown.body.name).toBe('InvalidCwSettingsError');
   expect(bad.body.name).toBe('InvalidCwSettingsError');
 });
 test('practice validates input and uses lesson characters', async () => {
   const good = await api().get(`${path}/practice`).query(practice);
   expect(good.body.chars).toEqual(['K', 'M']);
   expect(good.body.text).toMatch(/^[KM ]+$/);
-  expect((await api().get(`${path}/practice`).query({ lesson: 1 })).body.name).toBe('InvalidCwSettingsError');
+  for (const query of [{ lesson: 1 }, { ...practice, effWpm: 21 }]) {
+    const bad = await api().get(`${path}/practice`).query(query);
+    expect(bad.status).toBe(400);
+    expect(bad.body.name).toBe('InvalidCwSettingsError');
+  }
 });
 test('results save only for account', async () => {
+  const sessionsBefore = await client.query('SELECT count(*) FROM cw_sessions');
   const anon = await api().post(`${path}/results`).send(resultBody);
   expect(anon.body.saved).toBe(false);
+  const sessionsAfter = await client.query('SELECT count(*) FROM cw_sessions');
+  expect(sessionsAfter.rows).toEqual(sessionsBefore.rows);
   const account = await api().post(`${path}/results`).set(auth(token)).send(resultBody);
   expect(account.body.saved).toBe(true);
   const { rows: [row] } = await client.query('SELECT accuracy, letter_counts FROM cw_sessions WHERE id=$1', [account.body.session.id]);
   expect(Number(row.accuracy)).toBe(50);
   expect(row.letter_counts.M).toEqual([1, 1]);
-  for (const changes of [{ sent: 'A' }, { sent: ' KM' }, { sent: 'K'.repeat(1601) }, { typed: 'K'.repeat(103) }]) {
+});
+test('results reject invalid text or missing settings', async () => {
+  const invalid = [
+    { sent: 'A' },
+    { sent: ' KM' },
+    { sent: 'K'.repeat(1601) },
+    { typed: 'K'.repeat(103) },
+    { typed: 'ﬃ'.repeat(35) }, // Fits the raw limit but exceeds it after uppercasing.
+    { lesson: undefined },
+  ];
+  for (const changes of invalid) {
     const bad = await api().post(`${path}/results`).send({ ...resultBody, ...changes });
+    expect(bad.status).toBe(400);
     expect(bad.body.name).toBe('InvalidCwInputError');
   }
 });

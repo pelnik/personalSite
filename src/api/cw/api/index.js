@@ -5,7 +5,7 @@ const { DEFAULT_SETTINGS, OPTIONS, validateSettings } = require('../lib/settings
 const { lessonChars } = require('../lib/koch');
 const { baselineWeights } = require('../lib/baseline');
 const { generatePractice } = require('../lib/generate');
-const { checkCopy } = require('../lib/check');
+const { checkCopy, normalizeCopy } = require('../lib/check');
 
 const cwRouter = express.Router();
 cwRouter.use(authenticate(ensureProfile));
@@ -39,13 +39,21 @@ cwRouter.post('/results', async (req, res, next) => {
     const { sent, typed, ...provided } = req.body;
     const names = ['lesson', 'charWpm', 'effWpm', 'toneHz', 'groupLength'];
     if (Object.keys(provided).some((key) => !names.includes(key))) return next(fail('InvalidCwInputError', 'Invalid settings field'));
-    const settings = { ...DEFAULT_SETTINGS, ...provided };
+    const settings = { ...provided, minutes: DEFAULT_SETTINGS.minutes };
     const error = validateSettings(settings);
     if (error) return next(fail('InvalidCwInputError', error));
     const chars = lessonChars(settings.lesson);
-    if (typeof sent !== 'string' || !sent.length || sent.length > 1600 || !sent.split(' ').every((group) => group.length && [...group].every((char) => chars.includes(char))) ||
-        typeof typed !== 'string' || typed.length > sent.length + 100)
+    if (typeof sent !== 'string' || !sent.length || sent.length > 1600) {
       return next(fail('InvalidCwInputError', 'Invalid practice text'));
+    }
+    const validGroups = sent.split(' ').every(
+      (group) => group.length && [...group].every((char) => chars.includes(char))
+    );
+    const typedLimit = sent.length + 100;
+    if (!validGroups || typeof typed !== 'string' || typed.length > typedLimit ||
+        normalizeCopy(typed).length > typedLimit) {
+      return next(fail('InvalidCwInputError', 'Invalid practice text'));
+    }
     const result = checkCopy(sent, typed);
     if (!req.user) return res.send({ result, saved: false });
     const session = await createSession(req.user.id, { ...settings, sent, typed, accuracy: result.accuracy, letterCounts: result.letterCounts });

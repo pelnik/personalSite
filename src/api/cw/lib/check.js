@@ -1,5 +1,9 @@
+function normalizeCopy(input) {
+  return input.toUpperCase().replace(/\s+/g, ' ').trim();
+}
+
 function checkCopy(sent, input) {
-  const typed = input.toUpperCase().replace(/\s+/g, ' ').trim();
+  const typed = normalizeCopy(input);
   const width = typed.length + 1;
   const height = sent.length + 1;
   const costs = new Uint16Array(width * height);
@@ -48,4 +52,4 @@ function checkCopy(sent, input) {
   const accuracy = sentCount ? Math.max(0, Math.round(1000 * (1 - errors / sentCount)) / 10) : 0;
   return { ops, errors, sentCount, accuracy, passed: accuracy >= 90, letterCounts };
 }
-module.exports = { checkCopy };
+module.exports = { checkCopy, normalizeCopy };
