@@ -61,4 +61,4 @@ function startMetricsLog(intervalMs) {
   return timer;
 }
 
-module.exports = { snapshot, startMetricsLog };
+module.exports = { snapshot, startMetricsLog, toMB };

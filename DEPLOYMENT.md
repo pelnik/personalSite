@@ -114,6 +114,8 @@ Then merge the `.nvmrc` change. Deploys run `nvm use`, which now finds the new v
 
 ## Checking memory
 
+[Diagnostics](https://pelnik.dev/diagnostics) shows current memory, disk usage and deployed commits.
+
 ### Is something leaking?
 
 `server.js` logs one JSON line every 5 minutes with memory, event-loop delay and database pool stats. Summarize them on the server:

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function SiteFooter() {
   return (
@@ -49,6 +50,7 @@ function SiteFooter() {
               <p>Email: matthew.pelnik@gmail.com</p>
               <p>Phone: (918) 798-2238</p>
             </div>
+            <Link to="/diagnostics" id="footer-diagnostics">Diagnostics</Link>
           </div>
         </div>
       </div>

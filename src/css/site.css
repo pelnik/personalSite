@@ -487,13 +487,14 @@
 .site-full-window #middle-footer-flex {
   display: flex;
   flex-direction: column;
-  gap: 100px;
+  gap: 20px;
 }
 
 .site-full-window #footer-icon-parent {
   display: flex;
   justify-content: center;
   gap: 30px;
+  margin-bottom: 80px;
 }
 
 .site-full-window .footer-icon {
@@ -504,6 +505,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.site-full-window #footer-diagnostics {
+  align-self: center;
+  font-size: 0.8rem;
+  color: var(--myLightGray);
+  opacity: 0.5;
+}
+
+.site-full-window #footer-diagnostics:hover,
+.site-full-window #footer-diagnostics:focus {
+  opacity: 0.9;
 }
 
 .site-full-window #contact-title-footer {
@@ -555,7 +568,106 @@
   word-wrap:break-word;
 }
 
+.site-full-window .diagnostics-page {
+  display: grid;
+  gap: 1rem;
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+.site-full-window .diagnostics-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.site-full-window .diagnostics-header p {
+  grid-column: 1 / -1;
+  color: #46505c;
+}
+
+.site-full-window .diagnostics-header button {
+  padding: 0.45rem 0.85rem;
+  font: inherit;
+  background: var(--blue);
+  color: inherit;
+  border: 1px solid #596779;
+  cursor: pointer;
+}
+
+.site-full-window .diagnostics-header button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.site-full-window .diagnostics-section {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--myDarkBlue);
+  background: #fff;
+}
+
+.site-full-window .diagnostics-section h2 {
+  font-size: 1.2rem;
+}
+
+.site-full-window .diagnostics-rows {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 0.5rem 1rem;
+  margin-top: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.site-full-window .diagnostics-rows dt {
+  font-weight: 600;
+}
+
+.site-full-window .diagnostics-rows a {
+  display: inline;
+  text-decoration: underline;
+}
+
+.site-full-window .diagnostics-status-ok {
+  color: #187046;
+}
+
+.site-full-window .diagnostics-status-error {
+  color: #a3252a;
+}
+
+.site-full-window .diagnostics-warning {
+  color: #875400;
+}
+
+.site-full-window .diagnostics-bar-track {
+  margin-top: 0.375rem;
+  background: #e4e9ec;
+}
+
+.site-full-window .diagnostics-bar {
+  height: 0.375rem;
+  background: #25714e;
+}
+
+.site-full-window .diagnostics-bar.warn {
+  background: #a46600;
+}
+
+.site-full-window .diagnostics-bar.bad {
+  background: #a3252a;
+}
+
 @media (max-width: 700px) {
+  .site-full-window .diagnostics-rows {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.25rem;
+  }
+
+  .site-full-window .diagnostics-rows dd + dt {
+    margin-top: 0.5rem;
+  }
+
   .site-full-window #about-pic-flex {
     display: flex;
     flex-direction: column;
