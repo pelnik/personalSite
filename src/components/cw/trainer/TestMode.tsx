@@ -33,7 +33,7 @@ export default function TestMode({
   const { elapsed, duration } = player.progress;
   const playing = player.status === 'playing' || player.status === 'loading';
   const showCheck = Boolean(text && player.status === 'done' && !result);
-  const canCheck = showCheck && !loading && player.playedChars > 0;
+  const canCheck = showCheck && !loading;
   const nextLesson = playedSettings ? playedSettings.lesson + 1 : null;
   const canAdvance = result?.passed && player.completed &&
     lessons.some(({ lesson }) => lesson === nextLesson);
@@ -72,10 +72,9 @@ export default function TestMode({
     setLoading(true);
     onError('');
     try {
-      const sent = player.completed ? text : text.slice(0, player.playedChars).trimEnd();
       const response = await cwApi.postResults(token, {
         lesson: playedSettings.lesson, charWpm: playedSettings.charWpm, effWpm: playedSettings.effWpm,
-        toneHz: playedSettings.toneHz, groupLength: playedSettings.groupLength, sent, typed, complete: player.completed,
+        toneHz: playedSettings.toneHz, groupLength: playedSettings.groupLength, sent: text, typed, complete: true,
       });
       setResult(response.result);
       if (response.saved && response.session) onSaved(response.session.id);
@@ -87,6 +86,11 @@ export default function TestMode({
     setTyped('');
     setText('');
     setPlayedSettings(null);
+  }
+  function stop() {
+    player.stop();
+    again();
+    onError('');
   }
   function advance() {
     if (!canAdvance || nextLesson === null) return;
@@ -106,11 +110,13 @@ export default function TestMode({
         {!text && (
           <button type="button" onClick={start} disabled={loading || !audioReady}>Start</button>
         )}
-        {playing && <button type="button" onClick={player.stop}>Stop</button>}
+        {text && !result && (
+          <button type="button" onClick={stop} disabled={loading && player.status === 'done'}>Stop</button>
+        )}
         {showCheck && (
           <button type="button" onClick={check} disabled={!canCheck}>Check</button>
         )}
-        {(result || (showCheck && player.playedChars < 1)) && (
+        {result && (
           <button type="button" onClick={again}>Practice again</button>
         )}
         {canAdvance && <button type="button" onClick={advance}>Next lesson</button>}
@@ -141,7 +147,7 @@ export default function TestMode({
           <p id="cw-check-hint" className="cw-check-hint">Ctrl+Enter or ⌘+Enter to check</p>
         </>
       )}
-      {result && <ResultView result={result} loggedIn={Boolean(token)} complete={player.completed} />}
+      {result && <ResultView result={result} loggedIn={Boolean(token)} />}
     </>
   );
 }

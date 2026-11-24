@@ -48,8 +48,10 @@ export function usePlayer() {
   const stop = useCallback(() => {
     generation.current++;
     player.current?.stop();
+    setStatus('idle');
     setCompleted(false);
-    setStatus('done');
+    setPlayedChars(0);
+    setProgress({ elapsed: 0, duration: 0 });
   }, []);
   useEffect(() => {
     if (status !== 'playing') return;
