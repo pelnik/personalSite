@@ -8,7 +8,7 @@ const { DEFAULT_SETTINGS, OPTIONS, validateSettings } = require('../lib/settings
 const { KOCH_ORDER, LESSON_COUNT, lessonChars } = require('../lib/koch');
 const { baselineWeights } = require('../lib/baseline');
 const { practiceWeights } = require('../lib/weights');
-const { generatePractice } = require('../lib/generate');
+const { generateGroup, generatePractice } = require('../lib/generate');
 const { checkCopy, normalizeCopy } = require('../lib/check');
 
 const cwRouter = express.Router();
@@ -54,6 +54,38 @@ cwRouter.get('/showcase/letter', async (req, res, next) => {
     const points = profile ? await getLetterHistory(profile.id, char) : [];
     return res.send({ char, points });
   } catch (error) { return next(error); }
+});
+
+function validGroupCounts(counts, chars) {
+  if (!counts || Object.getPrototypeOf(counts) !== Object.prototype) return false;
+
+  let total = 0;
+  for (const [char, pair] of Object.entries(counts)) {
+    if (!chars.includes(char) || !Array.isArray(pair) || pair.length !== 2) return false;
+    const [sent, errors] = pair;
+    if (!Number.isInteger(sent) || sent < 1 ||
+        !Number.isInteger(errors) || errors < 0 || errors > sent) return false;
+    total += sent;
+  }
+  return total >= 1 && total <= 7;
+}
+
+// Feedback group generation is public and stateless, even with a token.
+cwRouter.post('/feedback/group', (req, res, next) => {
+  const { lesson, groupLength, recent, ...unexpected } = req.body ?? {};
+  if (Object.keys(unexpected).length) return next(fail('InvalidCwInputError', 'Invalid feedback field'));
+
+  const error = validateSettings({ ...DEFAULT_SETTINGS, lesson, groupLength });
+  if (error) return next(fail('InvalidCwInputError', error));
+
+  const chars = lessonChars(lesson);
+  if (!Array.isArray(recent) || recent.length > 100 || !recent.every((counts) => validGroupCounts(counts, chars))) {
+    return next(fail('InvalidCwInputError', 'Invalid recent group counts'));
+  }
+
+  const { weights, letters } = practiceWeights(lesson, recent);
+  const group = generateGroup({ lesson, weights, groupLength });
+  return res.send({ group, weights, baseline: baselineWeights(lesson), letters });
 });
 
 cwRouter.use(authenticate(ensureProfile));
