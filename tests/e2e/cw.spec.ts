@@ -280,3 +280,41 @@ test('Feedback wraps seven-letter groups on a narrow screen', async ({ page }) =
   expect(second).toBeGreaterThan(first);
   await page.getByRole('button', { name: 'Stop' }).click();
 });
+
+test('Feedback clears a full board and keeps the run score and weighting history', async ({ page }) => {
+  await page.route('**/api/cw/feedback/group', async (route) => {
+    const response = await route.fetch();
+    await route.fulfill({ response, json: { ...await response.json(), group: 'KM' } });
+  });
+
+  await page.goto('/cw?mode=feedback');
+  await page.getByLabel('Character speed').selectOption('50');
+  await page.getByLabel('Effective speed').selectOption('50');
+  await page.getByLabel('Group length').selectOption('2');
+  await page.getByRole('button', { name: 'Start' }).click();
+
+  const input = page.getByLabel('Type what you hear');
+  const waiting = page.getByRole('img', { name: 'Waiting', exact: true });
+  const groups = page.locator('.cw-fb-group');
+  for (let count = 1; count <= 12; count++) {
+    await expect(groups).toHaveCount(count);
+    await expect(waiting).toHaveCount(2);
+    if (count < 12) await input.fill(count === 1 ? 'K ' : 'KM');
+  }
+
+  const [request] = await Promise.all([
+    page.waitForRequest('**/api/cw/feedback/group'),
+    input.fill('KM'),
+  ]);
+  expect(request.postDataJSON().recent).toEqual([
+    ...Array.from({ length: 11 }, () => ({ K: [1, 0], M: [1, 0] })),
+    { K: [1, 0], M: [1, 1] },
+  ]);
+  await expect(groups).toHaveCount(1);
+  await expect(waiting).toHaveCount(2);
+  await expect(input).toBeFocused();
+  await expect(page.getByText('Right: 23 of 24 (96%)', { exact: true })).toBeVisible();
+  await input.fill('KM');
+  await page.getByRole('button', { name: 'Stop' }).click();
+  await expect(page.getByRole('region', { name: 'Run summary' }).getByText('25 of 26 right (96%)')).toBeVisible();
+});

@@ -16,6 +16,8 @@ type Props = {
 type Group = { number: number; text: string; answers: (string | null)[] };
 type Miss = { text: string; number: number };
 
+const GROUPS_PER_BOARD = 12;
+
 function countAnswer(counts: LetterCounts, sent: string, answer: string) {
   const [seen, missed] = counts[sent] ?? [0, 0];
   counts[sent] = [seen + 1, missed + Number(sent !== answer)];
@@ -68,10 +70,14 @@ export default function FeedbackMode({ settings, kochOrder, audioReady, onBusyCh
       if (generation.current !== run) return;
       try {
         setLetters(letters);
-        setGroups((previous) => [
-          ...previous.slice(-11),
-          { number: (previous.at(-1)?.number ?? 0) + 1, text: group, answers: Array<string | null>(group.length).fill(null) },
-        ]);
+        setGroups((previous) => {
+          const next = {
+            number: (previous.at(-1)?.number ?? 0) + 1,
+            text: group,
+            answers: Array<string | null>(group.length).fill(null),
+          };
+          return previous.length === GROUPS_PER_BOARD ? [next] : [...previous, next];
+        });
         await play(group, settings);
       } catch (cause) {
         handleFailure(cause);
