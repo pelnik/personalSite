@@ -161,3 +161,43 @@ test('public showcase stays on Matt’s lesson while guests change their own', a
   await expect(letters).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Your stats' })).toHaveCount(0);
 });
+
+test('error-rate axes switch between 50% and 100%', async ({ page }) => {
+  const createdAt = '2026-01-01T12:00:00.000Z';
+  let errors = 5;
+  await page.route('**/api/cw/showcase', (route) => route.fulfill({
+    json: {
+      showcase: {
+        lesson: 1,
+        sessions: [{ id: 1, createdAt, lesson: 1, accuracy: 90, charWpm: 20, effWpm: 15 }],
+        lessonStarts: [{ lesson: 1, sessionId: 1 }],
+        letters: [
+          { char: 'K', attempts: 10, errors, errorRate: errors / 10, multiplier: 1, share: 0.5, baselineShare: 0.5 },
+          { char: 'M', attempts: 10, errors: 0, errorRate: 0, multiplier: 1, share: 0.5, baselineShare: 0.5 },
+        ],
+      },
+    },
+  }));
+  await page.route('**/api/cw/showcase/letter?*', (route) => route.fulfill({
+    json: { char: 'K', points: [{ createdAt, sent: 10, errors }] },
+  }));
+
+  const ticks = (name: string) => page.getByRole('group', { name })
+    .locator('.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value');
+  const letterTicks = ticks('Error rate by letter');
+  const dayTicks = ticks('Error rate by day for K');
+
+  await page.goto('/cw');
+  const lowTicks = ['0%', '10%', '20%', '30%', '40%', '50%'];
+  await expect(letterTicks).toHaveText(lowTicks);
+  await page.getByRole('button', { name: 'K', exact: true }).click();
+  await expect(dayTicks).toHaveText(lowTicks);
+
+  errors = 6;
+  await page.reload();
+  const highTicks = ['0%', '25%', '50%', '75%', '100%'];
+  await expect(letterTicks).toHaveText(highTicks);
+  await page.getByRole('button', { name: 'K', exact: true }).click();
+  await expect(dayTicks).toHaveText(highTicks);
+  await expect(ticks('Session accuracy')).toHaveText(highTicks);
+});
