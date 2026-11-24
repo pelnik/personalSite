@@ -6,7 +6,7 @@ async function createSession(profileId, { lesson, charWpm, effWpm, toneHz, group
     [profileId, lesson, charWpm, effWpm, toneHz, groupLength, sent, typed, accuracy, letterCounts]);
   return session;
 }
-async function getRecentLetterCounts(profileId, limit = 500) {
+async function getRecentLetterCounts(profileId, limit = 1000) {
   const { rows } = await client.query('SELECT letter_counts FROM cw_sessions WHERE profile_id=$1 ORDER BY created_at DESC, id DESC LIMIT $2', [profileId, limit]);
   return rows.map((row) => row.letter_counts);
 }

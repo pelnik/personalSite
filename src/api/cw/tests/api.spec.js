@@ -153,6 +153,20 @@ test('letter history supports punctuation and scopes results to the account', as
   }
 });
 
+test('stats include more than 100 recent attempts per letter', async () => {
+  const copy = 'KKKKK '.repeat(15).trimEnd();
+  for (let i = 0; i < 3; i++) {
+    const saved = await api().post(`${path}/results`).set(auth(token)).send({
+      ...resultBody, sent: copy, typed: copy,
+    });
+    expect(saved.body.saved).toBe(true);
+  }
+
+  const response = await api().get(`${path}/stats`).set(auth(token));
+  expect(response.status).toBe(200);
+  expect(response.body.letters.find(({ char }) => char === 'K').attempts).toBeGreaterThanOrEqual(225);
+});
+
 describe('public showcase', () => {
   let originalUsername;
 

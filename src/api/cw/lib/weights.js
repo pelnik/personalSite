@@ -1,7 +1,7 @@
 const { baselineWeights } = require('./baseline');
 const { lessonChars } = require('./koch');
 
-const WINDOW = 100;
+const WINDOW = 1000;
 const PRIOR = 10;
 const MIN_MULTIPLIER = 0.5;
 const MAX_MULTIPLIER = 4;
