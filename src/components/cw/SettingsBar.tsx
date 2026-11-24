@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Options, Settings } from './cwApi';
-type Props = { settings: Settings; options: Options; disabled: boolean; onChange: (changes: Partial<Settings>) => void };
-export default function SettingsBar({ settings, options, disabled, onChange }: Props) {
+type Props = { settings: Settings; options: Options; disabled: boolean; hidden?: (keyof Settings)[]; onChange: (changes: Partial<Settings>) => void };
+export default function SettingsBar({ settings, options, disabled, hidden = [], onChange }: Props) {
   const controls: { key: keyof Settings; label: string; choices: { value: number; text: string }[] }[] = [
     { key: 'lesson', label: 'Lesson', choices: options.lessons.map(({ lesson, chars }) => ({ value: lesson, text: `Lesson ${lesson}: ${chars.join(' ')}` })) },
     { key: 'charWpm', label: 'Character speed', choices: options.charWpm.map((n) => ({ value: n, text: `${n} WPM` })) },
@@ -20,7 +20,7 @@ export default function SettingsBar({ settings, options, disabled, onChange }: P
 
   return (
     <div className="cw-settings">
-      {controls.map(({ key, label, choices }) => (
+      {controls.filter(({ key }) => !hidden.includes(key)).map(({ key, label, choices }) => (
         <label key={key}>
           {label}
           <select

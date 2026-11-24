@@ -1,7 +1,8 @@
 export type Settings = { lesson: number; charWpm: number; effWpm: number; toneHz: number; minutes: number; groupLength: number };
 export type Options = { lessons: { lesson: number; newChars: string[]; chars: string[] }[]; charWpm: number[]; effWpm: number[]; toneHz: number[]; minutes: number[]; groupLength: number[] };
 export type Operation = { type: 'match' | 'wrong' | 'missing' | 'extra'; sent?: string; typed?: string };
-export type Result = { ops: Operation[]; errors: number; sentCount: number; accuracy: number; passed: boolean; letterCounts: Record<string, [number, number]> };
+export type LetterCounts = Record<string, [number, number]>;
+export type Result = { ops: Operation[]; errors: number; sentCount: number; accuracy: number; passed: boolean; letterCounts: LetterCounts };
 async function request<T>(path: string, token: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`/api/cw${path}`, { ...init, headers: { ...(init?.body ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: `Bearer ${token}` } : {}) } });
   const data = await response.json();
@@ -34,6 +35,11 @@ export type LetterSummary = {
   share: number;
   baselineShare: number;
 };
+
+export const getFeedbackGroup = (values: { lesson: number; groupLength: number; recent: LetterCounts[] }, signal?: AbortSignal) =>
+  request<{ group: string; weights: Record<string, number>; baseline: Record<string, number>; letters: LetterSummary[] }>(
+    '/feedback/group', '', { method: 'POST', body: JSON.stringify(values), signal },
+  );
 
 export type CwStatsData = {
   sessions: SessionSummary[];
