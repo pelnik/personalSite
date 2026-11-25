@@ -26,7 +26,9 @@ GitHub secrets the deploy needs: `EC2_HOST`, `EC2_USER`, `EC2_SSH_KEY`, `EC2_PRO
 
 ## The server
 
-- **Instance:** an EC2 nano running Ubuntu, with 512 MB of RAM.
+- **Instance:** an EC2 t2.nano running Ubuntu 26.04 LTS, with 512 MB of RAM. See [Upgrading Ubuntu](#upgrading-ubuntu).
+- **Postgres:** Ubuntu's PostgreSQL 18 on the same instance, port 5432, holding every database in `.env`.
+- **Boot:** the instance always boots with an initramfs. The cloud image's initrdless boot (`GRUB_FORCE_PARTUUID`) is commented out in `/etc/default/grub.d/40-force-partuuid.cfg`, because on this instance it ran out of memory and hung instead of falling back. Keep it commented out.
 - **Node:** installed with nvm under `ubuntu`. The version is in `.nvmrc` (24); the deploy sources nvm and runs `nvm use`, because SSH sessions don't load nvm on their own. See [Upgrading Node](#upgrading-node).
 - **Process manager:** PM2, running as `ubuntu`, configured by `ecosystem.config.js`:
   - heap capped at 192 MB
@@ -114,6 +116,36 @@ pm2 save
 Then merge the `.nvmrc` change. Deploys run `nvm use`, which now finds the new version. The certbot renewal hook (#23) already picks the newest nvm `pm2`, so it needs no change.
 
 **To roll back:** run `nvm use <old version> && nvm alias default <old version> && pm2 update`, revert `.nvmrc`, and redo the `pm2 unstartup` and `pm2 startup` steps.
+
+## Upgrading Ubuntu
+
+Release upgrades go one LTS at a time (for example 24.04 → 26.04), and each one can take the site down, so plan for downtime.
+
+1. **Take an EBS snapshot** of the root volume in the AWS console. This is the only full rollback. Also copy a database dump to your laptop: `ssh <server> 'cd /tmp && sudo -u postgres pg_dumpall | gzip' > pg_dumpall.sql.gz`.
+2. **Install the current release's updates and reboot first:** `sudo apt-get update && sudo apt-get full-upgrade`, then `sudo reboot`.
+3. **Run the upgrade as a system unit, not in tmux or screen:**
+
+   ```bash
+   sudo systemd-run --unit=release-upgrade \
+     bash -c 'DEBIAN_FRONTEND=noninteractive do-release-upgrade -f DistUpgradeViewNonInteractive > /root/release-upgrade.log 2>&1'
+   systemctl status release-upgrade   # finished when inactive; check the log
+   ```
+
+   The upgrade restarts logind and the user manager, which kills a tmux session running as `ubuntu`, and the upgrader with it. SSH also refuses connections for a while partway through, while sshd is replaced.
+4. **Before rebooting:** `sudo dpkg --audit` should print nothing. Check that `GRUB_FORCE_PARTUUID` is still commented out (see [The server](#the-server)) and that `/boot/grub/grub.cfg` has an `initrd` line for the new kernel.
+5. **Move the databases to the new Postgres.** The upgrade installs the new version beside the old one but leaves the data in the old cluster:
+
+   ```bash
+   source ~/.nvm/nvm.sh && pm2 stop personalsite
+   pg_lsclusters                            # an empty new cluster? drop it: sudo pg_dropcluster <new> main --stop
+   sudo pg_upgradecluster <old> main        # the new cluster takes port 5432; .env doesn't change
+   pm2 start personalsite && curl -s localhost/api/health
+   ```
+
+   Once the site is healthy, remove the old cluster (`sudo pg_dropcluster <old> main`) and its `postgresql-<old>` packages.
+6. **Turn third-party apt sources back on.** The upgrade disables them (Docker's, in `/etc/apt/sources.list.d/docker.list`); change the suite to the new release's codename.
+
+A big upgrade can use up a gp2 volume's I/O burst balance, which slows the rest of the upgrade down. gp3 volumes don't have a burst balance.
 
 ## Checking memory
 
