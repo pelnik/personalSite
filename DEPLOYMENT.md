@@ -128,12 +128,12 @@ Release upgrades go one LTS at a time (for example 24.04 → 26.04), and each on
    ```bash
    sudo systemd-run --unit=release-upgrade \
      bash -c 'DEBIAN_FRONTEND=noninteractive do-release-upgrade -f DistUpgradeViewNonInteractive > /root/release-upgrade.log 2>&1'
-   systemctl status release-upgrade   # finished when inactive; check the log
+   systemctl status release-upgrade   # running while active; once it's gone ("could not be found") or failed, it's finished: check the log
    ```
 
    The upgrade restarts logind and the user manager, which kills a tmux session running as `ubuntu`, and the upgrader with it. SSH also refuses connections for a while partway through, while sshd is replaced.
-4. **Before rebooting:** `sudo dpkg --audit` should print nothing. Check that `GRUB_FORCE_PARTUUID` is still commented out (see [The server](#the-server)) and that `/boot/grub/grub.cfg` has an `initrd` line for the new kernel.
-5. **Move the databases to the new Postgres.** The upgrade installs the new version beside the old one but leaves the data in the old cluster:
+4. **Before rebooting:** `sudo dpkg --audit` should print nothing. Check that `GRUB_FORCE_PARTUUID` is still commented out (see [The server](#the-server)) and that `/boot/grub/grub.cfg` has an `initrd` line for the new kernel. Then `sudo reboot` and wait for SSH to come back. The first boot on a new kernel is the risky one, so allow extra time.
+5. **After the reboot, move the databases to the new Postgres.** The upgrade installs the new version beside the old one but leaves the data in the old cluster:
 
    ```bash
    source ~/.nvm/nvm.sh && pm2 stop personalsite
